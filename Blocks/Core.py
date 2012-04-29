@@ -7,4 +7,7 @@ from Block import *
 class Core(Block):
     """Core"""
     def __init__(self, arg):
-        super(Core, self).__init__(arg)
+        Block.__init__(self, arg)
+
+    def __str__(self):
+        return "Core Block"

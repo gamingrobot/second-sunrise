@@ -7,4 +7,7 @@ from MovableEntity import *
 class Planet(MovableEntity):
     """Planet"""
     def __init__(self, arg):
-        super(Planet, self).__init__(arg)
+        MovableEntity.__init__(self, arg)
+
+    def __str__(self):
+        return "A Planet"
