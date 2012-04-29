@@ -1,0 +1,119 @@
+// Ogre overlay scripts
+POCore/DebugOverlay
+{
+	zorder 500
+	// Stats block
+	container BorderPanel(POCore/StatPanel1)
+	{
+		metrics_mode pixels
+		vert_align bottom
+		left 3 
+		top -92
+		width 637
+		height 90
+		material POCore/StatsBlockCenter
+	
+		    
+		element TextArea(POCore/CurrFps)
+		{
+			metrics_mode pixels
+			left 500
+			top 15
+			width 140
+			height 20
+			font_name BlueHighway
+			char_height 16
+			caption FPS:
+			colour_top 0.4 0.4 0.2
+			//1 1 0.7
+			colour_bottom 0 0 0.0
+			//1 1 0.7
+		}
+		element TextArea(POCore/AverageFps)
+		{
+			metrics_mode pixels
+			left 500
+			top 30
+			width 90
+			height 20
+			font_name BlueHighway
+			char_height 16
+			caption AVG FPS:
+			colour_top 0.4 0.4 0.2 
+			//0.5 0.7 0.5
+			colour_bottom 0 0 0.0 
+			//0.3 0.5 0.3
+		}
+		element TextArea(POCore/NumTris)
+		{
+			metrics_mode pixels
+			left 500
+			top 45
+			width 90
+			height 20
+			font_name BlueHighway
+			char_height 16
+			caption Triangles:
+			colour_top 0.4 0.4 0.2   
+			//0.5 0.7 0.5
+			colour_bottom 0 0 0.0 
+			//0.3 0.5 0.3
+		}
+		element TextArea(POCore/NumBatches)
+		{
+			metrics_mode pixels
+			left 500
+			top 60
+			width 90
+			height 20
+			font_name BlueHighway
+			char_height 16
+			caption Batches:
+			colour_top 0.4 0.4 0.2   
+			//0.5 0.7 0.5
+			colour_bottom 0 0 0.0 
+			//0.3 0.5 0.3
+		}
+		element TextArea(POCore/DebugText)
+		{
+			metrics_mode pixels
+			left 105
+			top 73
+			width 400
+			height 30
+			font_name BlueHighway
+			char_height 14
+			colour_top 1 1 0.7 
+			// 0.5 0.7 0.5
+			colour_bottom 1 1 0.7 
+			//0.3 0.5 0.3
+		}
+				
+	}
+//	container Panel(POCore/LogoPanel)
+//	{	
+//		metrics_mode pixels
+//		horz_align right
+//		vert_align bottom
+//		top -95
+//		left -165
+//		width 160
+//		height 93
+//		material POCore/OgreText
+//	}
+//}
+
+// A silly example of how you would do a 3D cockpit
+//Examples/KnotCockpit
+//{
+//	zorder 100
+//	entity knot.mesh(hudKnot)
+//	{
+//		position 0 0 -50
+//		rotation 0 0 0 0
+//	}
+//
+//}
+
+
+
