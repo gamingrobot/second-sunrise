@@ -3,5 +3,7 @@
 
 class Block:
     """Block is a modifyable object"""
-    def __init__(self, arg):
-        self.arg = arg
+    def __init__(self, newX, newY, newZ):
+        self.x = newX
+        self.y = newY
+        self.z = newZ
