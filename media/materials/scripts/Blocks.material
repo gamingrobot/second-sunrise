@@ -6,7 +6,7 @@ material Blocks/Stone
 		{
 			texture_unit
 			{
-				texture stone.tga
+				texture stone.jpg
 			}
 		}
 	}

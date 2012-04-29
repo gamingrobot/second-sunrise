@@ -2,7 +2,7 @@
 import sys
 sys.path.insert(0, '..')
 from MovableEntity import *
-from Chunk import *
+#from Chunk import *
 
 
 class Planet(MovableEntity):
