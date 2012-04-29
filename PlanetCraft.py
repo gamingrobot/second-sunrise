@@ -26,15 +26,8 @@ class PlanetApplication(Application):
         sceneManager.setAmbientLight(ogre.ColourValue(1, 1, 1))
         sceneManager.setShadowTechnique(ogre.SHADOWTYPE_STENCIL_ADDITIVE)
 
-        cube = sceneManager.createEntity('cube', 'cube.mesh')
-        cube.setMaterialName ('Blocks/Stone')
-        node = sceneManager.getRootSceneNode().createChildSceneNode("cube_node", ogre.Vector3(100, 50, 0))
-        node.attachObject(cube)
-
-        cube2 = sceneManager.createEntity('cube2', 'cube.mesh')
-        cube2.setMaterialName ('Blocks/Grass')
-        node2 = sceneManager.getRootSceneNode().createChildSceneNode("cube2_node", ogre.Vector3(0, 50, 0))
-        node2.attachObject(cube2)
+        BlockManager.Stone({'x': 100, 'y': 100, 'z': 100, 'senemanager': sceneManager})
+        BlockManager.Grass({'x': 100, 'y': 0, 'z': 100, 'senemanager': sceneManager})
 
 
         # Create Camera

@@ -6,5 +6,6 @@ from Block import *
 
 class Air(Block):
     """Air is a slightly transparent block that allows players to breathe"""
-    def __init__(self, newX, newY, newZ):
-        Block.__init__(self, newX, newY, newZ, 'air.png')
+    def __init__(self, args):
+        args['texture'] = self.__class__.__name__
+        Block.__init__(self, args)

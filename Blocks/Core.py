@@ -6,8 +6,6 @@ from Block import *
 
 class Core(Block):
     """Core is the core block of a world"""
-    def __init__(self, newX, newY, newZ):
-        Block.__init__(self, newX, newY, newZ, 'core.png')
-
-    def __str__(self):
-        return "Core Block"
+    def __init__(self, args):
+        args['texture'] = self.__class__.__name__
+        Block.__init__(self, args)
