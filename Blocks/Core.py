@@ -5,7 +5,7 @@ from Block import *
 
 
 class Core(Block):
-    """Core"""
+    """Core is the core block of a world"""
     def __init__(self, newX, newY, newZ):
         Block.__init__(self, newX, newY, newZ, 'core.png')
 
