@@ -1,10 +1,10 @@
 #Dirt.py
+import sys
+sys.path.insert(0, '..')
+from Block import *
 
-import Block
 
-
-class Dirt(object):
-    """docstring for Dirt"""
+class Dirt(Block):
+    """Dirt is, well, you know, dirty"""
     def __init__(self, newX, newY, newZ):
-        Block.__init__(self, newX, newY, newZ)
-        self.renderTexture = "openFile(dirt.png)"
+        Block.__init__(self, newX, newY, newZ, 'dirt.png')
