@@ -1,0 +1,52 @@
+material POCore/StatsBlockCenter
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+//				texture New_Ogre_Border_Center.png
+				texture popanel.png
+			}
+		}
+	}
+}
+material POCore/OgreText
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture pythonogretext.png
+			}
+		}
+	}
+}
+material POCore/Panel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture popanel.png
+			}
+		}
+	}
+}

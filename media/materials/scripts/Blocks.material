@@ -1,0 +1,43 @@
+material Blocks/Stone
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture stone.tga
+			}
+		}
+	}
+}
+
+material Blocks/Grass
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture grass.jpg
+			}
+		}
+	}
+}
+
+material Blocks/Dirt
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture dirt.jpg
+			}
+		}
+	}
+}
+
+
