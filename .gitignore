@@ -1,4 +1,6 @@
 *.dll
+*.exe
+PlanetCraft.app
 *.dylib
 *.so
 *.cmake
