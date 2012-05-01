@@ -76,9 +76,17 @@ include_directories( ${OIS_INCLUDE_DIRS}
 	${OGRE_INCLUDE_DIRS}
 	${OGRE_SAMPLES_INCLUDEPATH}
 )
- 
-add_executable(PlanetCraft WIN32 ${HDRS} ${SRCS})
- 
+
+if (WIN32)
+	add_executable(PlanetCraft WIN32 ${HDRS} ${SRCS})
+endif (WIN32)
+
+if (APPLE)
+	add_executable(PlanetCraft MACOSX_BUNDLE ${HDRS} ${SRCS})
+	#FIND_LIBRARY(COCOA_LIBRARY Cocoa "/System/Library/Frameworks" "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks")
+	#TARGET_LINK_LIBRARIES(${COCOA_LIBRARY})
+endif (APPLE)
+
 set_target_properties(PlanetCraft PROPERTIES DEBUG_POSTFIX _d)
  
 target_link_libraries(PlanetCraft ${OGRE_LIBRARIES} ${OIS_LIBRARIES})
