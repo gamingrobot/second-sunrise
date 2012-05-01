@@ -13,8 +13,6 @@ Explosion Series
         explode a nuclear bomb
     Fusion!
         create a star
-    Quantasmic!
-        make a Quantum engine
 
 Vehicle Series
     Who says a chair isn't a vehicle?
@@ -29,8 +27,10 @@ Vehicle Series
         make a rocket propelled vehicle
     I Bet You Can't Move That Planet
         move a planet
+    Quantasmic!
+        make a Quantum engine
 
-Squish
+Pancake
     get squashed by a planet
 
 Terraformer
