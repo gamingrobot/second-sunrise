@@ -1,9 +1,0 @@
-*.dll
-*.exe
-PlanetCraft.app
-*.dylib
-*.so
-*.cmake
-CMakeFiles
-Makefile
-CMakeCache.txt
