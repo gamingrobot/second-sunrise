@@ -32,6 +32,10 @@ Vehicle Series
 
 Pancake
     get squashed by a planet
+    (also grants Planetquake achievement)
+
+Planetquake
+    be on a planet when it collides with another one
 
 Terraformer
     make a planet habitable
