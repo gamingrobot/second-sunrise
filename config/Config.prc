@@ -7,3 +7,6 @@ show-frame-rate-meter  True
 window-title PlanetCraft
 
 sync-video False
+
+cursor-hidden True
+
