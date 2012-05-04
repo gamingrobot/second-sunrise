@@ -1,11 +1,10 @@
 #CameraTest.py
 from direct.task import Task
 from math import *
-import sys
 
 
 class Controls:
-    def __init__(self, superapp):
+    def __init__(self, superapp, noclip):
         self.app = superapp
         #camera stuff
         self.app.disableMouse()
@@ -19,6 +18,8 @@ class Controls:
         self.app.accept("a-up", self.walkLeft)
         self.app.accept("d", self.walkRight)
         self.app.accept("d-up", self.walkRight)
+        self.app.accept("space", self.jump)
+        self.app.accept("space-up", self.jump)
         self.app.accept("escape", self.stop)
 
         #register stuff
@@ -37,6 +38,7 @@ class Controls:
         self.isWalkingB = False
         self.isWalkingL = False
         self.isWalkingR = False
+        self.isJumping = False
         self.startLook()
 
     def look(self, task):
@@ -61,6 +63,7 @@ class Controls:
         taskMgr.remove('walkBack')
         taskMgr.remove('walkLeft')
         taskMgr.remove('walkRight')
+        taskMgr.remove('jump')
         self.app.exitfunc()
 
     def walkForward(self):
@@ -122,6 +125,23 @@ class Controls:
     def walkRightTask(self, task):
         dir = self.app.camera.getNetTransform().getMat().getRow3(0)
         dir.setZ(0)
+        dir.normalize()
+        self.pos += dir * self.speed
+        self.app.camera.setPos(self.pos)
+        return Task.cont
+
+    def jump(self):
+        if self.isJumping:
+            self.isJumping = False
+            taskMgr.remove('jump')
+        else:
+            self.isJumping = True
+            taskMgr.add(self.jumpTask, 'jump')
+
+    def jumpTask(self, task):
+        dir = self.app.camera.getNetTransform().getMat().getRow3(2)
+        print dir
+        #dir.setZ(0)
         dir.normalize()
         self.pos += dir * self.speed
         self.app.camera.setPos(self.pos)

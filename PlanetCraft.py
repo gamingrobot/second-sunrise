@@ -16,7 +16,7 @@ loadPrcFile("config/Config.prc")
 class PlanetCraft(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
-        Controls(self)
+        Controls(self, True)
 
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
