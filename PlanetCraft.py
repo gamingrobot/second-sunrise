@@ -7,7 +7,7 @@ from panda3d.core import GeomVertexWriter
 from panda3d.core import GeomTriangles
 from panda3d.core import GeomNode
 from panda3d.core import Geom
-import numpy as np
+#import numpy as np
 
 loadPrcFile("config/Config.prc")
 
