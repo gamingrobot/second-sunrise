@@ -11,6 +11,7 @@ from panda3d.core import Geom
 
 loadPrcFile("config/Config.prc")
 
+
 class PlanetCraft(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
