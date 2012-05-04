@@ -7,6 +7,7 @@ from panda3d.core import GeomVertexWriter
 from panda3d.core import GeomTriangles
 from panda3d.core import GeomNode
 from panda3d.core import Geom
+from Controls import *
 #import numpy as np
 
 loadPrcFile("config/Config.prc")
@@ -15,6 +16,7 @@ loadPrcFile("config/Config.prc")
 class PlanetCraft(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
+        Controls(self)
 
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
@@ -60,6 +62,12 @@ class PlanetCraft(ShowBase):
 
         nodePath = self.render.attachNewNode(node)
         nodePath.setPos(0, 0, 0)
+
+        temp = self.loader.loadModel("models/box")
+        temp.reparentTo(self.render)
+        temp.setPos(0, 20, 0)
+
+        self.camera.lookAt(temp)
 
         #generate entire chunk node
         #store data in chunk class so dont have to regenerate

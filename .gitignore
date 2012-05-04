@@ -1,4 +1,5 @@
 *.dll
+*.pyc
 *.exe
 PlanetCraft.app
 *.dylib
