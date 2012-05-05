@@ -4,6 +4,7 @@ from panda3d.core import loadPrcFile
 import BlockManager
 #BlockManager.initBlocks()
 from Blocks import *
+#from Blocks.Air import *
 from Controls import *
 #import numpy as np
 

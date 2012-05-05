@@ -23,4 +23,4 @@ def initBlocks():
     for module, name, isPkg in pkgutil.walk_packages(path):
         if name.find("Blocks") == 0 and name != "Blocks" and name != "Blocks.Block":
             name = name[7:]
-            f.write("import " + name + "\n")
+            f.write("from " + name + " import *\n")
