@@ -7,7 +7,7 @@ from panda3d.core import GeomNode
 from panda3d.core import Geom
 import numpy as np
 import random
-import BlockManager
+from Blocks import *
 
 
 class Chunk:
@@ -26,10 +26,10 @@ class Chunk:
             arandom = random.randint(0, 1)
             #arandom = 1
             if arandom == 1:
-                it[0] = BlockManager.Dirt(
+                it[0] = Dirt(
                     {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'name': '000'})
             else:
-                it[0] = BlockManager.Air(
+                it[0] = Air(
                     {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'name': '000'})
             it.iternext()
 

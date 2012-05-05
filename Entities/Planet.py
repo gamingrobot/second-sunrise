@@ -12,7 +12,7 @@ class Planet(MovableEntity):
         self.x = args['x']
         self.y = args['y']
         self.z = args['z']
-        self.size = 5  # in chunks
+        self.size = 2  # in chunks
         self.planetNode = args['render'].attachNewNode("Planet_Gamma")
         self.planetNode.setPos(self.x, self.y, self.z)
         #init chunks
