@@ -4,22 +4,24 @@ from math import *
 
 
 class Controls:
-    def __init__(self, superapp, noclip):
+    def __init__(self, superapp):
         self.app = superapp
         #camera stuff
         self.app.disableMouse()
 
         #register events
         self.app.accept("w", self.walkForward)
-        self.app.accept("w-up", self.walkForward)
+        self.app.accept("w-up", self.walkForwardUp)
         self.app.accept("s", self.walkBack)
-        self.app.accept("s-up", self.walkBack)
+        self.app.accept("s-up", self.walkBackUp)
         self.app.accept("a", self.walkLeft)
-        self.app.accept("a-up", self.walkLeft)
+        self.app.accept("a-up", self.walkLeftUp)
         self.app.accept("d", self.walkRight)
-        self.app.accept("d-up", self.walkRight)
+        self.app.accept("d-up", self.walkRightUp)
         self.app.accept("space", self.jump)
-        self.app.accept("space-up", self.jump)
+        self.app.accept("space-up", self.jumpUp)
+        self.app.accept("shift", self.crouch)
+        self.app.accept("shift-up", self.crouchUp)
         self.app.accept("escape", self.stop)
 
         #register stuff
@@ -34,11 +36,6 @@ class Controls:
         self.pos = self.app.camera.getPos()
         self.sensitivity = .05
         self.speed = .01
-        self.isWalkingF = False
-        self.isWalkingB = False
-        self.isWalkingL = False
-        self.isWalkingR = False
-        self.isJumping = False
         self.startLook()
 
     def look(self, task):
@@ -64,15 +61,14 @@ class Controls:
         taskMgr.remove('walkLeft')
         taskMgr.remove('walkRight')
         taskMgr.remove('jump')
+        taskMgr.remove('crouch')
         self.app.exitfunc()
 
     def walkForward(self):
-        if self.isWalkingF:
-            self.isWalkingF = False
-            taskMgr.remove('walkForward')
-        else:
-            self.isWalkingF = True
-            taskMgr.add(self.walkForwardTask, 'walkForward')
+        taskMgr.add(self.walkForwardTask, 'walkForward')
+
+    def walkForwardUp(self):
+        taskMgr.remove('walkForward')
 
     def walkForwardTask(self, task):
         dir = self.app.camera.getNetTransform().getMat().getRow3(1)
@@ -83,12 +79,10 @@ class Controls:
         return Task.cont
 
     def walkBack(self):
-        if self.isWalkingB:
-            self.isWalkingB = False
-            taskMgr.remove('walkBack')
-        else:
-            self.isWalkingB = True
-            taskMgr.add(self.walkBackTask, 'walkBack')
+        taskMgr.add(self.walkBackTask, 'walkBack')
+
+    def walkBackUp(self):
+        taskMgr.remove('walkBack')
 
     def walkBackTask(self, task):
         dir = self.app.camera.getNetTransform().getMat().getRow3(1)
@@ -99,12 +93,10 @@ class Controls:
         return Task.cont
 
     def walkLeft(self):
-        if self.isWalkingL:
-            self.isWalkingL = False
-            taskMgr.remove('walkLeft')
-        else:
-            self.isWalkingL = True
-            taskMgr.add(self.walkLeftTask, 'walkLeft')
+        taskMgr.add(self.walkLeftTask, 'walkLeft')
+
+    def walkLeftUp(self):
+        taskMgr.remove('walkLeft')
 
     def walkLeftTask(self, task):
         dir = self.app.camera.getNetTransform().getMat().getRow3(0)
@@ -115,12 +107,10 @@ class Controls:
         return Task.cont
 
     def walkRight(self):
-        if self.isWalkingR:
-            self.isWalkingR = False
-            taskMgr.remove('walkRight')
-        else:
-            self.isWalkingR = True
-            taskMgr.add(self.walkRightTask, 'walkRight')
+        taskMgr.add(self.walkRightTask, 'walkRight')
+
+    def walkRightUp(self):
+        taskMgr.remove('walkRight')
 
     def walkRightTask(self, task):
         dir = self.app.camera.getNetTransform().getMat().getRow3(0)
@@ -131,18 +121,29 @@ class Controls:
         return Task.cont
 
     def jump(self):
-        if self.isJumping:
-            self.isJumping = False
-            taskMgr.remove('jump')
-        else:
-            self.isJumping = True
-            taskMgr.add(self.jumpTask, 'jump')
+        taskMgr.add(self.jumpTask, 'jump')
+
+    def jumpUp(self):
+        taskMgr.remove('jump')
 
     def jumpTask(self, task):
         dir = self.app.camera.getNetTransform().getMat().getRow3(2)
-        print dir
         #dir.setZ(0)
         dir.normalize()
         self.pos += dir * self.speed
+        self.app.camera.setPos(self.pos)
+        return Task.cont
+
+    def crouch(self):
+        taskMgr.add(self.crouchTask, 'crouch')
+
+    def crouchUp(self):
+        taskMgr.remove('crouch')
+
+    def crouchTask(self, task):
+        dir = self.app.camera.getNetTransform().getMat().getRow3(2)
+        #dir.setZ(0)
+        dir.normalize()
+        self.pos -= dir * self.speed
         self.app.camera.setPos(self.pos)
         return Task.cont

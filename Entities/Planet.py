@@ -12,17 +12,17 @@ class Planet(MovableEntity):
         self.x = args['x']
         self.y = args['y']
         self.z = args['z']
-        self.size = 1
-        #self.planetNode = sm.getRootSceneNode().createChildSceneNode("planet" + args['name'], ogre.Vector3(self.x, self.y, self.z))
-
-        self.numChunks = 0
-        self.numChunks += 1
-        self.aChunk = Chunk({'x': 0, 'y': 0, 'z': 0, 'planetNode': self.planetNode, 'senemanager': args['senemanager'], 'name': str(self.numChunks)})
-        #chunks
-        #self.chunks = []
-        #for x in range(0, args['maxc']):
-        #    s = Chunk()
-        #    self.chunks.append(s)
+        self.size = 5  # in chunks
+        self.planetNode = args['render'].attachNewNode("Planet_Gamma")
+        self.planetNode.setPos(self.x, self.y, self.z)
+        #init chunks
+        self.chunks = np.zeros((self.size, self.size, self.size), dtype=np.object)
+        self.chunkSize = 8
+        it = np.nditer(self.chunks, op_flags=['readwrite'], flags=['multi_index', 'refs_ok'])
+        while not it.finished:
+            index = it.multi_index
+            it[0] = Chunk({'x': index[0] * self.chunkSize, 'y': index[1] * self.chunkSize, 'z': index[2] * self.chunkSize, 'planetNode': self.planetNode, 'name': str(index[0] + index[1] + index[2])})
+            it.iternext()
 
     def __str__(self):
         return "A Planet"
