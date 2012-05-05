@@ -1,10 +1,9 @@
-#import pkgutil
-#import os
+#Block package
+__all__ = ["Air", "Core", "Dirt", "Grass", "Space", "Stone"]
 
-#print "I'm alive!"
-
-
-'''for module in pkgutil.iter_modules(os.path.abspath(__file__)):
-    if module[1] != "__init__.py":
-        #import module
-        print module[1]'''
+import Air
+import Core
+import Dirt
+import Grass
+import Space
+import Stone
