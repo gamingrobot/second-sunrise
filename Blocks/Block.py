@@ -1,6 +1,4 @@
 #Base Class : Block
-import random
-import ogre.renderer.OGRE as ogre
 
 
 class Block:
