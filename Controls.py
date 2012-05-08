@@ -22,7 +22,8 @@ class Controls:
         self.app.accept("space-up", self.jumpUp)
         self.app.accept("shift", self.crouch)
         self.app.accept("shift-up", self.crouchUp)
-        self.app.accept("escape", self.stop)
+        self.app.accept("q", self.stop)
+        self.app.accept("escape", self.app.overlay)
 
         #register stuff
         self.mouseChangeX = 0

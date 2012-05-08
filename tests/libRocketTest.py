@@ -18,10 +18,7 @@ class rocketTest(ShowBase):
         r.setActive(1)
         context = r.getContext()
 
-        #context.LoadDocument('rocket-sample/data/background.rml').Show()
-
         self.doc = context.LoadDocument('rocketTest.rml')
-        #doc.Show()
 
         ih = RocketInputHandler()
         base.mouseWatcher.attachNewNode(ih)
