@@ -1,0 +1,18 @@
+<template name="overWindow" content="content">
+<head>
+    <link type="text/rcss" href="style.rcss"/>
+    <link type="text/rcss" href="default.rcss"/>
+    <script>
+
+
+
+    </script>
+</head>
+<body>
+    <div id="title-bar">
+        <span id="title"></span>
+    </div>
+    <div id="content">
+    </div>
+</body>
+</template>

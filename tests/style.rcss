@@ -1,7 +1,42 @@
+body
+{
+    width: 300px;
+    height: 225px;
+
+    margin: auto;
+
+    font-family: Delicious;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24;
+}
+
 div#title-bar span
 {
-    font-size: 22;
+    font-size: 72;
     font-weight: bold;
 
     text-shadow: 2px 2px black;
+}
+
+button
+{
+    background-color:#1144ff;
+    padding: 0px 4px 4px 4px;
+
+
+    border-top: 4px rgb(0%, 17%, 100%);
+    border-left: 4px rgb(0%, 17%, 100%);
+    border-bottom: 4px rgb(0%, 23%, 80%);
+    border-right: 4px rgb(0%, 23%, 80%);
+
+    margin: auto;
+}
+
+button:hover
+{
+    border-top: 4px rgb(0%, 23%, 80%);
+    border-left: 4px rgb(0%, 23%, 80%);
+    border-bottom: 4px rgb(0%, 17%, 100%);
+    border-right: 4px rgb(0%, 17%, 100%);
 }
