@@ -6,7 +6,7 @@ from panda3d.core import GeomTriangles
 from panda3d.core import GeomNode
 from panda3d.core import Geom
 import numpy as np
-import random
+import math
 from Blocks import *
 
 
@@ -16,16 +16,21 @@ class Chunk:
         self.x = args['x']
         self.y = args['y']
         self.z = args['z']
-        self.size = 8
+        self.planetNode = args['planetNode']
+
+    def generateBlocks(self):
+        self.size = 16
+        #self.radius = self.size / 2.0
+        self.radius = 32
         self.blocks = np.zeros((self.size, self.size, self.size), dtype=np.object)
         self.blockSize = 1
         #init numpy
         it = np.nditer(self.blocks, op_flags=['readwrite'], flags=['multi_index', 'refs_ok'])
         while not it.finished:
             index = it.multi_index
-            arandom = random.randint(0, 1)
+            #arandom = random.randint(0, 1)
             #arandom = 1
-            if arandom == 1:
+            if math.sqrt((self.x + index[0] - self.radius) ** 2 + (self.y + index[1] - self.radius) ** 2 + (self.z + index[2] - self.radius) ** 2) <= self.radius:
                 it[0] = Dirt(
                     {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'name': '000'})
             else:
@@ -33,6 +38,7 @@ class Chunk:
                     {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'name': '000'})
             it.iternext()
 
+    def generateVoxel(self):
         #render a cube
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
@@ -274,7 +280,7 @@ class Chunk:
         node = GeomNode('gnode')
         node.addGeom(geom)
 
-        self.node = args['planetNode'].attachNewNode(node)
+        self.node = self.planetNode.attachNewNode(node)
         self.node.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
 
         #store data in chunk class so dont have to regenerate
