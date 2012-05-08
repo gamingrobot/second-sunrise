@@ -1,0 +1,7 @@
+div#title-bar span
+{
+    font-size: 22;
+    font-weight: bold;
+
+    text-shadow: 2px 2px black;
+}

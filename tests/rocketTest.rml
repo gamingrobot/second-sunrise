@@ -1,0 +1,12 @@
+<rml>
+<head>
+    <title>Lib Rocket Test</title>
+    <link type="text/rcss" href="style.rcss"/>
+</head>
+<body class="window">
+    <div id="title-bar">
+        <span id="title">Now what?</span>
+    </div>
+
+
+</body>
