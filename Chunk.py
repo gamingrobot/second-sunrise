@@ -17,6 +17,8 @@ class Chunk:
         self.y = args['y']
         self.z = args['z']
         self.planetNode = args['planetNode']
+        self.name = args['name']
+        self.node = loader.loadModel("./chunks/" + self.name + ".bam", okMissing=True)
 
     def generateBlocks(self):
         self.size = 16
@@ -39,249 +41,256 @@ class Chunk:
             it.iternext()
 
     def generateVoxel(self):
-        #render a cube
-        format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
-        vdata = GeomVertexData('chunk', format, Geom.UHStatic)
+        if self.node == None:
+            #render a cube
+            format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
+            vdata = GeomVertexData('chunk', format, Geom.UHStatic)
 
-        vertex = GeomVertexWriter(vdata, 'vertex')
-        normal = GeomVertexWriter(vdata, 'normal')
-        color = GeomVertexWriter(vdata, 'color')
-        texcoord = GeomVertexWriter(vdata, 'texcoord')
+            vertex = GeomVertexWriter(vdata, 'vertex')
+            normal = GeomVertexWriter(vdata, 'normal')
+            color = GeomVertexWriter(vdata, 'color')
+            texcoord = GeomVertexWriter(vdata, 'texcoord')
 
-        prim = GeomTriangles(Geom.UHStatic)
-        self.vertexcount = 0
+            prim = GeomTriangles(Geom.UHStatic)
+            self.vertexcount = 0
 
-        for x in xrange(0, self.size):
-            for y in xrange(0, self.size):
-                for z in xrange(0, self.size):
-                    block = self.blocks[x, y, z]
-                    #current block exists
-                    if not self.isEmptyBlock(block):
-                        #Not air or space block render
-                        #left
-                        block = None
-                        if x >= 1:
-                            block = self.blocks[x - 1, y, z]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Left Side" + str(x) + "," + str(y) + "," + str(z)
-                            shade = 0.45
-                            #line corners
-                            #0
-                            vertex.addData3f(x, y, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #1
-                            vertex.addData3f(x, y + 1, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x, y, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #3
-                            vertex.addData3f(x, y + 1, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
-                        #front
-                        block = None
-                        if y >= 1:
-                            block = self.blocks[x, y - 1, z]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Front Side" + str(x) + "," + str(y) + "," + str(z)
-                            shade = 0.1
-                            #line corners
-                            #0
-                            vertex.addData3f(x + 1, y, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #1
-                            vertex.addData3f(x, y, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #3
-                            vertex.addData3f(x, y, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
+            for x in xrange(0, self.size):
+                for y in xrange(0, self.size):
+                    for z in xrange(0, self.size):
+                        block = self.blocks[x, y, z]
+                        #current block exists
+                        if not self.isEmptyBlock(block):
+                            #Not air or space block render
+                            #left
+                            block = None
+                            if x >= 1:
+                                block = self.blocks[x - 1, y, z]
+                            if(self.isEmptyBlock(block)):
+                                #render that side
+                                #print "Render Left Side" + str(x) + "," + str(y) + "," + str(z)
+                                shade = 0.45
+                                #line corners
+                                #0
+                                vertex.addData3f(x, y, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 0)
+                                #1
+                                vertex.addData3f(x, y + 1, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 1)
+                                #edge corners
+                                #2
+                                vertex.addData3f(x, y, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 0)
+                                #3
+                                vertex.addData3f(x, y + 1, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 1)
+                                #draw triangles
+                                prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
+                                prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
+                                #increment vertexcount
+                                self.vertexcount += 4
+                            #front
+                            block = None
+                            if y >= 1:
+                                block = self.blocks[x, y - 1, z]
+                            if(self.isEmptyBlock(block)):
+                                #render that side
+                                #print "Render Front Side" + str(x) + "," + str(y) + "," + str(z)
+                                shade = 0.1
+                                #line corners
+                                #0
+                                vertex.addData3f(x + 1, y, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 0)
+                                #1
+                                vertex.addData3f(x, y, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 0)
+                                #edge corners
+                                #2
+                                vertex.addData3f(x + 1, y, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 0)
+                                #3
+                                vertex.addData3f(x, y, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 0)
+                                #draw triangles
+                                prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
+                                prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
+                                #increment vertexcount
+                                self.vertexcount += 4
 
-                        #right
-                        block = None
-                        if x < self.size - 1:
-                            block = self.blocks[x + 1, y, z]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Right Side" + str(x) + "," + str(y) + "," + str(z)
-                            shade = 0.7
-                            #line corners
-                            #0
-                            vertex.addData3f(x + 1, y + 1, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #1
-                            vertex.addData3f(x + 1, y, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #3
-                            vertex.addData3f(x + 1, y + 1, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
+                            #right
+                            block = None
+                            if x < self.size - 1:
+                                block = self.blocks[x + 1, y, z]
+                            if(self.isEmptyBlock(block)):
+                                #render that side
+                                #print "Render Right Side" + str(x) + "," + str(y) + "," + str(z)
+                                shade = 0.7
+                                #line corners
+                                #0
+                                vertex.addData3f(x + 1, y + 1, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 1)
+                                #1
+                                vertex.addData3f(x + 1, y, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 0)
+                                #edge corners
+                                #2
+                                vertex.addData3f(x + 1, y, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 0)
+                                #3
+                                vertex.addData3f(x + 1, y + 1, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 1)
+                                #draw triangles
+                                prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
+                                prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
+                                #increment vertexcount
+                                self.vertexcount += 4
 
-                        #back
-                        block = None
-                        if y < self.size - 1:
-                            block = self.blocks[x, y + 1, z]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Back Side" + str(x) + "," + str(y) + "," + str(z)
-                            shade = 0.5
-                            #line corners
-                            #0
-                            vertex.addData3f(x, y + 1, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #1
-                            vertex.addData3f(x + 1, y + 1, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y + 1, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #3
-                            vertex.addData3f(x, y + 1, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
+                            #back
+                            block = None
+                            if y < self.size - 1:
+                                block = self.blocks[x, y + 1, z]
+                            if(self.isEmptyBlock(block)):
+                                #render that side
+                                #print "Render Back Side" + str(x) + "," + str(y) + "," + str(z)
+                                shade = 0.5
+                                #line corners
+                                #0
+                                vertex.addData3f(x, y + 1, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 1)
+                                #1
+                                vertex.addData3f(x + 1, y + 1, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 1)
+                                #edge corners
+                                #2
+                                vertex.addData3f(x + 1, y + 1, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 1)
+                                #3
+                                vertex.addData3f(x, y + 1, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 1)
+                                #draw triangles
+                                prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
+                                prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
+                                #increment vertexcount
+                                self.vertexcount += 4
 
-                        #bottom
-                        block = None
-                        if z > 1:
-                            block = self.blocks[x, y, z - 1]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Bottom Side" + str(x) + "," + str(y) + "," + str(z)
-                            shade = 0.3
-                            #line corners
-                            #0
-                            vertex.addData3f(x, y + 1, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #1
-                            vertex.addData3f(x + 1, y, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y + 1, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #3
-                            vertex.addData3f(x, y, z)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
+                            #bottom
+                            block = None
+                            if z > 1:
+                                block = self.blocks[x, y, z - 1]
+                            if(self.isEmptyBlock(block)):
+                                #render that side
+                                #print "Render Bottom Side" + str(x) + "," + str(y) + "," + str(z)
+                                shade = 0.3
+                                #line corners
+                                #0
+                                vertex.addData3f(x, y + 1, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 1)
+                                #1
+                                vertex.addData3f(x + 1, y, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 0)
+                                #edge corners
+                                #2
+                                vertex.addData3f(x + 1, y + 1, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 1)
+                                #3
+                                vertex.addData3f(x, y, z)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 0)
+                                #draw triangles
+                                prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
+                                prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
+                                #increment vertexcount
+                                self.vertexcount += 4
 
-                        #top
-                        block = None
-                        if z < self.size - 1:
-                            block = self.blocks[x, y, z + 1]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Top Side" + str(x) + "," + str(y) + "," + str(z)
-                            shade = 0.9
-                            #line corners
-                            #0
-                            vertex.addData3f(x + 1, y, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #1
-                            vertex.addData3f(x, y + 1, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y + 1, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #3
-                            vertex.addData3f(x, y, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
+                            #top
+                            block = None
+                            if z < self.size - 1:
+                                block = self.blocks[x, y, z + 1]
+                            if(self.isEmptyBlock(block)):
+                                #render that side
+                                #print "Render Top Side" + str(x) + "," + str(y) + "," + str(z)
+                                shade = 0.9
+                                #line corners
+                                #0
+                                vertex.addData3f(x + 1, y, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 0)
+                                #1
+                                vertex.addData3f(x, y + 1, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 1)
+                                #edge corners
+                                #2
+                                vertex.addData3f(x + 1, y + 1, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(1, 1)
+                                #3
+                                vertex.addData3f(x, y, z + 1)
+                                normal.addData3f(0, 0, 1)
+                                color.addData4f(shade, shade, shade, 1)
+                                texcoord.addData2f(0, 0)
+                                #draw triangles
+                                prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
+                                prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
+                                #increment vertexcount
+                                self.vertexcount += 4
 
-        #attach primitives and render
-        geom = Geom(vdata)
-        geom.addPrimitive(prim)
+            #attach primitives and render
+            geom = Geom(vdata)
+            geom.addPrimitive(prim)
 
-        node = GeomNode('gnode')
-        node.addGeom(geom)
-
-        self.node = self.planetNode.attachNewNode(node)
-        self.node.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
+            node = GeomNode('gnode')
+            node.addGeom(geom)
+            self.node = self.planetNode.attachNewNode(node)
+            self.node.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
+            self.node.writeBamFile("./chunks/" + self.name + ".bam")
+        else:
+            self.node.reparentTo(self.planetNode)
+            #print self.name
+            #print self.node
+            #self.node.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
+            #self.node.writeBamFile(self.name + ".bam")
 
         #store data in chunk class so dont have to regenerate
 
