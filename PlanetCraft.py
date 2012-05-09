@@ -11,6 +11,7 @@ from panda3d.rocket import *
 from Blocks import *
 from Entities import *
 from Controls import *
+import shelve
 #import numpy as np
 
 loadPrcFile("config/Config.prc")
@@ -19,12 +20,12 @@ loadPrcFile("config/Config.prc")
 class PlanetCraft(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
-        Controls(self)
+        self.cont = Controls(self)
+        self.cont.gameMode()
         self.setBackgroundColor(0, 0, 0, 1)
-        Planet({'x': 0, 'y': 20, 'z': -2, 'render': self.render})
+        gamma = Planet({'x': 0, 'y': 20, 'z': -2, 'render': self.render})
 
         #Pause menu overlay initialization
-
         self.ovrlay = False
 
         #I think we can (eventually) get away without this font
@@ -41,21 +42,18 @@ class PlanetCraft(ShowBase):
         base.mouseWatcher.attachNewNode(ih)
         r.setInputHandler(ih)
 
-        print Core
-        print Space
-        print Player
-        p = Player("oh hai")
-        a = Air({'x': 4, 'y': 2, 'z': 7})
-        print a
-        print p
+    def stop(self):
+        pass
 
     def overlay(self):
         self.ovrlay = not self.ovrlay
 
         if (self.ovrlay):
             self.doc.Show()
+            self.cont.menuMode()
         else:
             self.doc.Hide()
+            self.cont.gameMode()
 
 app = PlanetCraft()
 app.run()

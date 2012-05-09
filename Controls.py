@@ -1,5 +1,6 @@
 #CameraTest.py
 from direct.task import Task
+from panda3d.core import WindowProperties
 from math import *
 import sys
 
@@ -10,6 +11,40 @@ class Controls:
         #camera stuff
         self.app.disableMouse()
 
+    def menuMode(self):
+        #show mouse
+        props = WindowProperties()
+        props.setCursorHidden(False)
+        base.win.requestProperties(props)
+        #stop events
+        taskMgr.remove('look')
+        taskMgr.remove('walkForward')
+        taskMgr.remove('walkBack')
+        taskMgr.remove('walkLeft')
+        taskMgr.remove('walkRight')
+        taskMgr.remove('jump')
+        taskMgr.remove('crouch')
+        #fix registers
+        self.app.accept("w", self.dummy)
+        self.app.accept("w-up", self.dummy)
+        self.app.accept("s", self.dummy)
+        self.app.accept("s-up", self.dummy)
+        self.app.accept("a", self.dummy)
+        self.app.accept("a-up", self.dummy)
+        self.app.accept("d", self.dummy)
+        self.app.accept("d-up", self.dummy)
+        self.app.accept("space", self.dummy)
+        self.app.accept("space-up", self.dummy)
+        self.app.accept("shift", self.dummy)
+        self.app.accept("shift-up", self.dummy)
+        self.app.accept("q", self.stop)
+        self.app.accept("escape", self.app.overlay)
+
+    def gameMode(self):
+        #hide mouse
+        props = WindowProperties()
+        props.setCursorHidden(True)
+        base.win.requestProperties(props)
         #register events
         self.app.accept("w", self.walkForward)
         self.app.accept("w-up", self.walkForwardUp)
@@ -40,6 +75,9 @@ class Controls:
         self.speed = .01
         self.startLook()
 
+    def dummy(self):
+        pass
+
     def look(self, task):
         mouse = self.app.win.getPointer(0)
         x = mouse.getX()
@@ -64,6 +102,7 @@ class Controls:
         taskMgr.remove('walkRight')
         taskMgr.remove('jump')
         taskMgr.remove('crouch')
+        self.app.stop()
         sys.exit()
 
     def walkForward(self):
