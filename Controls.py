@@ -63,7 +63,7 @@ class Controls:
         taskMgr.remove('walkRight')
         taskMgr.remove('jump')
         taskMgr.remove('crouch')
-        exit()
+        sys.exit()
 
     def walkForward(self):
         taskMgr.add(self.walkForwardTask, 'walkForward')
