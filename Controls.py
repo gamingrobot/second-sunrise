@@ -2,12 +2,15 @@
 from direct.task import Task
 from panda3d.core import WindowProperties
 from math import *
+from Menus import *
 import sys
 
 
 class Controls:
     def __init__(self, superapp):
         self.app = superapp
+        self.overlay = OverlayMenu(self)
+        self.ovrlay = False
         #camera stuff
         self.app.disableMouse()
 
@@ -38,7 +41,7 @@ class Controls:
         self.app.accept("shift", self.dummy)
         self.app.accept("shift-up", self.dummy)
         self.app.accept("q", self.stop)
-        self.app.accept("escape", self.app.overlay)
+        self.app.accept("escape", self.toggleOverlay)
 
     def gameMode(self):
         #hide mouse
@@ -59,7 +62,7 @@ class Controls:
         self.app.accept("shift", self.crouch)
         self.app.accept("shift-up", self.crouchUp)
         self.app.accept("q", self.stop)
-        self.app.accept("escape", self.app.overlay)
+        self.app.accept("escape", self.toggleOverlay)
 
         #register stuff
         self.mouseChangeX = 0
@@ -188,3 +191,13 @@ class Controls:
         self.pos -= dir * self.speed
         self.app.camera.setPos(self.pos)
         return Task.cont
+
+    def toggleOverlay(self):
+        self.ovrlay = not self.ovrlay
+
+        if (self.ovrlay):
+            self.overlay.show()
+            self.menuMode()
+        else:
+            self.overlay.hide()
+            self.gameMode()

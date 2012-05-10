@@ -2,18 +2,14 @@
 <head>
     <title>Lib Rocket Test</title>
     <link type="text/template" href="overWinTemplate.rml"/>
-    <style>
-   
-
-    </style>
 </head>
-<body template="overWindow" class="window">
+<body template="mainWindow" class="window">
     <div id="title-bar">
         <span id="title">PlanetCraft</span>
     </div>
     <div id="content">
         <br/>
-        <button id="resume">Resume Game</button><br/>
+        <button onclick="print 'hi'">Play Game</button><br/>
         <br/>
         <button onclick="exit()">Quit Game</button>
     </div>

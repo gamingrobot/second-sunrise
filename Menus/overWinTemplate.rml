@@ -3,8 +3,10 @@
     <link type="text/rcss" href="style.rcss"/>
     <link type="text/rcss" href="default.rcss"/>
     <script>
+import Menus.OverlayMenu
 
-
+def resume():
+    OverlayMenu.resume()
 
     </script>
 </head>
