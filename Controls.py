@@ -10,6 +10,8 @@ class Controls:
     def __init__(self, superapp):
         self.app = superapp
         self.overlay = OverlayMenu(self)
+        #uncomment out below once the Play Game button works
+        #self.mainmenu = MainMenu()
         self.ovrlay = False
         #camera stuff
         self.app.disableMouse()

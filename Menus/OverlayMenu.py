@@ -8,7 +8,7 @@ helper = None
 
 class OverlayMenu(Menu):
     def __init__(self, mainControl):
-        Menu.__init__(self, 'Menus/overlayMenu.rml')
+        Menu.__init__(self, 'Menus/overlayMenu.rml', 'overlayMenu')
         self.control = mainControl
         helper = self
 

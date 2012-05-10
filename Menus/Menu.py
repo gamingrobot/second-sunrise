@@ -2,10 +2,10 @@ from panda3d.rocket import *
 
 
 class Menu:
-    def __init__(self, fname):
+    def __init__(self, fname, regionName):
         LoadFontFace("tests/rocket-sample/assets/Delicious-Roman.otf")
 
-        self.r = RocketRegion.make('pandaRocket', base.win)
+        self.r = RocketRegion.make(regionName, base.win)
         self.r.setActive(1)
         self.context = self.r.getContext()
 
