@@ -24,6 +24,8 @@ class PlanetCraft(ShowBase):
         self.setBackgroundColor(0, 0, 0, 1)
         gamma = Planet({'x': 0, 'y': 20, 'z': -2, 'render': self.render})
 
+        centx, centy, centz = gamma.getCenter()
+        print str(centx) + str(centy) + str(centz)
 
     def stop(self):
         pass

@@ -34,3 +34,8 @@ class Planet(MovableEntity):
 
     def __str__(self):
         return "A Planet"
+
+    def getCenter(self):
+        d = self.size * self.chunkSize
+        r = d / 2
+        return self.x + r, self.y + r, self.z + r
