@@ -10,8 +10,8 @@ from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape
 import math
 
-#G = 0.981
-G = 6.673 * 10 ** -11
+G = 0.981
+#G = 6.673 * 10 ** -11
 #G = .5
 
 
@@ -37,7 +37,7 @@ class BulletTest(ShowBase):
         self.moonnode.setMass(1)
         self.moonnode.addShape(shape)
         self.moonnp = self.render.attachNewNode(self.moonnode)
-        self.moonnp.setPos(-20, 0, -20)
+        self.moonnp.setPos(-20, 0, -10)
         self.world.attachRigidBody(self.moonnode)
         self.moonmodel = self.loader.loadModel('models/box.egg')
         self.moonmodel.flattenLight()
@@ -46,7 +46,8 @@ class BulletTest(ShowBase):
 
         shape2 = BulletSphereShape(10)
         self.earthnode = BulletRigidBodyNode('Box')
-        self.earthnode.setMass(10000000000000)
+        #self.earthnode.setMass(10000000000000)
+        self.earthnode.setMass(100)
         self.earthnode.addShape(shape2)
         self.earthnp = self.render.attachNewNode(self.earthnode)
         self.earthnp.setPos(0, 0, 0)
@@ -66,9 +67,14 @@ class BulletTest(ShowBase):
         moonmass = self.moonnode.getMass()
         earthmass = self.earthnode.getMass()
 
-        difx = moonpos[0] - earthpos[0]
+        """difx = moonpos[0] - earthpos[0]
         dify = moonpos[1] - earthpos[1]
-        difz = moonpos[2] - earthpos[2]
+        difz = moonpos[2] - earthpos[2]"""
+
+
+        difx = moonpos[0]
+        dify = moonpos[1]
+        difz = moonpos[2]
 
         ftop = G * earthmass * moonmass
         #prevent divide by 0
@@ -85,19 +91,31 @@ class BulletTest(ShowBase):
         else:
             fz = ftop / difz ** 2
 
+        maxf = 200
+        if fx > maxf:
+            fx = maxf
+
+        if fy > maxf:
+            fy = maxf
+
+        if fz > maxf:
+            fz = maxf
+
         #fix vector direction
-        if fx > 0 and difx > 0:
+        if difx > 0:
             fx = fx * -1
 
-        if fy > 0 and dify > 0:
+        if dify > 0:
             fy = fy * -1
 
-        if fz > 0 and difz > 0:
+        if difz > 0:
             fz = fz * -1
+
+        print "DIF: " + str(difx) + "," + str(dify) + "," + str(difz)
 
         self.moonnode.applyForce(Vec3(fx, fy, fz), False)
 
-        print str(fx) + "," + str(fy) + "," + str(fz)
+        print "FORCE: " +str(fx) + "," + str(fy) + "," + str(fz)
 
         """pos = self.np2.getPos()
         gv = [self.gravity_point[0] - pos[0], self.gravity_point[1] - pos[1], self.gravity_point[2] - pos[2]]
