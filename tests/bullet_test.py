@@ -4,33 +4,32 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import Vec3
 from panda3d.bullet import BulletWorld
+from panda3d.bullet import BulletDebugNode
 from panda3d.bullet import BulletSphereShape
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape
 import math
 
-zero_vector = [0.0, 0.0, 0.0]
 #G = 0.981
 G = 6.673 * 10 ** -11
 #G = .5
+
 
 class BulletTest(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
 
-        self.gravity_point = zero_vector
+        debugNode = BulletDebugNode('Debug')
+        debugNode.showWireframe(True)
+        debugNode.showConstraints(True)
+        debugNode.showBoundingBoxes(False)
+        debugNode.showNormals(True)
+        debugNP = self.render.attachNewNode(debugNode)
+        debugNP.show()
 
         # World
         self.world = BulletWorld()
-        #self.world.setGravity(Vec3(0,0,0))
-
-        # Plane
-        #shape = BulletPlaneShape(Vec3(0, 0, 1), 1)
-        #node = BulletRigidBodyNode('Ground')
-        #node.addShape(shape)
-        #np = self.render.attachNewNode(node)
-        #np.setPos(0, 0, -2)
-        #self.world.attachRigidBody(node)
+        self.world.setDebugNode(debugNP.node())
 
         # Box
         shape = BulletBoxShape(Vec3(0.5, 0.5, 0.5))
@@ -38,12 +37,12 @@ class BulletTest(ShowBase):
         self.moonnode.setMass(1)
         self.moonnode.addShape(shape)
         self.moonnp = self.render.attachNewNode(self.moonnode)
-        self.moonnp.setPos(-20, 20, -20)
+        self.moonnp.setPos(-20, 0, -20)
         self.world.attachRigidBody(self.moonnode)
         self.moonmodel = self.loader.loadModel('models/box.egg')
         self.moonmodel.flattenLight()
         self.moonmodel.reparentTo(self.moonnp)
-        self.moonmodel.setPos(0, 0, 0)
+        self.moonmodel.setPos(-0.5, -0.5, -0.5)
 
         shape2 = BulletSphereShape(10)
         self.earthnode = BulletRigidBodyNode('Box')
@@ -52,10 +51,10 @@ class BulletTest(ShowBase):
         self.earthnp = self.render.attachNewNode(self.earthnode)
         self.earthnp.setPos(0, 0, 0)
         self.world.attachRigidBody(self.earthnode)
-        self.earthmodel = self.loader.loadModel('models/box.egg')
-        self.earthmodel.flattenLight()
-        self.earthmodel.reparentTo(self.earthnp)
-        self.earthmodel.setPos(0, 0, 0)
+        #self.earthmodel = self.loader.loadModel('models/box.egg')
+        #self.earthmodel.flattenLight()
+        #self.earthmodel.reparentTo(self.earthnp)
+        #self.earthmodel.setPos(0, 0, 0)
         #self.earthmodel.setScale(10)
 
         self.taskMgr.add(self.update, 'update')
@@ -95,14 +94,6 @@ class BulletTest(ShowBase):
 
         if fz > 0 and difz > 0:
             fz = fz * -1
-
-        #print str(difx) + "," + str(dify) + "," + str(difz)
-
-        #gv = [self.gravity_point[0] - pos[0], self.gravity_point[1] - pos[1], self.gravity_point[2] - pos[2]]
-        #d = math.sqrt((gv[0] * gv[0]) + (gv[1] * gv[1]) + (gv[2] * gv[2]))
-        #f = G * self.node.getMass()/(d*d)
-        #gv = [(f/d)*gv[0],(f/d)*gv[1],(f/d)*gv[2]]
-        #print gv
 
         self.moonnode.applyForce(Vec3(fx, fy, fz), False)
 
