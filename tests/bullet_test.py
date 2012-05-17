@@ -37,7 +37,7 @@ class BulletTest(ShowBase):
         self.moonnode.setMass(1)
         self.moonnode.addShape(shape)
         self.moonnp = self.render.attachNewNode(self.moonnode)
-        self.moonnp.setPos(-12, 25, -10)
+        self.moonnp.setPos(-10, 25, 10)
         self.world.attachRigidBody(self.moonnode)
         self.moonmodel = self.loader.loadModel('models/box.egg')
         self.moonmodel.flattenLight()
@@ -47,7 +47,7 @@ class BulletTest(ShowBase):
         shape2 = BulletSphereShape(10)
         self.earthnode = BulletRigidBodyNode('Box')
         #self.earthnode.setMass(10000000000000)
-        self.earthnode.setMass(100)
+        self.earthnode.setMass(1000)
         self.earthnode.addShape(shape2)
         self.earthnp = self.render.attachNewNode(self.earthnode)
         self.earthnp.setPos(0, 0, 0)
@@ -71,44 +71,12 @@ class BulletTest(ShowBase):
         dify = moonpos[1] - earthpos[1]
         difz = moonpos[2] - earthpos[2]
 
-        '''difx = moonpos[0]
-        dify = moonpos[1]
-        difz = moonpos[2]'''
+        d = math.sqrt(difx ** 2 + dify ** 2 + difz ** 2)
+        f = (G * moonmass * earthmass) / d ** 2
 
-        ftop = G * earthmass * moonmass
-        #prevent divide by 0
-        if(difx == 0):
-            fx = 0
-        else:
-            fx = ftop / difx ** 2
-        if(dify == 0):
-            fy = 0
-        else:
-            fy = ftop / dify ** 2
-        if(difz == 0):
-            fz = 0
-        else:
-            fz = ftop / difz ** 2
-
-        maxf = 200
-        if fx > maxf:
-            fx = maxf
-
-        if fy > maxf:
-            fy = maxf
-
-        if fz > maxf:
-            fz = maxf
-
-        #fix vector direction
-        '''if difx > 0:
-            fx = fx * -1
-
-        if dify > 0:
-            fy = fy * -1
-
-        if difz > 0:
-            fz = fz * -1'''
+        fx = ((f / d) * difx) * -1
+        fy = ((f / d) * dify) * -1
+        fz = ((f / d) * difz) * -1
 
         print "DIF: " + str(difx) + "," + str(dify) + "," + str(difz)
 
