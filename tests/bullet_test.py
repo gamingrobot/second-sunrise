@@ -48,7 +48,7 @@ class BulletTest(ShowBase):
         self.earthnode = BulletRigidBodyNode('Box')
         #self.earthnode.setMass(10000000000000)
         self.earthnode.setMass(1000)
-        self.earthnode.addShape(shape2)
+        #self.earthnode.addShape(shape2)
         self.earthnp = self.render.attachNewNode(self.earthnode)
         self.earthnp.setPos(0, 0, 0)
         self.world.attachRigidBody(self.earthnode)
@@ -77,6 +77,10 @@ class BulletTest(ShowBase):
         fx = ((f / d) * difx) * -1
         fy = ((f / d) * dify) * -1
         fz = ((f / d) * difz) * -1
+
+        th = 1
+        if math.fabs(difx) < th and math.fabs(dify) < th and math.fabs(difz) < th:
+            fx, fy, fz = 0, 0, 0
 
         print "DIF: " + str(difx) + "," + str(dify) + "," + str(difz)
 
