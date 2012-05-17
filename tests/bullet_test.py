@@ -37,7 +37,7 @@ class BulletTest(ShowBase):
         self.moonnode.setMass(1)
         self.moonnode.addShape(shape)
         self.moonnp = self.render.attachNewNode(self.moonnode)
-        self.moonnp.setPos(-20, 0, -10)
+        self.moonnp.setPos(-12, 25, -10)
         self.world.attachRigidBody(self.moonnode)
         self.moonmodel = self.loader.loadModel('models/box.egg')
         self.moonmodel.flattenLight()
@@ -67,14 +67,13 @@ class BulletTest(ShowBase):
         moonmass = self.moonnode.getMass()
         earthmass = self.earthnode.getMass()
 
-        """difx = moonpos[0] - earthpos[0]
+        difx = moonpos[0] - earthpos[0]
         dify = moonpos[1] - earthpos[1]
-        difz = moonpos[2] - earthpos[2]"""
+        difz = moonpos[2] - earthpos[2]
 
-
-        difx = moonpos[0]
+        '''difx = moonpos[0]
         dify = moonpos[1]
-        difz = moonpos[2]
+        difz = moonpos[2]'''
 
         ftop = G * earthmass * moonmass
         #prevent divide by 0
@@ -102,20 +101,20 @@ class BulletTest(ShowBase):
             fz = maxf
 
         #fix vector direction
-        if difx > 0:
+        '''if difx > 0:
             fx = fx * -1
 
         if dify > 0:
             fy = fy * -1
 
         if difz > 0:
-            fz = fz * -1
+            fz = fz * -1'''
 
         print "DIF: " + str(difx) + "," + str(dify) + "," + str(difz)
 
         self.moonnode.applyForce(Vec3(fx, fy, fz), False)
 
-        print "FORCE: " +str(fx) + "," + str(fy) + "," + str(fz)
+        print "FORCE: " + str(fx) + "," + str(fy) + "," + str(fz)
 
         """pos = self.np2.getPos()
         gv = [self.gravity_point[0] - pos[0], self.gravity_point[1] - pos[1], self.gravity_point[2] - pos[2]]
