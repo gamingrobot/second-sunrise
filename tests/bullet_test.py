@@ -86,10 +86,6 @@ class BulletTest(ShowBase):
         else:
             self.moonnode.applyForce(Vec3(fx, fy, fz), False)
 
-        print "DIF: " + str(difx) + "," + str(dify) + "," + str(difz)
-
-        print "FORCE: " + str(fx) + "," + str(fy) + "," + str(fz)
-
         """pos = self.np2.getPos()
         gv = [self.gravity_point[0] - pos[0], self.gravity_point[1] - pos[1], self.gravity_point[2] - pos[2]]
         d = math.sqrt((gv[0] * gv[0]) + (gv[1] * gv[1]) + (gv[2] * gv[2]))
