@@ -10,8 +10,8 @@ from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape
 import math
 
-G = 0.981
-#G = 6.673 * 10 ** -11
+#G = 0.981
+G = 6.673 * 10 ** -11
 #G = .5
 
 
@@ -47,8 +47,9 @@ class BulletTest(ShowBase):
         shape2 = BulletSphereShape(10)
         self.earthnode = BulletRigidBodyNode('Box')
         #self.earthnode.setMass(10000000000000)
-        self.earthnode.setMass(1000)
-        #self.earthnode.addShape(shape2)
+        self.earthnode.setMass(1000000000000000)
+        #self.earthnode.setMass(1000)
+        self.earthnode.addShape(shape2)
         self.earthnp = self.render.attachNewNode(self.earthnode)
         self.earthnp.setPos(0, 0, 0)
         self.world.attachRigidBody(self.earthnode)
@@ -79,12 +80,13 @@ class BulletTest(ShowBase):
         fz = ((f / d) * difz) * -1
 
         th = 1
-        if math.fabs(difx) < th and math.fabs(dify) < th and math.fabs(difz) < th:
-            fx, fy, fz = 0, 0, 0
+        if math.fabs(difx) <= th and math.fabs(dify) <= th and math.fabs(difz) <= th:
+            #fx, fy, fz = 0, 0, 0
+            self.moonnode.setLinearVelocity(Vec3(0, 0, 0))
+        else:
+            self.moonnode.applyForce(Vec3(fx, fy, fz), False)
 
         print "DIF: " + str(difx) + "," + str(dify) + "," + str(difz)
-
-        self.moonnode.applyForce(Vec3(fx, fy, fz), False)
 
         print "FORCE: " + str(fx) + "," + str(fy) + "," + str(fz)
 
