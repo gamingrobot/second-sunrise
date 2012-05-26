@@ -8,6 +8,10 @@ class Block:
         self.y = args['y']
         self.z = args['z']
         self.texture = 'Blocks/' + args['texture']
+        self.density = args['density']
+
+    def getDensity(self):
+        return self.density
 
     def __str__(self):
         return "Block: %s is at (%i, %i, %i)" % (self.__class__.__name__, self.x, self.y, self.z)

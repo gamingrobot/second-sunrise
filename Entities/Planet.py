@@ -29,7 +29,8 @@ class Planet(MovableEntity):
             index = it.multi_index
             thechunk = it[0].tolist()
             thechunk.generateBlocks()
-            thechunk.generateVoxel()
+            #thechunk.generateVoxel()
+            thechunk.generateMarching()
             it.iternext()
 
     def __str__(self):

@@ -38,7 +38,7 @@ class Controls:
         self.P = self.app.camera.getP()
         self.pos = self.app.camera.getPos()
         self.sensitivity = .05
-        self.speed = .01
+        self.speed = .1
 
     def menuMode(self):
         #show mouse
