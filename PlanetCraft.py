@@ -5,6 +5,7 @@ from panda3d.core import PointLight
 from panda3d.core import AmbientLight
 from panda3d.core import VBase4
 from panda3d.core import Point3
+from panda3d.bullet import BulletWorld
 #uncomment and run when you add a block, then re comment on next run
 #import BlockIniter
 #import EntityIniter
@@ -13,7 +14,7 @@ from panda3d.core import Point3
 
 from Blocks import *
 from Entities import *
-from Controls import *
+#from Controls import *
 #import shelve
 #import numpy as np
 
@@ -23,11 +24,13 @@ loadPrcFile("config/Config.prc")
 class PlanetCraft(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
-        self.cont = Controls(self)
-        self.cont.gameMode()
         self.setBackgroundColor(0, 0, 0, 1)
-        print self.camera.getPos()
-        gamma = Planet({'x': -48, 'y': 16, 'z': -48, 'render': self.render})
+        #create bullet world
+        self.bulletworld = BulletWorld()
+        #create player
+        player = Player({'x': 0, 'y': 0, 'z': 0, 'root': self})
+        #create planet
+        gamma = Planet({'x': -48, 'y': 16, 'z': -48, 'render': self.render, 'root': self})
 
         """plight = PointLight('plight')
         plight.setColor(VBase4(1, 1, 1, 1))

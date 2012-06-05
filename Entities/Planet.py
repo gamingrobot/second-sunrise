@@ -21,7 +21,7 @@ class Planet(MovableEntity):
         it = np.nditer(self.chunks, op_flags=['readwrite'], flags=['multi_index', 'refs_ok'])
         while not it.finished:
             index = it.multi_index
-            it[0] = Chunk({'x': index[0] * self.chunkSize, 'y': index[1] * self.chunkSize, 'z': index[2] * self.chunkSize, 'planetNode': self.planetNode, 'name': str(index[0]) + str(index[1]) + str(index[2])})
+            it[0] = Chunk({'x': index[0] * self.chunkSize, 'y': index[1] * self.chunkSize, 'z': index[2] * self.chunkSize, 'planetNode': self.planetNode, 'root': args['root'], 'name': str(index[0]) + str(index[1]) + str(index[2])})
             it.iternext()
 
         it = np.nditer(self.chunks, op_flags=['readwrite'], flags=['multi_index', 'refs_ok'])
@@ -29,8 +29,8 @@ class Planet(MovableEntity):
             index = it.multi_index
             thechunk = it[0].tolist()
             thechunk.generateBlocks()
-            #thechunk.generateVoxel()
-            thechunk.generateMarching()
+            thechunk.generateVoxel()
+            #thechunk.generateMarching()
             it.iternext()
 
     def __str__(self):
