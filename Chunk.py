@@ -23,6 +23,7 @@ class Chunk:
         self.id = str(self.x) + ":" + str(self.y) + ":" + str(self.z)
         self.planetNode = args['planetNode']
         self.root = args['root']
+        self.spawn = args['spawnchunk']
 
     def getChunkID(self):
         return self.id
@@ -31,9 +32,9 @@ class Chunk:
         #make a nicer name for math.fabs()
         ab = math.fabs
 
-        self.size = 16
-        self.numchunks = 4
-        self.radius = 32  # in blocks
+        self.size = planet.chunkSize
+        self.numchunks = planet.psize
+        self.radius = planet.radius  # in blocks
         self.blocks = np.zeros((self.size, self.size, self.size), dtype=np.object)
         self.blockSize = 1
         #init numpy
@@ -80,27 +81,30 @@ class Chunk:
                             #render that side
                             #print "Render Left Side" + str(x) + "," + str(y) + "," + str(z)
                             shade = 0.45
+                            shade2 = shade
+                            if self.spawn:
+                                shade2 = 1
                             #line corners
                             #0
                             vertex.addData3f(x, y, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 0)
                             #1
                             vertex.addData3f(x, y + 1, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 1)
                             #edge corners
                             #2
                             vertex.addData3f(x, y, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 0)
                             #3
                             vertex.addData3f(x, y + 1, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 1)
                             #draw triangles
                             prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
@@ -115,27 +119,30 @@ class Chunk:
                             #render that side
                             #print "Render Front Side" + str(x) + "," + str(y) + "," + str(z)
                             shade = 0.1
+                            shade2 = shade
+                            if self.spawn:
+                                shade2 = 1
                             #line corners
                             #0
                             vertex.addData3f(x + 1, y, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 0)
                             #1
                             vertex.addData3f(x, y, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 0)
                             #edge corners
                             #2
                             vertex.addData3f(x + 1, y, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 0)
                             #3
                             vertex.addData3f(x, y, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 0)
                             #draw triangles
                             prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
@@ -151,27 +158,30 @@ class Chunk:
                             #render that side
                             #print "Render Right Side" + str(x) + "," + str(y) + "," + str(z)
                             shade = 0.7
+                            shade2 = shade
+                            if self.spawn:
+                                shade2 = 1
                             #line corners
                             #0
                             vertex.addData3f(x + 1, y + 1, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 1)
                             #1
                             vertex.addData3f(x + 1, y, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 0)
                             #edge corners
                             #2
                             vertex.addData3f(x + 1, y, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 0)
                             #3
                             vertex.addData3f(x + 1, y + 1, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 1)
                             #draw triangles
                             prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
@@ -187,27 +197,30 @@ class Chunk:
                             #render that side
                             #print "Render Back Side" + str(x) + "," + str(y) + "," + str(z)
                             shade = 0.5
+                            shade2 = shade
+                            if self.spawn:
+                                shade2 = 1
                             #line corners
                             #0
                             vertex.addData3f(x, y + 1, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 1)
                             #1
                             vertex.addData3f(x + 1, y + 1, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 1)
                             #edge corners
                             #2
                             vertex.addData3f(x + 1, y + 1, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 1)
                             #3
                             vertex.addData3f(x, y + 1, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 1)
                             #draw triangles
                             prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
@@ -223,27 +236,30 @@ class Chunk:
                             #render that side
                             #print "Render Bottom Side" + str(x) + "," + str(y) + "," + str(z)
                             shade = 0.3
+                            shade2 = shade
+                            if self.spawn:
+                                shade2 = 1
                             #line corners
                             #0
                             vertex.addData3f(x, y + 1, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 1)
                             #1
                             vertex.addData3f(x + 1, y, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 0)
                             #edge corners
                             #2
                             vertex.addData3f(x + 1, y + 1, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 1)
                             #3
                             vertex.addData3f(x, y, z)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 0)
                             #draw triangles
                             prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
@@ -259,27 +275,30 @@ class Chunk:
                             #render that side
                             #print "Render Top Side" + str(x) + "," + str(y) + "," + str(z)
                             shade = 0.9
+                            shade2 = shade
+                            if self.spawn:
+                                shade2 = 1
                             #line corners
                             #0
                             vertex.addData3f(x + 1, y, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 0)
                             #1
                             vertex.addData3f(x, y + 1, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 1)
                             #edge corners
-                            #2
+                            #22
                             vertex.addData3f(x + 1, y + 1, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(1, 1)
                             #3
                             vertex.addData3f(x, y, z + 1)
                             normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
+                            color.addData4f(shade, shade, shade2, 1)
                             texcoord.addData2f(0, 0)
                             #draw triangles
                             prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)

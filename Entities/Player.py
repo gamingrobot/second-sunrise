@@ -40,6 +40,9 @@ class Player(MovableEntity):
     def getPos(self):
         return self.player.getPos()
 
+    def setPos(self, newpos):
+        self.root.camera.setPos(newpos)
+
     def getMass(self):
         return self.bplayer.getMass()
 

@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, '..')
 from MovableEntity import *
 from Chunk import *
+from panda3d.core import Vec3
 
 
 class Planet(MovableEntity):
@@ -18,7 +19,8 @@ class Planet(MovableEntity):
         #init chunks
         self.chunkSize = 16
         self.chunks = {}
-        self.psize = 4  # in chunks
+        self.psize = 64  # in chunks
+        self.radius = self.chunkSize * (self.psize / 2)
 
         model = self.root.loader.loadModel('models/box.egg')
         model.reparentTo(self.planetNode)
@@ -33,19 +35,59 @@ class Planet(MovableEntity):
         return self.x + r, self.y + r, self.z + r
 
     def spawnPlayer(self, player):
+        cs = self.chunkSize
         #find a surface chunk
-        spawnchunk = (1 * self.chunkSize, 0 * self.chunkSize, 1 * self.chunkSize)
-        print spawnchunk
+        spl = (0 * cs, 0 * cs, ((self.psize / 2) - 1) * cs)
+        print spl
         #generate chunk
-        thechunk = Chunk({'x': spawnchunk[0], 'y': spawnchunk[1], 'z': spawnchunk[2],
-            'planetNode': self.planetNode, 'root': self.root})
-        thechunk.generateBlocks(self)
-        thechunk.generateVoxel()
-        #thechunk.generateMarching()
-        #place in loaded chunks dictionary
-        print thechunk.getChunkID()
-        self.chunks[thechunk.getChunkID()] = thechunk
+        self.addChunk(spl[0], spl[1], spl[2], True)
+
+        #generate naboring chunks
+        #x y
+        self.addChunk(spl[0] + 16, spl[1], spl[2], False)              # (x + 1, y, z)
+        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2], False)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1] + 16, spl[2], False)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2], False)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] + 16, spl[1] - 16, spl[2], False)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0], spl[1] + 16, spl[2], False)              # (x, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1], spl[2], False)              # (x + 1, y, z)
+        self.addChunk(spl[0], spl[1] - 16, spl[2], False)              # (x, y + 1, z)
+
+        """#generate naboring chunks
+        #positive
+        self.addChunk(spl[0] + 16, spl[1], spl[2])              # (x + 1, y, z)
+        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2])         # (x + 1, y + 1, z)
+        self.addChunk(spl[0], spl[1] + 16, spl[2])              # (x, y + 1, z)
+        self.addChunk(spl[0], spl[1] + 16, spl[2] + 16)         # (x, y, z + 1)
+        self.addChunk(spl[0] + 16, spl[1], spl[2] + 16)         # (x + 1, y, z + 1)
+        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2] + 16)    # (x + 1, y + 1, z + 1)
+        self.addChunk(spl[0], spl[1] + 16, spl[2] + 16)         # (x, y + 1, z + 1)
+        #negitive
+        self.addChunk(spl[0] - 16, spl[1], spl[2])              # (x - 1, y, z)
+        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2])         # (x - 1, y - 1, z)
+        self.addChunk(spl[0], spl[1] - 16, spl[2])              # (x, y - 1, z)
+        self.addChunk(spl[0], spl[1] - 16, spl[2] - 16)         # (x, y, z - 1)
+        self.addChunk(spl[0] - 16, spl[1], spl[2] - 16)         # (x - 1, y, z - 1)
+        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2] - 16)    # (x - 1, y - 1, z - 1)
+        self.addChunk(spl[0], spl[1] - 16, spl[2] - 16)         # (x, y - 1, z - 1)"""
+
         #place player
+        playerspl = Vec3(spl[0], spl[1], spl[2] + self.chunkSize + 4)
+        player.setPos(playerspl)
+
+    def addChunk(self, x, y, z, spawnchunk):
+        nchunk = Chunk({'x': x, 'y': y, 'z': z,
+            'planetNode': self.planetNode, 'root': self.root, 'spawnchunk': spawnchunk})
+        nchunk.generateBlocks(self)
+        nchunk.generateVoxel()
+        #thechunk.generateMarching()
+        print nchunk.getChunkID()
+        self.chunks[nchunk.getChunkID()] = nchunk
+
+    def testBox(self, x, y, z):
+        model = self.root.loader.loadModel('models/box.egg')
+        model.reparentTo(self.planetNode)
+        model.setPos(x, y, z)
 
     def testChunk(self):
         for i in range(-2, 2):

@@ -45,7 +45,7 @@ class PlanetCraft(ShowBase):
 
         #create bullet world
         self.bulletworld = BulletWorld()
-        self.bulletworld.setDebugNode(debugNP.node())
+        #self.bulletworld.setDebugNode(debugNP.node())
 
         #test colision
         shape2 = BulletSphereShape(64)
@@ -135,7 +135,7 @@ class PlanetCraft(ShowBase):
         self.bplayer.setLinearVelocity(speed)"""
 
         dt = globalClock.getDt()
-        self.bulletworld.doPhysics(dt, 10, 1.0 / 60.0)
+        self.bulletworld.doPhysics(dt, 10, 1.0 / 180.0)
         return task.cont
 
     def stop(self):

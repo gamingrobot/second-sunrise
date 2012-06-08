@@ -80,6 +80,9 @@ class Controls:
         taskMgr.add(self.move, 'move')
 
     def move(self, task):
+        self.H = self.app.camera.getH()
+        self.P = self.app.camera.getP()
+        self.pos = self.app.camera.getPos()
         if inputState.isSet('forward'):
             dir = self.app.camera.getNetTransform().getMat().getRow3(1)
             dir.setZ(0)
