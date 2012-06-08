@@ -12,26 +12,17 @@ class Planet(MovableEntity):
         self.x = args['x']
         self.y = args['y']
         self.z = args['z']
-        self.size = 4  # in chunks
+        self.root = args['root']
         self.planetNode = args['render'].attachNewNode("Planet_Gamma")
         self.planetNode.setPos(self.x, self.y, self.z)
         #init chunks
-        self.chunks = np.zeros((self.size, self.size, self.size), dtype=np.object)
         self.chunkSize = 16
-        it = np.nditer(self.chunks, op_flags=['readwrite'], flags=['multi_index', 'refs_ok'])
-        while not it.finished:
-            index = it.multi_index
-            it[0] = Chunk({'x': index[0] * self.chunkSize, 'y': index[1] * self.chunkSize, 'z': index[2] * self.chunkSize, 'planetNode': self.planetNode, 'root': args['root'], 'name': str(index[0]) + str(index[1]) + str(index[2])})
-            it.iternext()
+        self.chunks = {}
+        self.psize = 4  # in chunks
 
-        it = np.nditer(self.chunks, op_flags=['readwrite'], flags=['multi_index', 'refs_ok'])
-        while not it.finished:
-            index = it.multi_index
-            thechunk = it[0].tolist()
-            thechunk.generateBlocks()
-            thechunk.generateVoxel()
-            #thechunk.generateMarching()
-            it.iternext()
+        model = self.root.loader.loadModel('models/box.egg')
+        model.reparentTo(self.planetNode)
+        model.setPos(0, 0, 0)
 
     def __str__(self):
         return "A Planet"
@@ -40,3 +31,18 @@ class Planet(MovableEntity):
         d = self.size * self.chunkSize
         r = d / 2
         return self.x + r, self.y + r, self.z + r
+
+    def spawnPlayer(self, player):
+        #find a surface chunk
+        spawnchunk = (0 * self.chunkSize, 0 * self.chunkSize, -2 * self.chunkSize)
+        print spawnchunk
+        #generate chunk
+        thechunk = Chunk({'x': spawnchunk[0], 'y': spawnchunk[1], 'z': spawnchunk[2],
+            'planetNode': self.planetNode, 'root': self.root})
+        thechunk.generateBlocks(self)
+        thechunk.generateVoxel()
+        #thechunk.generateMarching()
+        #place in loaded chunks dictionary
+        print thechunk.getChunkID()
+        self.chunks[thechunk.getChunkID()] = thechunk
+        #place player

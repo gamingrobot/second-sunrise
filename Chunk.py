@@ -15,19 +15,22 @@ from Blocks import *
 
 
 class Chunk:
-    """Chunk contains 32x32x32 blocks"""
+    """Chunk contains 16x16x16 blocks"""
     def __init__(self, args):
         self.x = args['x']
         self.y = args['y']
         self.z = args['z']
+        self.id = str(self.x) + ":" + str(self.y) + ":" + str(self.z)
         self.planetNode = args['planetNode']
         self.root = args['root']
-        self.name = args['name']
 
-    def generateBlocks(self):
+    def getChunkID(self):
+        return self.id
+
+    def generateBlocks(self, planet):
         self.size = 16
-        #self.radius = self.size / 2.0
-        self.radius = 32
+        self.numchunks = 4
+        self.radius = 32  # in blocks
         self.blocks = np.zeros((self.size, self.size, self.size), dtype=np.object)
         self.blockSize = 1
         #init numpy
@@ -36,12 +39,14 @@ class Chunk:
             index = it.multi_index
             #arandom = random.randint(0, 1)
             #arandom = 1
-            if math.sqrt((self.x + index[0] - self.radius) ** 2 + (self.y + index[1] - self.radius) ** 2 + (self.z + index[2] - self.radius) ** 2) <= self.radius:
-                it[0] = Dirt(
-                    {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(1.0), 'name': '000'})
-            else:
-                it[0] = Air(
-                    {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(-1.0), 'name': '000'})
+            #if math.sqrt((self.x + index[0] - self.radius) ** 2 + (self.y + index[1] - self.radius) ** 2 + (self.z + index[2] - self.radius) ** 2) <= self.radius:
+            #    it[0] = Dirt(
+            #        {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(1.0), 'name': '000'})
+            #else:
+            #    it[0] = Air(
+            #        {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(-1.0), 'name': '000'})
+            it[0] = Dirt(
+                    {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
             it.iternext()
 
     def generateVoxel(self):
@@ -288,7 +293,6 @@ class Chunk:
         col.addGeom(geom)
         shape = BulletTriangleMeshShape(col, dynamic=False)
         bulletnode = BulletRigidBodyNode('Chunk')
-        bulletnode.setMass(1)
         bulletnode.addShape(shape)
         bulletnp = self.planetNode.attachNewNode(bulletnode)
         bulletnp.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
@@ -297,7 +301,7 @@ class Chunk:
         node = GeomNode('gnode')
         node.addGeom(geom)
         self.node = self.planetNode.attachNewNode(node)
-        self.node.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
+        self.node.setPos(self.x, self.y, self.z)
         #self.node.writeBamFile("./chunks/" + self.name + ".bam")
 
     def isEmptyBlock(self, block):
@@ -344,7 +348,7 @@ class Chunk:
         node = GeomNode('gnode')
         node.addGeom(geom)
         self.node = self.planetNode.attachNewNode(node)
-        self.node.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
+        self.node.setPos(self.x, self.y, self.z)
 
 
 class Iso:
