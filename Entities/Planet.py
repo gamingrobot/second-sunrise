@@ -34,7 +34,7 @@ class Planet(MovableEntity):
 
     def spawnPlayer(self, player):
         #find a surface chunk
-        spawnchunk = (0 * self.chunkSize, 0 * self.chunkSize, -2 * self.chunkSize)
+        spawnchunk = (1 * self.chunkSize, 0 * self.chunkSize, 1 * self.chunkSize)
         print spawnchunk
         #generate chunk
         thechunk = Chunk({'x': spawnchunk[0], 'y': spawnchunk[1], 'z': spawnchunk[2],
@@ -46,3 +46,16 @@ class Planet(MovableEntity):
         print thechunk.getChunkID()
         self.chunks[thechunk.getChunkID()] = thechunk
         #place player
+
+    def testChunk(self):
+        for i in range(-2, 2):
+            for j in range(-2, 2):
+                for k in range(-2, 2):
+                    temp = (i * self.chunkSize, j * self.chunkSize, k * self.chunkSize)
+
+                    testchunk = Chunk({'x': temp[0], 'y': temp[1], 'z': temp[2],
+                        'planetNode': self.planetNode, 'root': self.root})
+                    testchunk.generateBlocks(self)
+                    testchunk.generateVoxel()
+
+                    self.chunks[testchunk.getChunkID()] = testchunk

@@ -28,6 +28,9 @@ class Chunk:
         return self.id
 
     def generateBlocks(self, planet):
+        #make a nicer name for math.fabs()
+        ab = math.fabs
+
         self.size = 16
         self.numchunks = 4
         self.radius = 32  # in blocks
@@ -39,14 +42,14 @@ class Chunk:
             index = it.multi_index
             #arandom = random.randint(0, 1)
             #arandom = 1
-            #if math.sqrt((self.x + index[0] - self.radius) ** 2 + (self.y + index[1] - self.radius) ** 2 + (self.z + index[2] - self.radius) ** 2) <= self.radius:
-            #    it[0] = Dirt(
-            #        {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(1.0), 'name': '000'})
-            #else:
-            #    it[0] = Air(
-            #        {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(-1.0), 'name': '000'})
-            it[0] = Dirt(
-                    {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
+            if math.sqrt((ab(self.x + index[0])) ** 2 + (ab(self.y + index[1])) ** 2 + (ab(self.z + index[2])) ** 2) <= self.radius:
+                it[0] = Dirt(
+                    {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(1.0), 'name': '000'})
+            else:
+                it[0] = Air(
+                    {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(-1.0), 'name': '000'})
+            #it[0] = Dirt(
+            #        {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
             it.iternext()
 
     def generateVoxel(self):

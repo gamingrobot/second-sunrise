@@ -66,6 +66,8 @@ class PlanetCraft(ShowBase):
 
         gamma.spawnPlayer(self.player)
 
+        #gamma.testChunk()
+
         """plight = PointLight('plight')
         plight.setColor(VBase4(1, 1, 1, 1))
         #plight.setAttenuation(Point3(0, 0, 0.5))
