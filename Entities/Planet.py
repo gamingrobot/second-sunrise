@@ -1,5 +1,6 @@
 #Planet
 import sys
+from direct.stdpy import thread
 sys.path.insert(0, '..')
 from MovableEntity import *
 from Chunk import *
@@ -40,18 +41,18 @@ class Planet(MovableEntity):
         spl = (0 * cs, 0 * cs, ((self.psize / 2) - 1) * cs)
         print spl
         #generate chunk
-        self.addChunk(spl[0], spl[1], spl[2], True)
+        self.addSpawnChunk(spl[0], spl[1], spl[2])
 
         #generate naboring chunks
         #x y
-        self.addChunk(spl[0] + 16, spl[1], spl[2], False)              # (x + 1, y, z)
-        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2], False)         # (x + 1, y + 1, z)
-        self.addChunk(spl[0] - 16, spl[1] + 16, spl[2], False)         # (x + 1, y + 1, z)
-        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2], False)         # (x + 1, y + 1, z)
-        self.addChunk(spl[0] + 16, spl[1] - 16, spl[2], False)         # (x + 1, y + 1, z)
-        self.addChunk(spl[0], spl[1] + 16, spl[2], False)              # (x, y + 1, z)
-        self.addChunk(spl[0] - 16, spl[1], spl[2], False)              # (x + 1, y, z)
-        self.addChunk(spl[0], spl[1] - 16, spl[2], False)              # (x, y + 1, z)
+        self.addChunk(spl[0] + 16, spl[1], spl[2])              # (x + 1, y, z)
+        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2])         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1] + 16, spl[2])         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2])         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] + 16, spl[1] - 16, spl[2])         # (x + 1, y + 1, z)
+        self.addChunk(spl[0], spl[1] + 16, spl[2])              # (x, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1], spl[2])              # (x + 1, y, z)
+        self.addChunk(spl[0], spl[1] - 16, spl[2])              # (x, y + 1, z)
 
         """#generate naboring chunks
         #positive
@@ -75,7 +76,15 @@ class Planet(MovableEntity):
         playerspl = Vec3(spl[0], spl[1], spl[2] + self.chunkSize + 4)
         player.setPos(playerspl)
 
-    def addChunk(self, x, y, z, spawnchunk):
+    def addSpawnChunk(self, x, y, z):
+        self.addChunkThread(x, y, z, True)
+
+    def addChunk(self, x, y, z):
+        #threading currently broken
+        #thread.start_new_thread(self.addChunkThread, (x, y, z, False))
+        self.addChunkThread(x, y, z, False)
+
+    def addChunkThread(self, x, y, z, spawnchunk):
         nchunk = Chunk({'x': x, 'y': y, 'z': z,
             'planetNode': self.planetNode, 'root': self.root, 'spawnchunk': spawnchunk})
         nchunk.generateBlocks(self)
