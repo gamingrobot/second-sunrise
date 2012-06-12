@@ -12,5 +12,11 @@ class OverlayMenu(Menu):
         el = self.doc.GetElementById('resume')
         el.AddEventListener('click', self.toggle, True)
 
+        pause = self.doc.GetElementById('pauseQuit')
+        pause.AddEventListener('click', self.stop, True)
+
     def toggle(self):
         self.control.toggleOverlay()
+
+    def stop(self):
+        self.control.stop()

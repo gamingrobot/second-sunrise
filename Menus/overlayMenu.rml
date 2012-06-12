@@ -9,9 +9,9 @@
     </div>
     <div id="content">
         <br/>
-        <button id="resume" onclick="resume()">Resume Game</button><br/>
+        <button id="resume">Resume Game</button><br/>
         <br/>
-        <button onclick="exit()">Quit Game</button>
+        <button id="pauseQuit">Quit Game</button>
     </div>
 </body>
 </rml>
