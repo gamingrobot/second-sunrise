@@ -20,10 +20,8 @@ class Controls:
         self.inGame = False
         #camera stuff
 
-        #self.app.disableMouse()
+        self.app.disableMouse()
         self.app.accept("q", self.stop)
-        self.app.accept("escape", self.toggleOverlay)
-        self.app.accept("s", self.temp)
 
         inputState.watchWithModifiers('forward', 'w')
         inputState.watchWithModifiers('left', 'a')
@@ -45,10 +43,6 @@ class Controls:
         self.sensitivity = .05
         self.speed = .1
 
-        self.menuMode()
-
-    def temp(self):
-        self.mainmenu = MainMenu(self)
         self.menuMode()
 
     def menuMode(self):
@@ -135,6 +129,7 @@ class Controls:
         return Task.cont
 
     def singlePlay(self):
+        self.app.accept("escape", self.toggleOverlay)
         self.mainmenu.hide()
         self.gameMode()
 
