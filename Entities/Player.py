@@ -36,7 +36,7 @@ class Player(MovableEntity):
         #self.root.camera.reparentTo(self.player)
         #start the controller
         self.cont = Controls(args['root'])
-        self.cont.gameMode()
+        #self.cont.gameMode()
         #setup picking
         #add mouse button 1 handler
         self.root.accept('mouse1', self.onMouseTask)

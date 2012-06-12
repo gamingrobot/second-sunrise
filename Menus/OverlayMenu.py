@@ -1,7 +1,4 @@
-#import sys
 from Menu import *
-#sys.path.insert(0, '..')
-#from Controls import *
 
 
 class OverlayMenu(Menu):

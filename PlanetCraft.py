@@ -143,6 +143,13 @@ class PlanetCraft(ShowBase):
     def stop(self):
         pass
 
+    '''def playSingle():
+        PlanetCraft().run
+
+    def playMulti():
+        #start multiplayer code here
+        pass'''
+
 
 app = PlanetCraft()
 app.run()

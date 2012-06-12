@@ -1,7 +1,7 @@
 <rml>
 <head>
     <title>Lib Rocket Test</title>
-    <link type="text/template" href="overWinTemplate.rml"/>
+    <link type="text/template" href="mainWinTemplate.rml"/>
 </head>
 <body template="mainWindow" class="window">
     <div id="title-bar">
@@ -9,9 +9,11 @@
     </div>
     <div id="content">
         <br/>
-        <button onclick="print 'hi'">Play Game</button><br/>
+        <button id="play">Play Game</button><br/>
         <br/>
-        <button onclick="exit()">Quit Game</button>
+        <button onclick="print 'working on it'">Options</button><br/>
+        <br/>
+        <button id="quit">Quit Game</button>
     </div>
 </body>
 </rml>

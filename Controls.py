@@ -10,15 +10,20 @@ import sys
 class Controls:
     def __init__(self, superapp):
         self.app = superapp
+        #prepare pause menu
         self.overlay = OverlayMenu(self)
-        #uncomment out below once the Play Game button works
-        #self.mainmenu = MainMenu()
+
+        #show the main menu - contains a way to start the game
+        self.mainmenu = MainMenu(self)
+
         self.ovrlay = False
         self.inGame = False
         #camera stuff
-        self.app.disableMouse()
+
+        #self.app.disableMouse()
         self.app.accept("q", self.stop)
         self.app.accept("escape", self.toggleOverlay)
+        self.app.accept("s", self.temp)
 
         inputState.watchWithModifiers('forward', 'w')
         inputState.watchWithModifiers('left', 'a')
@@ -39,6 +44,12 @@ class Controls:
         self.pos = self.app.camera.getPos()
         self.sensitivity = .05
         self.speed = .1
+
+        self.menuMode()
+
+    def temp(self):
+        self.mainmenu = MainMenu(self)
+        self.menuMode()
 
     def menuMode(self):
         #show mouse
@@ -122,6 +133,13 @@ class Controls:
             self.pos += dir * self.speed
             self.app.camera.setPos(self.pos)
         return Task.cont
+
+    def singlePlay(self):
+        self.mainmenu.hide()
+        self.gameMode()
+
+    def multiPlay(self):
+        self.app.playMulti()
 
     def stop(self):
         taskMgr.remove('look')
