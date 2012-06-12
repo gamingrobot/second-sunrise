@@ -1,9 +1,9 @@
 <rml>
 <head>
     <title>Lib Rocket Test</title>
-    <link type="text/template" href="overWinTemplate.rml"/>
+    <link type="text/template" href="mainWinTemplate.rml"/>
 </head>
-<body template="overWindow" class="window">
+<body template="mainWindow" class="window">
     <div id="title-bar">
         <span id="title">PlanetCraft</span>
     </div>
