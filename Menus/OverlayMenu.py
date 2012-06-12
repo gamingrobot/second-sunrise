@@ -3,21 +3,14 @@ from Menu import *
 #sys.path.insert(0, '..')
 #from Controls import *
 
-helper = None
-
 
 class OverlayMenu(Menu):
     def __init__(self, mainControl):
         Menu.__init__(self, 'Menus/overlayMenu.rml', 'overlayMenu')
         self.control = mainControl
-        helper = self
 
-    @staticmethod
-    def resume():
-        if helper != None:
-            helper.toggle()
-        else:
-            print "Your worst fears have been realized"
+        el = self.doc.GetElementById('resume')
+        el.AddEventListener('click', self.toggle, True)
 
     def toggle(self):
         self.control.toggleOverlay()

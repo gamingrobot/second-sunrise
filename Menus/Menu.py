@@ -15,6 +15,7 @@ class Menu:
         base.mouseWatcher.attachNewNode(self.ih)
         self.r.setInputHandler(self.ih)
 
+
     def show(self):
         self.doc.Show()
 
