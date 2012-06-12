@@ -3,9 +3,8 @@ import sys
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape
 from panda3d.core import Vec3
-from panda3d.core import Vec3
 from panda3d.core import Vec4
-from panda3d.core import CollisionRay,CollisionNode,GeomNode,CollisionTraverser
+from panda3d.core import CollisionRay, CollisionNode, GeomNode, CollisionTraverser
 from panda3d.core import CollisionHandlerQueue, CollisionSphere, BitMask32
 import math
 sys.path.insert(0, '..')
