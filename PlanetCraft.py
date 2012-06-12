@@ -66,6 +66,8 @@ class PlanetCraft(ShowBase):
 
         gamma.spawnPlayer(self.player)
 
+        self.player.lookAt(gamma.planetNode.getPos())
+
         #gamma.testChunk()
 
         """plight = PointLight('plight')

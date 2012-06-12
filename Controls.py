@@ -70,6 +70,8 @@ class Controls:
             self.H += self.mouseChangeX * self.sensitivity
             self.P += self.mouseChangeY * self.sensitivity
             self.app.camera.setHpr(self.H, self.P, 0)
+            print "H" + str(self.H)
+            #print "P" + str(self.P)
         return Task.cont
 
     def startLook(self):

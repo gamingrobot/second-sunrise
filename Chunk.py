@@ -320,10 +320,11 @@ class Chunk:
         bulletnp.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
         self.root.bulletworld.attachRigidBody(bulletnode)"""
 
-        node = GeomNode('gnode')
+        node = GeomNode(self.id)
         node.addGeom(geom)
         self.node = self.planetNode.attachNewNode(node)
         self.node.setPos(self.x, self.y, self.z)
+        self.node.setTag('Pickable', '1')
         #self.node.writeBamFile("./chunks/" + self.name + ".bam")
 
     def isEmptyBlock(self, block):

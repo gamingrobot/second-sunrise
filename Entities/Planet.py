@@ -20,7 +20,7 @@ class Planet(MovableEntity):
         #init chunks
         self.chunkSize = 16
         self.chunks = {}
-        self.psize = 64  # in chunks
+        self.psize = 16  # in chunks
         self.radius = self.chunkSize * (self.psize / 2)
 
         model = self.root.loader.loadModel('models/box.egg')
