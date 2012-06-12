@@ -27,7 +27,7 @@ def CloseLogo():
 		<button onclick="LoadMenu('start_game')">Start Game</button><br />
 		<button onclick="LoadMenu('high_score')">High Scores</button><br />
 		<button onclick="LoadMenu('options')">Options</button><br />
-		<button onclick="LoadMenu('help')">Help</button><br />
+		<button id="test" onclick="LoadMenu('help')">Help</button><br />
 		<button onclick="exit()">Exit</button>
                 <input type="text" />
 	</body>

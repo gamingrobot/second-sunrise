@@ -16,4 +16,12 @@ ih = RocketInputHandler()
 base.mouseWatcher.attachNewNode(ih)
 r.setInputHandler(ih)
 
+
+def OnClick():
+  for i in range(10):
+    print('Line ' + str(i))
+
+element = doc.GetElementById('test')
+element.AddEventListener('click', OnClick, True)
+
 run()
