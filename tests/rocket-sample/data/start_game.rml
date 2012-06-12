@@ -25,7 +25,7 @@
 		</style>
 		<script>
 def SetupGame(event):
-	import rocket
+	#import rocket
 #	if event.parameters['difficulty'] == "hard":
 #		game.SetDifficulty(game.difficulty.HARD)
 #	else:

@@ -24,7 +24,7 @@ def CloseLogo():
 		</script>
 	</head>
 	<body template="pywindow" onload="document.context.LoadDocument('data/logo.rml').Show()" onunload="CloseLogo()">
-		<button>Start Game</button><br />
+		<button onclick="LoadMenu('start_game')">Start Game</button><br />
 		<button onclick="LoadMenu('high_score')">High Scores</button><br />
 		<button onclick="LoadMenu('options')">Options</button><br />
 		<button onclick="LoadMenu('help')">Help</button><br />
