@@ -5,7 +5,7 @@
 </head>
 <body template="mainWindow" class="window">
     <div id="title-bar">
-        <span id="title">PlanetCraft</span>
+        <img src="../media/pcLogo.png" width="400px" heigt="123px" id="title" />
     </div>
     <div id="content">
         <br/>
