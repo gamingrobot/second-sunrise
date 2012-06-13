@@ -1,0 +1,25 @@
+<rml>
+    <head>
+        <title>Option sheet</title>
+        <link type="text/template" href="mainWinTemplate.rml"/>
+    </head>
+    <body template="mainWindow">
+        <div id="title-bar">
+            <img src="../media/pcLogo.png" id="title"  width="400px" height="127px"/>
+        </div>
+        <div id="content">
+            <input type="text" />
+            <textarea></textarea>
+            <form id="options" name="optionForm">
+                <input type="text" />
+                <textarea></textarea>
+                <label for="sensitivity">Sensitivity</label><input name="sensitivity" type="range" min="0" max="100" step="1" /><br/>
+                <label for="brightness">Brightness</label><input name="brightness" type="range" min="0" max="100" step="1" /><br/>
+                <label for="volLevel">Volume</label><input name="volLevel" type="range" min="0" max="100" step="1" /><br/>
+                
+                <input type="submit">Back</input>
+            </form>
+            <button id='temp'>Back</button>
+        </div>
+    </body>
+</rml>

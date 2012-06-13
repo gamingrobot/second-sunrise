@@ -1,14 +1,23 @@
 body
 {
-    width: 400px;
-    height: 225px;
-
-    margin: 25px auto auto auto;
-
+    background-decorator: tiled-horizontal;
+    background-left-image: ../media/menuBackground.png 0px 0px 16px 1px;
+    background-center-image: ../media/menuBackground.png 16px 16px 16px 16px;
+    background-right-image: ../media/menuBackground.png 16px 16px 16px 16px;
+    
     font-family: Delicious;
     font-weight: normal;
     font-style: normal;
     font-size: 24;
+    
+    height: 100%;
+}
+
+#contain
+{
+    width: 400px;
+
+    margin: 10% auto auto auto;
 }
 
 div#title-bar span
@@ -22,7 +31,7 @@ div#title-bar span
 button
 {
     display: block;
-    padding: 0px 0px 6px 0px;
+    padding-bottom: 5px;
     background-color:#1144ff;
     text-align: center;
 

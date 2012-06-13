@@ -4,10 +4,12 @@
     <link type="text/rcss" href="default.rcss"/>
 </head>
 <body>
-    <div id="title-bar">
-        <span id="title"></span>
-    </div>
-    <div id="content">
+    <div id='contain'>
+        <div id="title-bar">
+            <span id="title"></span>
+        </div>
+        <div id="content">
+        </div>
     </div>
 </body>
 </template>

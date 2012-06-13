@@ -5,7 +5,7 @@
 </head>
 <body template="mainWindow" class="window">
     <div id="title-bar">
-        <img src="../media/pcLogo.png" width="400px" heigt="127px" id="title" />
+        <img src="../media/pcLogo.png" width="400px" height="127px" id="title" />
     </div>
     <div id="content">
         <br/>
