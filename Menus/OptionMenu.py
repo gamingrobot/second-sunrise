@@ -19,8 +19,8 @@ class OptionMenu(Menu):
 
     # form processor - saves options
     def saveOptions(self):
-        self.doc.Hide()
         self.retMenu.show()
+        self.doc.Hide()
 
     # reads options from however they're stored - called by __init__
     def readOptions(self):

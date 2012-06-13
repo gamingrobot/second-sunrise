@@ -24,8 +24,8 @@ class MainMenu(Menu):
         quit.AddEventListener('click', self.stop, True)
 
     def showOptions(self):
-        self.doc.Hide()
         self.optionMenu.show()
+        self.doc.Hide()
 
     def start(self):
         #will have a multiPlay function eventually for multiplayer
