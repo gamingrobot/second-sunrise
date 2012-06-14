@@ -39,59 +39,6 @@ class PlanetCraft(ShowBase):
         self.mainmenu = MainMenu(self)
 
         self.setBackgroundColor(0, 0, 0, 1)
-        #bullet debug node
-        debugNode = BulletDebugNode('Debug')
-        debugNode.showWireframe(True)
-        debugNode.showConstraints(True)
-        debugNode.showBoundingBoxes(False)
-        debugNode.showNormals(True)
-        debugNP = self.render.attachNewNode(debugNode)
-        debugNP.show()
-
-        #create bullet world
-        self.bulletworld = BulletWorld()
-        #self.bulletworld.setDebugNode(debugNP.node())
-
-        #test colision
-        shape2 = BulletSphereShape(64)
-        self.earthnode = BulletRigidBodyNode('Earth')
-        self.earthnode.addShape(shape2)
-        self.earthnp = self.render.attachNewNode(self.earthnode)
-        self.earthnp.setPos(0, 0, 0)
-        self.bulletworld.attachRigidBody(self.earthnode)
-
-        #model = self.loader.loadModel('models/box.egg')
-        #model.reparentTo(self.render)
-        #model.setPos(0, 0, 0)
-
-        #create player
-        self.player = Player({'x': -10, 'y': 25, 'z': 10, 'root': self})
-        #create planet
-        gamma = Planet({'x': 0, 'y': 0, 'z': 0, 'render': self.render, 'root': self})
-
-        gamma.spawnPlayer(self.player)
-
-        self.player.lookAt(gamma.planetNode.getPos())
-
-        #gamma.testChunk()
-
-        """plight = PointLight('plight')
-        plight.setColor(VBase4(1, 1, 1, 1))
-        #plight.setAttenuation(Point3(0, 0, 0.5))
-        plnp = self.render.attachNewNode(plight)
-        plnp.setPos(0, 0, 0)
-        self.render.setLight(plnp)"""
-
-        """alight = AmbientLight('alight')
-        alight.setColor(VBase4(0.2, 0.2, 0.2, 1))
-        alnp = self.render.attachNewNode(alight)
-        self.render.setLight(alnp)"""
-
-        #centx, centy, centz = gamma.getCenter()
-        #print str(centx) + str(centy) + str(centz)
-
-        #do physics
-        self.taskMgr.add(self.bulletupdate, 'bulletupdate')
 
     def bulletupdate(self, task):
         """ G = 6.673 * 10 ** -11
@@ -146,10 +93,65 @@ class PlanetCraft(ShowBase):
         return task.cont
 
     def startVoxel(self):
-        print "Put voxel starting code in PlanetCraft.py:144"
+        self.startGame(debug=True)
 
     def startMarch(self):
-        print "Put marching cubes code in PlanetCraft.py:147"
+        self.startGame()
+
+    def startGame(self, debug=False):
+        #bullet debug node
+        debugNode = BulletDebugNode('Debug')
+        debugNode.showWireframe(True)
+        debugNode.showConstraints(True)
+        debugNode.showBoundingBoxes(False)
+        debugNode.showNormals(True)
+        debugNP = self.render.attachNewNode(debugNode)
+        debugNP.show()
+
+        #create bullet world
+        self.bulletworld = BulletWorld()
+        #self.bulletworld.setDebugNode(debugNP.node())
+
+        #test colision
+        shape2 = BulletSphereShape(64)
+        self.earthnode = BulletRigidBodyNode('Earth')
+        self.earthnode.addShape(shape2)
+        self.earthnp = self.render.attachNewNode(self.earthnode)
+        self.earthnp.setPos(0, 0, 0)
+        self.bulletworld.attachRigidBody(self.earthnode)
+
+        #model = self.loader.loadModel('models/box.egg')
+        #model.reparentTo(self.render)
+        #model.setPos(0, 0, 0)
+
+        #create player
+        self.player = Player({'x': -10, 'y': 25, 'z': 10, 'root': self})
+        #create planet
+        gamma = Planet({'x': 0, 'y': 0, 'z': 0, 'render': self.render, 'root': self, 'debug': debug})
+
+        gamma.spawnPlayer(self.player)
+
+        self.player.lookAt(gamma.planetNode.getPos())
+
+        #gamma.testChunk()
+
+        """plight = PointLight('plight')
+        plight.setColor(VBase4(1, 1, 1, 1))
+        #plight.setAttenuation(Point3(0, 0, 0.5))
+        plnp = self.render.attachNewNode(plight)
+        plnp.setPos(0, 0, 0)
+        self.render.setLight(plnp)"""
+
+        """alight = AmbientLight('alight')
+        alight.setColor(VBase4(0.2, 0.2, 0.2, 1))
+        alnp = self.render.attachNewNode(alight)
+        self.render.setLight(alnp)"""
+
+        #centx, centy, centz = gamma.getCenter()
+        #print str(centx) + str(centy) + str(centz)
+
+        #do physics
+        self.taskMgr.add(self.bulletupdate, 'bulletupdate')
 
     def stop(self):
         exit()
