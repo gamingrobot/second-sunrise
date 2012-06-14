@@ -12,6 +12,8 @@ from panda3d.bullet import BulletSphereShape
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape
 
+from Menus import MainMenu
+
 import math
 
 
@@ -33,6 +35,9 @@ loadPrcFile("config/Config.prc")
 class PlanetCraft(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
+
+        self.mainmenu = MainMenu(self)
+
         self.setBackgroundColor(0, 0, 0, 1)
         #bullet debug node
         debugNode = BulletDebugNode('Debug')
@@ -147,7 +152,7 @@ class PlanetCraft(ShowBase):
         print "Put marching cubes code in PlanetCraft.py:147"
 
     def stop(self):
-        pass
+        exit()
 
     '''def playSingle():
         PlanetCraft().run

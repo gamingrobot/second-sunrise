@@ -3,13 +3,13 @@ from OptionMenu import *
 
 
 class MainMenu(Menu):
-    def __init__(self, mainControl):
+    def __init__(self, superapp):
         print "hi"
         Menu.__init__(self, 'Menus/mainMenu.rml', 'mainMenu')
         #self.doc.Show()
         self.show()
 
-        self.controls = mainControl
+        self.app = superapp
 
         self.optionMenu = OptionMenu(self)
 
@@ -32,9 +32,6 @@ class MainMenu(Menu):
         march = self.startOpt.doc.GetElementById('march')
         march.AddEventListener('click', self.startMarch, True)
 
-        old = self.startOpt.doc.GetElementById('old')
-        old.AddEventListener('click', self.start, True)
-
         back = self.startOpt.doc.GetElementById('back')
         back.AddEventListener('click', self.hidePlayOpts, True)
 
@@ -50,17 +47,11 @@ class MainMenu(Menu):
         self.doc.Show()
         self.startOpt.hide()
 
-    #remove this method - temporary so game still works until seperated out
-    #into voxel and marching cubes
-    def start(self):
-        self.startOpt.doc.Close()
-        self.controls.singlePlay()
-
     def startVoxel(self):
-        self.controls.app.startVoxel()
+        self.app.startVoxel()
 
     def startMarch(self):
-        self.controls.app.startMarch()
+        self.app.startMarch()
 
     def stop(self):
-        self.controls.stop()
+        self.app.stop()
