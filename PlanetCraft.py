@@ -6,6 +6,7 @@ from panda3d.core import AmbientLight
 from panda3d.core import VBase4
 from panda3d.core import Point3
 from panda3d.core import Vec3
+from panda3d.core import WindowProperties
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletDebugNode
 from panda3d.bullet import BulletSphereShape
@@ -39,6 +40,11 @@ class PlanetCraft(ShowBase):
         self.mainmenu = MainMenu(self)
 
         self.setBackgroundColor(0, 0, 0, 1)
+
+        #show mouse
+        props = WindowProperties()
+        props.setCursorHidden(False)
+        base.win.requestProperties(props)
 
     def bulletupdate(self, task):
         """ G = 6.673 * 10 ** -11
@@ -93,7 +99,7 @@ class PlanetCraft(ShowBase):
         return task.cont
 
     def startVoxel(self):
-        self.startGame(debug=True)
+        self.startGame(True)
 
     def startMarch(self):
         self.startGame()

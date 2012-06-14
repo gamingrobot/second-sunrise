@@ -48,9 +48,11 @@ class MainMenu(Menu):
         self.startOpt.hide()
 
     def startVoxel(self):
+        self.startOpt.hide()
         self.app.startVoxel()
 
     def startMarch(self):
+        self.startOpt.hide()
         self.app.startMarch()
 
     def stop(self):

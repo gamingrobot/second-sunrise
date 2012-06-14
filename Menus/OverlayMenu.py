@@ -16,4 +16,4 @@ class OverlayMenu(Menu):
         self.control.toggleOverlay()
 
     def stop(self):
-        self.control.stop()
+        self.control.app.stop()

@@ -3,16 +3,15 @@ from direct.task import Task
 from panda3d.core import WindowProperties
 from direct.showbase.InputStateGlobal import inputState
 from math import *
-from Menus import *
+from Menus import OverlayMenu
 import sys
 
 
 class Controls:
     def __init__(self, superapp):
-        self.app = superapp
 
-        #prepare pause menu
-        self.overlay = OverlayMenu(self)
+        print 'hello'
+        self.app = superapp
 
         self.ovrlay = False
         self.inGame = False
@@ -42,7 +41,7 @@ class Controls:
         self.sensitivity = .05
         self.speed = .1
 
-        self.menuMode()
+        self.gameMode()
 
     def menuMode(self):
         #show mouse
@@ -134,6 +133,12 @@ class Controls:
         sys.exit()
 
     def toggleOverlay(self):
+        try:
+            self.overlay
+        except:
+            self.overlay = OverlayMenu(self)
+
+
         self.ovrlay = not self.ovrlay
 
         if (self.ovrlay):
