@@ -1,4 +1,4 @@
-win-size 640 480
+win-size 720 480
 
 threading-model Cull/Draw
 

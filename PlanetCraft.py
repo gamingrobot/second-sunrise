@@ -140,6 +140,12 @@ class PlanetCraft(ShowBase):
         self.bulletworld.doPhysics(dt, 10, 1.0 / 180.0)
         return task.cont
 
+    def startVoxel(self):
+        print "Put voxel starting code in PlanetCraft.py:144"
+
+    def startMarch(self):
+        print "Put marching cubes code in PlanetCraft.py:147"
+
     def stop(self):
         pass
 

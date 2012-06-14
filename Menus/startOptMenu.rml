@@ -1,0 +1,14 @@
+<rml>
+    <head>
+        <title>Play Options</title>
+        <link type="text/template" href="mainWinTemplate.rml"/>
+    </head>
+    <body template="mainWindow">
+        <div id="content">
+            <button id="voxel">Voxel</button><br/>
+            <button id="march">Marching Cubes</button><br/>
+            <button id="old">Use old settings</button><br/>
+            <button id="back">Back</button><br/>
+        </div>
+    </body>
+</rml>

@@ -4,11 +4,8 @@
     <link type="text/template" href="mainWinTemplate.rml"/>
 </head>
 <body template="mainWindow" class="window">
-    <div id="title-bar">
-        <img src="../media/pcLogo.png" width="400px" height="127px" id="title" />
-    </div>
     <div id="content">
-        <button id="play" width="150px">Play Game</button><br/>
+        <button id="play">Play Game</button><br/>
         <button id="options">Options</button><br/>
         <button id="quit">Quit Game</button>
     </div>

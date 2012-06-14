@@ -4,9 +4,6 @@
         <link type="text/template" href="mainWinTemplate.rml"/>
     </head>
     <body template="mainWindow">
-        <div id="title-bar">
-            <img src="../media/pcLogo.png" id="title"  width="400px" height="127px"/>
-        </div>
         <div id="content">
             <input type="text" />
             <textarea></textarea>
