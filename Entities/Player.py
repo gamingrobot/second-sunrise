@@ -10,6 +10,8 @@ import math
 sys.path.insert(0, '..')
 from MovableEntity import *
 from Controls import *
+from Hud import *
+from Menus import InGameMenu
 
 
 class Player(MovableEntity):
@@ -19,6 +21,10 @@ class Player(MovableEntity):
         self.root = args['root']
         #setup camera
         self.root.camera.setPos(args['x'], args['y'], args['z'])
+        #create hud
+        self.hud = Hud(self.root)
+        #create ingamemenu
+        self.ingamemenu = InGameMenu(self.root, self)
         #create player mesh
         """shape = BulletBoxShape(Vec3(0.5, 0.5, 0.5))
         self.bplayer = BulletRigidBodyNode('Player')
@@ -34,7 +40,7 @@ class Player(MovableEntity):
         #reparent player to camera
         #self.root.camera.reparentTo(self.player)
         #start the controller
-        self.cont = Controls(self.root)
+        self.cont = Controls(self.root, self)
 
         #was used before start menu was working
         #self.cont.gameMode()
@@ -132,3 +138,14 @@ class Player(MovableEntity):
 
     def lookAt(self, planet):
         self.root.camera.headsUp(planet)
+
+    def toggleInGameMenu(self):
+        if self.cont.inGame:
+            self.ingamemenu.doc.Show()
+            self.cont.menuMode()
+        else:
+            self.ingamemenu.doc.Hide()
+            self.cont.gameMode()
+
+    def stop(self):
+        self.cont.stop()

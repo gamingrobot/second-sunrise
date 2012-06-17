@@ -11,6 +11,10 @@ context.LoadDocument('data/background.rml').Show()
 
 doc = context.LoadDocument('data/main_menu.rml')
 doc.Show()
+doc.Close()
+
+doc = context.LoadDocument('data/help.rml')
+doc.Show()
 
 ih = RocketInputHandler()
 base.mouseWatcher.attachNewNode(ih)
@@ -21,7 +25,7 @@ def OnClick():
   for i in range(10):
     print('Line ' + str(i))
 
-element = doc.GetElementById('test')
+element = doc.GetElementById('help_back')
 element.AddEventListener('click', OnClick, True)
 
 run()

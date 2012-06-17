@@ -2,22 +2,24 @@ from panda3d.rocket import *
 
 
 class Menu:
-    def __init__(self, fname, regionName):
-        LoadFontFace("tests/rocket-sample/assets/Delicious-Roman.otf")
+    def __init__(self,  root, prevmenu, rmlpath):
+        self.root = root
+        self.prevmenu = prevmenu
+        #create menu
+        self.doc = self.root.rocketContext.LoadDocument(rmlpath)
 
-        self.r = RocketRegion.make(regionName, base.win)
-        self.r.setActive(1)
-        self.context = self.r.getContext()
-
-        self.doc = self.context.LoadDocument(fname)
-
-        self.ih = RocketInputHandler()
-        base.mouseWatcher.attachNewNode(self.ih)
-        self.r.setInputHandler(self.ih)
-
-
-    def show(self):
-        self.doc.Show()
-
-    def hide(self):
+    def goBackMenu(self):
+        self.prevmenu.doc.Show()
         self.doc.Hide()
+
+    def goToMenu(self, themenu):
+        self.doc.Hide()
+        themenu.doc.Show()
+
+    def closeAllMenus(self):
+        if self.prevmenu != None:
+            self.prevmenu.closeAllMenus()
+        self.closeMenu()
+
+    def closeMenu(self):
+        self.doc.Close()

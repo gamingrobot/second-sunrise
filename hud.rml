@@ -1,0 +1,10 @@
+<rml>
+<head>
+    <link type="text/rcss" href="hud.rcss"/>
+</head>
+<body class="window">
+    <div id="content">
+        <div id="crosshair">+</div>
+    </div>
+</body>
+</rml>

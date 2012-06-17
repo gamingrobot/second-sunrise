@@ -50,6 +50,6 @@
 		<p>
 			Destroy all the invaders in each wave before any get past your ship to invade Earth, unleash their deadly toxin and wipe out all of humanity!
 		</p>
-		<button id="help_back" onclick="LoadMenu('main_menu')">Back</button>
+		<button id="help_back">Back</button>
 	</body>
 </rml>

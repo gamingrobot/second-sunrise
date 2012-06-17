@@ -3,23 +3,22 @@ from direct.task import Task
 from panda3d.core import WindowProperties
 from direct.showbase.InputStateGlobal import inputState
 from math import *
-from Menus import OverlayMenu
 import sys
 
 
 class Controls:
-    def __init__(self, superapp):
+    def __init__(self, root, player):
 
-        print 'hello'
-        self.app = superapp
+        #TODO: fix to be root
+        self.root = root
+        self.player = player
 
-        self.ovrlay = False
         self.inGame = False
         #camera stuff
 
-        self.app.disableMouse()
-        self.app.accept("escape", self.toggleOverlay)
-        self.app.accept("q", self.stop)
+        self.root.disableMouse()
+        self.root.accept("escape", self.player.toggleInGameMenu)
+        self.root.accept("q", self.stop)
 
         inputState.watchWithModifiers('forward', 'w')
         inputState.watchWithModifiers('left', 'a')
@@ -31,13 +30,13 @@ class Controls:
         #register stuff
         self.mouseChangeX = 0
         self.mouseChangeY = 0
-        self.windowSizeX = self.app.win.getXSize()
-        self.windowSizeY = self.app.win.getYSize()
+        self.windowSizeX = self.root.win.getXSize()
+        self.windowSizeY = self.root.win.getYSize()
         self.centerX = self.windowSizeX / 2
         self.centerY = self.windowSizeY / 2
-        self.H = self.app.camera.getH()
-        self.P = self.app.camera.getP()
-        self.pos = self.app.camera.getPos()
+        self.H = self.root.camera.getH()
+        self.P = self.root.camera.getP()
+        self.pos = self.root.camera.getPos()
         self.sensitivity = .05
         self.speed = .1
 
@@ -64,86 +63,70 @@ class Controls:
         self.startMove()
 
     def look(self, task):
-        mouse = self.app.win.getPointer(0)
+        mouse = self.root.win.getPointer(0)
         x = mouse.getX()
         y = mouse.getY()
-        if self.app.win.movePointer(0, self.centerX, self.centerY):
+        if self.root.win.movePointer(0, self.centerX, self.centerY):
             self.mouseChangeX = self.centerX - x
             self.mouseChangeY = self.centerY - y
             self.H += self.mouseChangeX * self.sensitivity
             self.P += self.mouseChangeY * self.sensitivity
-            self.app.camera.setHpr(self.H, self.P, 0)
+            self.root.camera.setHpr(self.H, self.P, 0)
             print "H" + str(self.H)
             #print "P" + str(self.P)
         return Task.cont
 
     def startLook(self):
-        self.app.win.movePointer(0, self.centerX, self.centerY)
+        self.root.win.movePointer(0, self.centerX, self.centerY)
         taskMgr.add(self.look, 'look')
 
     def startMove(self):
         taskMgr.add(self.move, 'move')
 
     def move(self, task):
-        self.H = self.app.camera.getH()
-        self.P = self.app.camera.getP()
-        self.pos = self.app.camera.getPos()
+        self.H = self.root.camera.getH()
+        self.P = self.root.camera.getP()
+        self.pos = self.root.camera.getPos()
         if inputState.isSet('forward'):
-            dir = self.app.camera.getNetTransform().getMat().getRow3(1)
+            dir = self.root.camera.getNetTransform().getMat().getRow3(1)
             dir.setZ(0)
             dir.normalize()
             self.pos += dir * self.speed
-            self.app.camera.setPos(self.pos)
+            self.root.camera.setPos(self.pos)
         if inputState.isSet('reverse'):
-            dir = self.app.camera.getNetTransform().getMat().getRow3(1)
+            dir = self.root.camera.getNetTransform().getMat().getRow3(1)
             dir.setZ(0)
             dir.normalize()
             self.pos -= dir * self.speed
-            self.app.camera.setPos(self.pos)
+            self.root.camera.setPos(self.pos)
         if inputState.isSet('left'):
-            dir = self.app.camera.getNetTransform().getMat().getRow3(0)
+            dir = self.root.camera.getNetTransform().getMat().getRow3(0)
             dir.setZ(0)
             dir.normalize()
             self.pos -= dir * self.speed
-            self.app.camera.setPos(self.pos)
+            self.root.camera.setPos(self.pos)
         if inputState.isSet('right'):
-            dir = self.app.camera.getNetTransform().getMat().getRow3(0)
+            dir = self.root.camera.getNetTransform().getMat().getRow3(0)
             dir.setZ(0)
             dir.normalize()
             self.pos += dir * self.speed
-            self.app.camera.setPos(self.pos)
+            self.root.camera.setPos(self.pos)
         if inputState.isSet('crouch'):
-            dir = self.app.camera.getNetTransform().getMat().getRow3(2)
+            dir = self.root.camera.getNetTransform().getMat().getRow3(2)
             #dir.setZ(0)
             dir.normalize()
             self.pos -= dir * self.speed
-            self.app.camera.setPos(self.pos)
+            self.root.camera.setPos(self.pos)
         if inputState.isSet('jump'):
-            dir = self.app.camera.getNetTransform().getMat().getRow3(2)
+            dir = self.root.camera.getNetTransform().getMat().getRow3(2)
             #dir.setZ(0)
             dir.normalize()
             self.pos += dir * self.speed
-            self.app.camera.setPos(self.pos)
+            self.root.camera.setPos(self.pos)
         return Task.cont
 
     def stop(self):
         taskMgr.remove('look')
         taskMgr.remove('move')
-        self.app.stop()
+        self.root.stop()
         sys.exit()
-
-    def toggleOverlay(self):
-        try:
-            self.overlay
-        except:
-            self.overlay = OverlayMenu(self)
-
-
-        self.ovrlay = not self.ovrlay
-
-        if (self.ovrlay):
-            self.overlay.show()
-            self.menuMode()
-        else:
-            self.overlay.hide()
-            self.gameMode()

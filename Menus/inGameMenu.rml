@@ -7,7 +7,7 @@
     <div id="content">
         <br/>
         <button id="resume">Resume Game</button><br/>
-        <br/>
+        <button id="options">Options</button><br/>
         <button id="pauseQuit">Quit Game</button>
     </div>
 </body>
