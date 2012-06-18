@@ -14,6 +14,9 @@ class MainMenu(Menu):
         #create world menu (root, currentmenu)
         self.worldSelectMenu = WorldSelectMenu(self.root, self)
 
+        #set self.root for use in the stop method
+        self.root = root
+
         #get the play button and add a callback function for starting the game
         play = self.doc.GetElementById('play')
         play.AddEventListener('click', self.ShowWorldMenu, True)
@@ -33,5 +36,4 @@ class MainMenu(Menu):
         self.goToMenu(self.worldSelectMenu)
 
     def stop(self):
-        pass
-        #self.root.stop()
+        self.root.stop()

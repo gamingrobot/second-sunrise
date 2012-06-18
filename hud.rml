@@ -1,6 +1,7 @@
 <rml>
 <head>
     <link type="text/rcss" href="hud.rcss"/>
+    <link type="text/rcss" href="Menus/default.rcss"/>
 </head>
 <body class="window">
     <div id="content">
