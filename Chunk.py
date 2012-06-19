@@ -56,12 +56,11 @@ class Chunk:
             it.iternext()
 
     def generateVoxel(self):
-        taskMgr.add(self.generateVoxelThread, 'voxel')
         #t = threading.Thread(target=self.generateVoxelThread, args=())
         #t.start()
-        #self.generateVoxelThread()
+        self.generateVoxelThread()
 
-    def generateVoxelThread(self, task):
+    def generateVoxelThread(self):
         #render a cube
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
@@ -344,10 +343,9 @@ class Chunk:
             return True
 
     def generateMarching(self):
-        taskMgr.add(self.generateMarchingThread, 'marching')
         #t = threading.Thread(target=self.generateMarchingThread, args=())
         #t.start()
-        #self.generateMarchingThread()
+        self.generateMarchingThread()
 
     def generateMarchingThread(self, task):
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
