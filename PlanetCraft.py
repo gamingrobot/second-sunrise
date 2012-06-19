@@ -38,6 +38,8 @@ loadPrcFile("config/Config.prc")
 class PlanetCraft(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
+        from panda3d.core import Thread
+        print "Threading Supported: " + str(Thread.isThreadingSupported())
         #create rocketregion
         LoadFontFace("tests/rocket-sample/assets/Delicious-Roman.otf")
 

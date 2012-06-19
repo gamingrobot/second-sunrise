@@ -9,4 +9,3 @@ window-title PlanetCraft
 sync-video False
 
 cursor-hidden True
-

@@ -1,6 +1,5 @@
 #Planet
 import sys
-from direct.stdpy import thread
 sys.path.insert(0, '..')
 from MovableEntity import *
 from Chunk import *
@@ -16,6 +15,7 @@ class Planet(MovableEntity):
         self.z = args['z']
         self.root = args['root']
         self.planetNode = args['render'].attachNewNode("Planet_Gamma")
+        self.debug = args['debug']
         self.planetNode.setPos(self.x, self.y, self.z)
         #init chunks
         self.chunkSize = 16
@@ -80,16 +80,16 @@ class Planet(MovableEntity):
         self.addChunkThread(x, y, z, True)
 
     def addChunk(self, x, y, z):
-        #threading currently broken
-        #thread.start_new_thread(self.addChunkThread, (x, y, z, False))
         self.addChunkThread(x, y, z, False)
 
     def addChunkThread(self, x, y, z, spawnchunk):
         nchunk = Chunk({'x': x, 'y': y, 'z': z,
             'planetNode': self.planetNode, 'root': self.root, 'spawnchunk': spawnchunk})
         nchunk.generateBlocks(self)
-        nchunk.generateVoxel()
-        #thechunk.generateMarching()
+        if self.debug:
+            nchunk.generateVoxel()
+        else:
+            nchunk.generateMarching()
         print nchunk.getChunkID()
         self.chunks[nchunk.getChunkID()] = nchunk
 

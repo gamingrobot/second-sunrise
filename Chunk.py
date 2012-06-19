@@ -9,6 +9,8 @@ from panda3d.bullet import BulletTriangleMeshShape
 from panda3d.bullet import BulletTriangleMesh
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape
+from direct.stdpy import threading
+from pandac.PandaModules import Thread
 import numpy as np
 import math
 from Blocks import *
@@ -54,6 +56,12 @@ class Chunk:
             it.iternext()
 
     def generateVoxel(self):
+        taskMgr.add(self.generateVoxelThread, 'voxel')
+        #t = threading.Thread(target=self.generateVoxelThread, args=())
+        #t.start()
+        #self.generateVoxelThread()
+
+    def generateVoxelThread(self, task):
         #render a cube
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
@@ -336,6 +344,12 @@ class Chunk:
             return True
 
     def generateMarching(self):
+        taskMgr.add(self.generateMarchingThread, 'marching')
+        #t = threading.Thread(target=self.generateMarchingThread, args=())
+        #t.start()
+        #self.generateMarchingThread()
+
+    def generateMarchingThread(self, task):
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
 
@@ -349,6 +363,7 @@ class Chunk:
         draw = Iso(self.blocks, self.size)
         pixel = draw.grid()
         triangles = draw.triangles
+        #threading currently hangs here
         for triangle in triangles:
             for avertex in triangle:
                 #print triangle
@@ -372,6 +387,7 @@ class Chunk:
         node.addGeom(geom)
         self.node = self.planetNode.attachNewNode(node)
         self.node.setPos(self.x, self.y, self.z)
+        self.node.setTag('Pickable', '1')
 
 
 class Iso:
