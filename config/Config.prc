@@ -9,3 +9,5 @@ window-title PlanetCraft
 sync-video False
 
 cursor-hidden True
+
+notify-level-thread spam
