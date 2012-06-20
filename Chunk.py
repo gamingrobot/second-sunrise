@@ -347,7 +347,7 @@ class Chunk:
         #t.start()
         self.generateMarchingThread()
 
-    def generateMarchingThread(self, task):
+    def generateMarchingThread(self):
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
 
