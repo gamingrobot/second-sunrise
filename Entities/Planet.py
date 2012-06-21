@@ -38,7 +38,9 @@ class Planet(MovableEntity):
     def spawnPlayer(self, player):
         cs = self.chunkSize
         #find a surface chunk
+        #spl = (0 * cs, 0 * cs, ((self.psize / 2) - 1) * cs)
         spl = (0 * cs, 0 * cs, ((self.psize / 2) - 1) * cs)
+
         print spl
         #generate chunk
         self.addSpawnChunk(spl[0], spl[1], spl[2])
@@ -53,45 +55,61 @@ class Planet(MovableEntity):
         self.addChunk(spl[0], spl[1] + 16, spl[2])              # (x, y + 1, z)
         self.addChunk(spl[0] - 16, spl[1], spl[2])              # (x + 1, y, z)
         self.addChunk(spl[0], spl[1] - 16, spl[2])              # (x, y + 1, z)
+        # +z
+        self.addChunk(spl[0], spl[1], spl[2] + 16)                   # (x, y, z)
+        self.addChunk(spl[0] + 16, spl[1], spl[2] + 16)              # (x + 1, y, z)
+        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2] + 16)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1] + 16, spl[2] + 16)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2] + 16)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] + 16, spl[1] - 16, spl[2] + 16)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0], spl[1] + 16, spl[2] + 16)              # (x, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1], spl[2] + 16)              # (x + 1, y, z)
+        self.addChunk(spl[0], spl[1] - 16, spl[2] + 16)              # (x, y + 1, z)
+        # -z
+        self.addChunk(spl[0], spl[1], spl[2] - 16)              # (x, y, z)
+        self.addChunk(spl[0] + 16, spl[1], spl[2] - 16)              # (x + 1, y, z)
+        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2] - 16)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1] + 16, spl[2] - 16)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2] - 16)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0] + 16, spl[1] - 16, spl[2] - 16)         # (x + 1, y + 1, z)
+        self.addChunk(spl[0], spl[1] + 16, spl[2] - 16)              # (x, y + 1, z)
+        self.addChunk(spl[0] - 16, spl[1], spl[2] - 16)              # (x + 1, y, z)
+        self.addChunk(spl[0], spl[1] - 16, spl[2] - 16)              # (x, y + 1, z)
 
-        """#generate naboring chunks
-        #positive
-        self.addChunk(spl[0] + 16, spl[1], spl[2])              # (x + 1, y, z)
-        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2])         # (x + 1, y + 1, z)
-        self.addChunk(spl[0], spl[1] + 16, spl[2])              # (x, y + 1, z)
-        self.addChunk(spl[0], spl[1] + 16, spl[2] + 16)         # (x, y, z + 1)
-        self.addChunk(spl[0] + 16, spl[1], spl[2] + 16)         # (x + 1, y, z + 1)
-        self.addChunk(spl[0] + 16, spl[1] + 16, spl[2] + 16)    # (x + 1, y + 1, z + 1)
-        self.addChunk(spl[0], spl[1] + 16, spl[2] + 16)         # (x, y + 1, z + 1)
-        #negitive
-        self.addChunk(spl[0] - 16, spl[1], spl[2])              # (x - 1, y, z)
-        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2])         # (x - 1, y - 1, z)
-        self.addChunk(spl[0], spl[1] - 16, spl[2])              # (x, y - 1, z)
-        self.addChunk(spl[0], spl[1] - 16, spl[2] - 16)         # (x, y, z - 1)
-        self.addChunk(spl[0] - 16, spl[1], spl[2] - 16)         # (x - 1, y, z - 1)
-        self.addChunk(spl[0] - 16, spl[1] - 16, spl[2] - 16)    # (x - 1, y - 1, z - 1)
-        self.addChunk(spl[0], spl[1] - 16, spl[2] - 16)         # (x, y - 1, z - 1)"""
+        #generate meshes
+        self.generateChunkMesh(self.chunks[str(spl[0]) + ":" + str(spl[1]) + ":" + str(spl[2])], self.chunks)
+        """self.generateChunkMesh(self.chunks[str(spl[0] + 16) + ":" + str(spl[1]) + ":" + str(spl[2])], self.chunks)
+        self.generateChunkMesh(self.chunks[str(spl[0] + 16) + ":" + str(spl[1] + 16) + ":" + str(spl[2])], self.chunks)
+        self.generateChunkMesh(self.chunks[str(spl[0]) + ":" + str(spl[1] + 16) + ":" + str(spl[2])], self.chunks)
+        self.generateChunkMesh(self.chunks[str(spl[0]) + ":" + str(spl[1] + 16) + ":" + str(spl[2] + 16)], self.chunks)
+        self.generateChunkMesh(self.chunks[str(spl[0]) + ":" + str(spl[1]) + ":" + str(spl[2] + 16)], self.chunks)
+        self.generateChunkMesh(self.chunks[str(spl[0] + 16) + ":" + str(spl[1] + 16) + ":" + str(spl[2] + 16)], self.chunks)"""
 
         #place player
         playerspl = Vec3(spl[0], spl[1], spl[2] + self.chunkSize + 4)
         player.setPos(playerspl)
 
     def addSpawnChunk(self, x, y, z):
-        self.addChunkThread(x, y, z, True)
-
-    def addChunk(self, x, y, z):
-        self.addChunkThread(x, y, z, False)
-
-    def addChunkThread(self, x, y, z, spawnchunk):
         nchunk = Chunk({'x': x, 'y': y, 'z': z,
-            'planetNode': self.planetNode, 'root': self.root, 'spawnchunk': spawnchunk})
+            'planetNode': self.planetNode, 'root': self.root, 'spawnchunk': True})
         nchunk.generateBlocks(self)
-        if self.debug:
-            nchunk.generateVoxel()
-        else:
-            nchunk.generateMarching()
         print nchunk.getChunkID()
         self.chunks[nchunk.getChunkID()] = nchunk
+
+    def addChunk(self, x, y, z):
+        nchunk = Chunk({'x': x, 'y': y, 'z': z,
+            'planetNode': self.planetNode, 'root': self.root, 'spawnchunk': False})
+        nchunk.generateBlocks(self)
+        print nchunk.getChunkID()
+        self.chunks[nchunk.getChunkID()] = nchunk
+
+    def generateChunkMesh(self, chunk, chunks):
+        print chunks
+        #if chunk.spawn:
+        if self.debug:
+            chunk.generateVoxel()
+        else:
+            chunk.generateMarching(chunks)
 
     def testBox(self, x, y, z):
         model = self.root.loader.loadModel('models/box.egg')
