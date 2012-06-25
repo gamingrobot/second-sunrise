@@ -378,7 +378,19 @@ class Chunk:
                 #make vertices here
                 shade = 0.5
                 vertex.addData3f(avertex[0], avertex[1], avertex[2])
-                normal.addData3f(0, 0, 1)
+                #fix normals
+                x1, y1, z1 = triangle[0][0], triangle[0][1], triangle[0][2]
+                x2, y2, z2 = triangle[1][0], triangle[1][1], triangle[1][2]
+                x3, y3, z3 = triangle[2][0], triangle[2][1], triangle[2][2]
+                normx = (z1 - z2) * (y3 - y2) - (y1 - y2) * (z3 - z2)
+                normy = (x1 - x2) * (z3 - z2) - (z1 - z2) * (x3 - x2)
+                normz = (y1 - y2) * (x3 - x2) - (x1 - x2) * (y3 - y2)
+                normlength = math.sqrt(normx ** 2 + normy ** 2 + normz ** 2)
+                normx /= normlength
+                normy /= normlength
+                normz /= normlength
+
+                normal.addData3f(normx, normy, normz)
                 color.addData4f(shade, shade, shade, 1)
                 texcoord.addData2f(1, 0)
 
