@@ -3,7 +3,9 @@ import sys
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape
 from panda3d.core import Vec3
+from panda3d.core import PointLight
 from panda3d.core import Vec4
+from panda3d.core import VBase4
 from panda3d.core import CollisionRay, CollisionNode, GeomNode, CollisionTraverser
 from panda3d.core import CollisionHandlerQueue, CollisionSphere, BitMask32
 import math
@@ -19,8 +21,15 @@ class Player(MovableEntity):
     def __init__(self, args):
         MovableEntity.__init__(self, args)
         self.root = args['root']
+        self.planet = args['planet']
         #setup camera
         self.root.camera.setPos(args['x'], args['y'], args['z'])
+        plight = PointLight('plight')
+        plight.setColor(VBase4(1, 1, 1, 1))
+        #plight.setAttenuation(Point3(0, 0, 0.5))
+        plnp = self.root.camera.attachNewNode(plight)
+        plnp.setPos(0, 0, 0)
+        self.root.render.setLight(plnp)
         #create hud
         self.hud = Hud(self.root)
         #create ingamemenu
@@ -64,7 +73,6 @@ class Player(MovableEntity):
         mpos = base.mouseWatcherNode.getMouse()
 
         #Set the position of the ray based on the mouse position
-
         self.mPickRay.setFromLens(self.root.camNode, mpos.getX(), mpos.getY())
 
         #for this small example I will traverse everything, for bigger projects
@@ -80,8 +88,17 @@ class Player(MovableEntity):
             if not chunk.isEmpty():
                 #here is how you get the surface collsion
                 block = entry.getSurfacePoint(self.root.render)
-                print chunk.getName()
+                chunkname = chunk.getName()
+                cord = chunkname.split(":")
+
+                x = int(math.floor(block[0] - int(cord[0])))
+                y = int(math.floor(block[1] - int(cord[1])))
+                z = int(math.floor(block[2] - int(cord[2])))
                 print block
+                print chunkname
+                print str(x) + "," + str(y) + "," + str(z)
+
+                self.planet.removeBlock(chunkname, x, y, z)
                 #handleBlockClick(chunk, block)
 
     def setupMouseCollision(self):

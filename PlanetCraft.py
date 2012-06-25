@@ -145,10 +145,11 @@ class PlanetCraft(ShowBase):
         #model.reparentTo(self.render)
         #model.setPos(0, 0, 0)
 
-        #create player
-        self.player = Player({'x': -10, 'y': 25, 'z': 10, 'root': self})
         #create planet
         gamma = Planet({'x': 0, 'y': 0, 'z': 0, 'render': self.render, 'root': self, 'debug': debug})
+
+        #create player
+        self.player = Player({'x': -10, 'y': 25, 'z': 10, 'root': self, 'planet': gamma})
 
         gamma.spawnPlayer(self.player)
 

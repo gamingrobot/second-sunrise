@@ -55,6 +55,13 @@ class Chunk:
             #        {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
             it.iternext()
 
+    def removeBlock(self, x, y, z):
+        print "removing" + str(x) + "," + str(y) + "," + str(z)
+        print self.blocks[x][y][z]
+        self.blocks[x][y][z] = Air(
+                    {'x': x * self.blockSize, 'y': y * self.blockSize, 'z': z * self.blockSize, 'density': float(-1.0), 'name': '000'})
+        self.node.removeNode()
+
     def generateVoxel(self):
         #t = threading.Thread(target=self.generateVoxelThread, args=())
         #t.start()
@@ -313,6 +320,7 @@ class Chunk:
                             #increment vertexcount
                             self.vertexcount += 4
 
+        #prim.closePrimitive()
         #attach primitives and render
         geom = Geom(vdata)
         geom.addPrimitive(prim)
@@ -368,9 +376,9 @@ class Chunk:
             for avertex in triangle:
                 #print triangle
                 #make vertices here
-                shade = 1
+                shade = 0.5
                 vertex.addData3f(avertex[0], avertex[1], avertex[2])
-                normal.addData3f(0, 0, 1)
+                #normal.addData3f(0, 0, 1)
                 color.addData4f(shade, shade, shade, 1)
                 texcoord.addData2f(1, 0)
 
@@ -378,12 +386,13 @@ class Chunk:
             prim.addVertices(self.vertexcount, self.vertexcount + 1, self.vertexcount + 2)
             self.vertexcount += 3
 
+        #prim.closePrimitive()
         #print prim
         #attach primitives and render
         geom = Geom(vdata)
         geom.addPrimitive(prim)
 
-        node = GeomNode('gnode')
+        node = GeomNode(self.id)
         node.addGeom(geom)
         self.node = self.planetNode.attachNewNode(node)
         self.node.setPos(self.x, self.y, self.z)
