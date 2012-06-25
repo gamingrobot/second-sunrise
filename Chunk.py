@@ -504,10 +504,6 @@ class Iso:
                     position[5] = (x + 1, y, z + 1)
                     position[6] = (x + 1, y + 1, z + 1)
                     position[7] = (x, y + 1, z + 1)
-<<<<<<< HEAD
-=======
-                    #fix this
->>>>>>> 02587fa0c17cc3606604100fe45c1e44b4b8a9d9
                     #print self.genHash(x,y,z)
                     if x == self.size - 1 and y == self.size - 1 and z == self.size - 1:
                         #print "in if 1" + self.genHash(x, y, z)
