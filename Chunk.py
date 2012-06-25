@@ -378,7 +378,7 @@ class Chunk:
                 #make vertices here
                 shade = 0.5
                 vertex.addData3f(avertex[0], avertex[1], avertex[2])
-                #normal.addData3f(0, 0, 1)
+                normal.addData3f(0, 0, 1)
                 color.addData4f(shade, shade, shade, 1)
                 texcoord.addData2f(1, 0)
 
