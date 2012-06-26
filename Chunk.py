@@ -25,7 +25,6 @@ class Chunk:
         self.id = str(self.x) + ":" + str(self.y) + ":" + str(self.z)
         self.planetNode = args['planetNode']
         self.root = args['root']
-        self.spawn = args['spawnchunk']
 
     def getChunkID(self):
         return self.id
