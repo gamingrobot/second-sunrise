@@ -158,7 +158,7 @@ class Planet(MovableEntity):
         self.chunks[chunkid].removeBlock(x, y, z)
         cord = chunkid.split(":")
         #fix so it doesnt regenerate the entire mesh/might run into artificats tho
-        self.generateChunkMesh(int(cord[0]), int(cord[1]), int(cord[2]), self.chunks)
+        self.generateChunkMesh(int(cord[0]), int(cord[1]), int(cord[2]))
 
     def testBox(self, x, y, z):
         model = self.root.loader.loadModel('models/box.egg')

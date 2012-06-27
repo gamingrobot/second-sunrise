@@ -46,12 +46,17 @@ class Chunk:
             #arandom = 1
             if math.sqrt((ab(self.x + index[0])) ** 2 + (ab(self.y + index[1])) ** 2 + (ab(self.z + index[2])) ** 2) <= self.radius:
                 it[0] = Dirt(
-                    {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(1.0), 'name': '000'})
+                    {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
             else:
                 it[0] = Air(
-                    {'x': index[0] * self.blockSize, 'y': index[1] * self.blockSize, 'z': index[2] * self.blockSize, 'density': float(-1.0), 'name': '000'})
-            #it[0] = Dirt(
-            #        {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
+                    {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(-1.0), 'name': '000'})
+            
+            """if math.sqrt((ab(self.x)) ** 2 + (ab(self.y)) ** 2 + (ab(self.z)) ** 2) <= self.radius:
+                it[0] = Dirt(
+                        {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
+            else:
+                it[0] = Air(
+                        {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(-1.0), 'name': '000'})"""
             it.iternext()
 
     def removeBlock(self, x, y, z):
@@ -501,50 +506,92 @@ class Iso:
                     position[5] = (x + 1, y, z + 1)
                     position[6] = (x + 1, y + 1, z + 1)
                     position[7] = (x, y + 1, z + 1)
+
                     #print self.genHash(x,y,z)
                     if x == self.size - 1 and y == self.size - 1 and z == self.size - 1:
                         #print "in if 1" + self.genHash(x, y, z)
-                        p.value = (self.blocks[x, y, z].getDensity(),
+                        """p.value = (self.blocks[x, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[1, 0, 0].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[1, 1, 0].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 1, 0].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 0, 1].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[1, 0, 1].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 0, 0].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 1, 1].getDensity())
+                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 1, 1].getDensity())"""
+                        p.value = (self.blocks[x, y, z].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, 15].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, 15].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[15, 0, 15].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[15, 15, 0].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, 15, 0].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 0, 0].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[15, 0, 0].getDensity())
+                        """p.value = (-1.0,
+                                -1.0,
+                                -1.0,
+                                -1.0,
+                                -1.0,
+                                -1.0,
+                                -1.0,
+                                -1.0)"""
 
                     elif x == self.size - 1 and y == self.size - 1:
                         #print "in if 2" + self.genHash(x, y, z)
-                        p.value = (self.blocks[x, y, z].getDensity(),
+                        """p.value = (self.blocks[x, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[1, 0, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 1, z].getDensity(),
                                 self.blocks[x, y, z + 1].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[1, 0, z + 1].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[1, 1, z + 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 1, z + 1].getDensity())
+                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 1, z + 1].getDensity())"""
+                        p.value = (self.blocks[x, y, z].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, z].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z].getDensity(), #watch out here might cause problem
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[15, 0, z].getDensity(),
+                                self.blocks[x, y, z + 1].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, z + 1].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z + 1].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[15, 0, z + 1].getDensity())
 
                     elif x == self.size - 1 and z == self.size - 1:
-                        #print "in if 3" + self.genHash(x, y, z)
-                        p.value = (self.blocks[x, y, z].getDensity(),
+                        #print "in if 3 " + self.genHash(x, y, z)
+                        """p.value = (self.blocks[x, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[1, y, 0].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[1, y + 1, 0].getDensity(),
                                 self.blocks[x, y + 1, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y, 1].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y, 0].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[1, y + 1, 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y + 1, 1].getDensity())
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y + 1, 1].getDensity())"""
+                        p.value = (self.blocks[x, y, z].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y, 15].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y + 1, 15].getDensity(),
+                                self.blocks[x, y + 1, z].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[15, y, 0].getDensity(),
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y, 0].getDensity(), #watch out here might cause problem
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y + 1, 0].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[15, y + 1, 0].getDensity())
 
                     elif y == self.size - 1 and z == self.size - 1:
                         #print "in if 4" + self.genHash(x, y, z)
-                        p.value = (self.blocks[x, y, z].getDensity(),
+                        """p.value = (self.blocks[x, y, z].getDensity(),
                                 self.blocks[x + 1, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 1, 0].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 1, 0].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 1].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 0, 1].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 1, 1].getDensity(),
-                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 0].getDensity())
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 0].getDensity())"""
+                        p.value = (self.blocks[x, y, z].getDensity(),
+                                self.blocks[x + 1, y, z].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x + 1, 0, 15].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x, 0, 15].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x, 15, 0].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x + 1, 15, 0].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 0, 0].getDensity(),
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 0].getDensity()) #watch out here might cause problem
+
 
                     elif x == self.size - 1:
                         #print "in if 5" + self.genHash(x, y, z)
