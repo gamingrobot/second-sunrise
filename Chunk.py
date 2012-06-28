@@ -5,6 +5,8 @@ from panda3d.core import GeomVertexWriter
 from panda3d.core import GeomTriangles
 from panda3d.core import GeomNode
 from panda3d.core import Geom
+from panda3d.core import Point3
+from panda3d.core import VBase3
 from panda3d.bullet import BulletTriangleMeshShape
 from panda3d.bullet import BulletTriangleMesh
 from panda3d.bullet import BulletRigidBodyNode
@@ -25,6 +27,7 @@ class Chunk:
         self.id = str(self.x) + ":" + str(self.y) + ":" + str(self.z)
         self.planetNode = args['planetNode']
         self.root = args['root']
+        self.planet = args['planet']
 
     def getChunkID(self):
         return self.id
@@ -50,7 +53,7 @@ class Chunk:
             else:
                 it[0] = Air(
                     {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(-1.0), 'name': '000'})
-            
+
             """if math.sqrt((ab(self.x)) ** 2 + (ab(self.y)) ** 2 + (ab(self.z)) ** 2) <= self.radius:
                 it[0] = Dirt(
                         {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
@@ -65,6 +68,9 @@ class Chunk:
         self.blocks[x][y][z] = Air(
                     {'x': x * self.blockSize, 'y': y * self.blockSize, 'z': z * self.blockSize, 'density': float(-1.0), 'name': '000'})
         self.node.removeNode()
+        self.bulletnode.removeShape(self.bulletshape)
+        self.root.bulletworld.removeRigidBody(self.bulletnode)
+        self.bulletnp.removeNode()
 
     def generateVoxel(self):
         #t = threading.Thread(target=self.generateVoxelThread, args=())
@@ -301,7 +307,7 @@ class Chunk:
                             #increment vertexcount
                             self.vertexcount += 4
 
-        #prim.closePrimitive()
+        prim.closePrimitive()
         #attach primitives and render
         geom = Geom(vdata)
         geom.addPrimitive(prim)
@@ -379,7 +385,7 @@ class Chunk:
             prim.addVertices(self.vertexcount, self.vertexcount + 1, self.vertexcount + 2)
             self.vertexcount += 3
 
-        #prim.closePrimitive()
+        prim.closePrimitive()
         #print prim
         #attach primitives and render
         geom = Geom(vdata)
@@ -390,6 +396,24 @@ class Chunk:
         self.node = self.planetNode.attachNewNode(node)
         self.node.setPos(self.x, self.y, self.z)
         self.node.setTag('Pickable', '1')
+
+        #do bullet meshing
+        if self.id == self.planet.playerchunk:
+            mesh = BulletTriangleMesh()
+            for triangle in triangles:
+                p0 = Point3(triangle[0][0], triangle[0][1], triangle[0][2])
+                p1 = Point3(triangle[1][0], triangle[1][1], triangle[1][2])
+                p2 = Point3(triangle[2][0], triangle[2][1], triangle[2][2])
+                mesh.addTriangle(p0, p1, p2)
+
+            self.bulletshape = BulletTriangleMeshShape(mesh, dynamic=False)
+            self.bulletnode = BulletRigidBodyNode(self.id)
+            self.bulletnode.addShape(self.bulletshape)
+            self.bulletnode.setDeactivationEnabled(False)
+            self.bulletnode.setAnisotropicFriction(VBase3(1, 1, 0))
+            self.bulletnp = self.planetNode.attachNewNode(self.bulletnode)
+            self.bulletnp.setPos(self.x, self.y, self.z)
+            self.root.bulletworld.attachRigidBody(self.bulletnode)
 
     def genHash(self, x, y, z):
         return str(x) + ":" + str(y) + ":" + str(z)
@@ -547,7 +571,7 @@ class Iso:
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 1, z + 1].getDensity())"""
                         p.value = (self.blocks[x, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, z].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z].getDensity(), #watch out here might cause problem
+                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z].getDensity(),  # watch out here might cause problem
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[15, 0, z].getDensity(),
                                 self.blocks[x, y, z + 1].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, z + 1].getDensity(),
@@ -569,7 +593,7 @@ class Iso:
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y + 1, 15].getDensity(),
                                 self.blocks[x, y + 1, z].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[15, y, 0].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y, 0].getDensity(), #watch out here might cause problem
+                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y, 0].getDensity(),  # watch out here might cause problem
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y + 1, 0].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[15, y + 1, 0].getDensity())
 
@@ -590,8 +614,7 @@ class Iso:
                                 self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x, 15, 0].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x + 1, 15, 0].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 0, 0].getDensity(),
-                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 0].getDensity()) #watch out here might cause problem
-
+                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 0].getDensity())  # watch out here might cause problem
 
                     elif x == self.size - 1:
                         #print "in if 5" + self.genHash(x, y, z)

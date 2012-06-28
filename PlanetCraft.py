@@ -7,6 +7,7 @@ from panda3d.core import VBase4
 from panda3d.core import Point3
 from panda3d.core import Vec3
 from panda3d.core import WindowProperties
+from direct.showbase.InputStateGlobal import inputState
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletDebugNode
 from panda3d.bullet import BulletSphereShape
@@ -62,11 +63,12 @@ class PlanetCraft(ShowBase):
         base.win.requestProperties(props)
 
     def bulletupdate(self, task):
-        """ G = 6.673 * 10 ** -11
+        G = 6.673 * 10 ** -11
         playerpos = self.player.getPos()
         planetpos = (0, 0, 0)
         playermass = self.player.getMass()
         planetmass = 100000000000000
+        #planetmass = 100100000000000
 
         #find chunk player is in
 
@@ -81,17 +83,19 @@ class PlanetCraft(ShowBase):
         fy = ((f / d) * dify) * -1
         fz = ((f / d) * difz) * -1
 
-        th = 1
+        """th = 1
         if math.fabs(difx) <= th and math.fabs(dify) <= th and math.fabs(difz) <= th:
             #fx, fy, fz = 0, 0, 0
             self.player.setLinearVelocity(Vec3(0, 0, 0))
         else:
             self.player.applyForce(Vec3(fx, fy, fz), False)"""
 
-        """#player movement
-        speed = self.bplayer.getLinearVelocity()
-        omega = self.bplayer.getAngularVelocity()
-        move = 0.1
+        self.player.applyForce(Vec3(fx, fy, fz), False)
+
+        #player movement
+        speed = self.player.getLinearVelocity()
+        omega = self.player.getAngularVelocity()
+        move = 0.01
 
         if inputState.isSet('forward'):
             speed.setY(speed.getY() + move)
@@ -101,16 +105,27 @@ class PlanetCraft(ShowBase):
             speed.setX(speed.getX() + move * -1)
         if inputState.isSet('right'):
             speed.setX(speed.getX() + move)
-        if inputState.isSet('turnLeft'):
-            omega = 10.0
-        if inputState.isSet('turnRight'):
-            omega = -10.0
+        if inputState.isSet('jump'):
+            speed.setZ(speed.getZ() + move)
+        #if inputState.isSet('turnLeft'):
+        #    omega = 10.0
+        #if inputState.isSet('turnRight'):
+        #    omega = -10.0
 
-        self.bplayer.setAngularVelocity(omega)
-        self.bplayer.setLinearVelocity(speed)"""
+        #self.player.setAngularVelocity(omega)
+        #print speed
+
+        self.player.setLinearVelocity(speed)
+
 
         dt = globalClock.getDt()
         self.bulletworld.doPhysics(dt, 10, 1.0 / 180.0)
+
+        #fix orentation every 10 frames
+        #if(self.taskloopcounter == 60):
+        #    self.player.headsUp(self.gamma.planetNode.getPos())
+        #    self.taskloopcounter = 0
+        #self.taskloopcounter += 1
         return task.cont
 
     def startVoxel(self):
@@ -131,29 +146,36 @@ class PlanetCraft(ShowBase):
 
         #create bullet world
         self.bulletworld = BulletWorld()
-        #self.bulletworld.setDebugNode(debugNP.node())
+        self.bulletworld.setDebugNode(debugNP.node())
 
         #test colision
-        shape2 = BulletSphereShape(64)
+        """shape2 = BulletSphereShape(64)
         self.earthnode = BulletRigidBodyNode('Earth')
         self.earthnode.addShape(shape2)
         self.earthnp = self.render.attachNewNode(self.earthnode)
         self.earthnp.setPos(0, 0, 0)
-        self.bulletworld.attachRigidBody(self.earthnode)
+        self.bulletworld.attachRigidBody(self.earthnode)"""
 
         #model = self.loader.loadModel('models/box.egg')
         #model.reparentTo(self.render)
         #model.setPos(0, 0, 0)
 
         #create planet
-        gamma = Planet({'x': 0, 'y': 0, 'z': 0, 'render': self.render, 'root': self, 'debug': debug})
+        self.gamma = Planet({'x': 0, 'y': 0, 'z': 0, 'render': self.render, 'root': self, 'debug': debug})
 
         #create player
-        self.player = Player({'x': -10, 'y': 25, 'z': 10, 'root': self, 'planet': gamma})
+        self.player = Player({'x': -10, 'y': 25, 'z': 10, 'root': self, 'planet': self.gamma})
 
-        gamma.spawnPlayer(self.player)
+        self.gamma.spawnPlayer(self.player)
 
-        self.player.lookAt(gamma.planetNode.getPos())
+        self.player.headsUp(self.gamma.planetNode.getPos())
+
+        inputState.watchWithModifiers('forward', 'w')
+        inputState.watchWithModifiers('left', 'a')
+        inputState.watchWithModifiers('reverse', 's')
+        inputState.watchWithModifiers('right', 'd')
+        inputState.watchWithModifiers('crouch', 'shift')
+        inputState.watchWithModifiers('jump', 'space')
 
         #gamma.testChunk()
 
@@ -173,6 +195,7 @@ class PlanetCraft(ShowBase):
         #print str(centx) + str(centy) + str(centz)
 
         #do physics
+        self.taskloopcounter = 0
         self.taskMgr.add(self.bulletupdate, 'bulletupdate')
 
     def stop(self):

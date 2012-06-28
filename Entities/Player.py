@@ -35,21 +35,24 @@ class Player(MovableEntity):
         #create ingamemenu
         self.ingamemenu = InGameMenu(self.root, self)
         #create player mesh
-        """shape = BulletBoxShape(Vec3(0.5, 0.5, 0.5))
+        shape = BulletBoxShape(Vec3(0.5, 0.5, 1))
         self.bplayer = BulletRigidBodyNode('Player')
-        self.bplayer.setMass(1)
+        self.bplayer.setMass(200)
         self.bplayer.addShape(shape)
+        self.bplayer.setDeactivationEnabled(False)
         self.player = self.root.render.attachNewNode(self.bplayer)
         self.player.setPos(args['x'], args['y'], args['z'])
         self.root.bulletworld.attachRigidBody(self.bplayer)
-        model = self.root.loader.loadModel('models/box.egg')
-        model.flattenLight()
-        model.reparentTo(self.player)
-        model.setPos(-0.5, -0.5, -0.5)"""
+        #model = self.root.loader.loadModel('models/box.egg')
+        #model.flattenLight()
+        #model.reparentTo(self.player)
+        #model.setPos(-0.5, -0.5, -0.5)
         #reparent player to camera
-        #self.root.camera.reparentTo(self.player)
+        self.root.camera.reparentTo(self.player)
         #start the controller
         self.cont = Controls(self.root, self)
+
+        self.root.camera.setPos(0, 0, 0.5)
 
         #was used before start menu was working
         #self.cont.gameMode()
@@ -142,7 +145,7 @@ class Player(MovableEntity):
         return self.player.getPos()
 
     def setPos(self, newpos):
-        self.root.camera.setPos(newpos)
+        self.player.setPos(newpos)
 
     def getMass(self):
         return self.bplayer.getMass()
@@ -151,10 +154,22 @@ class Player(MovableEntity):
         self.bplayer.applyForce(force, mode)
 
     def setLinearVelocity(self, force):
-        self.player.setLinearVelocity(force)
+        self.bplayer.setLinearVelocity(force)
 
-    def lookAt(self, planet):
-        self.root.camera.headsUp(planet)
+    def setAngularVelocity(self, omega):
+        self.bplayer.setAngularVelocity(omega)
+
+    def getLinearVelocity(self):
+        return self.bplayer.getLinearVelocity()
+
+    def getAngularVelocity(self):
+        return self.bplayer.getAngularVelocity()
+
+    def headsUp(self, planet):
+        self.player.headsUp(planet)
+
+    def setHpr(self, h, p, r):
+        self.player.setHpr(h, p, r)
 
     def toggleInGameMenu(self):
         if self.cont.inGame:

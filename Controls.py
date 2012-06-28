@@ -20,12 +20,12 @@ class Controls:
         self.root.accept("escape", self.player.toggleInGameMenu)
         self.root.accept("q", self.stop)
 
-        inputState.watchWithModifiers('forward', 'w')
-        inputState.watchWithModifiers('left', 'a')
-        inputState.watchWithModifiers('reverse', 's')
-        inputState.watchWithModifiers('right', 'd')
-        inputState.watchWithModifiers('crouch', 'shift')
-        inputState.watchWithModifiers('jump', 'space')
+        #inputState.watchWithModifiers('forward', 'w')
+        #inputState.watchWithModifiers('left', 'a')
+        #inputState.watchWithModifiers('reverse', 's')
+        #inputState.watchWithModifiers('right', 'd')
+        #inputState.watchWithModifiers('crouch', 'shift')
+        #inputState.watchWithModifiers('jump', 'space')
 
         #register stuff
         self.mouseChangeX = 0
@@ -60,7 +60,7 @@ class Controls:
         #set game bool
         self.inGame = True
         self.startLook()
-        self.startMove()
+        #self.startMove()
 
     def look(self, task):
         mouse = self.root.win.getPointer(0)
@@ -71,7 +71,8 @@ class Controls:
             self.mouseChangeY = self.centerY - y
             self.H += self.mouseChangeX * self.sensitivity
             self.P += self.mouseChangeY * self.sensitivity
-            self.root.camera.setHpr(self.H, self.P, 0)
+            self.root.camera.setHpr(0, self.P, 0)
+            self.player.setHpr(self.H, 0, 0)
             #print "H" + str(self.H)
             #print "P" + str(self.P)
         return Task.cont

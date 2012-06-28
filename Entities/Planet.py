@@ -42,18 +42,19 @@ class Planet(MovableEntity):
         spl = (0 * cs, 0 * cs, ((self.psize / 2) - 1) * cs)
 
         print spl
+        self.playerchunk = self.genHash(spl[0], spl[1], spl[2])
         #generate chunk
         self.generateChunks(spl[0], spl[1], spl[2])
 
         #place player
-        playerspl = Vec3(spl[0], spl[1], spl[2] + self.chunkSize + 4)
+        playerspl = Vec3(spl[0] + 4, spl[1] + 4, spl[2] + self.chunkSize + 4)
         player.setPos(playerspl)
 
     def addChunk(self, x, y, z):
         nchunk = Chunk({'x': x, 'y': y, 'z': z,
-            'planetNode': self.planetNode, 'root': self.root})
+            'planetNode': self.planetNode, 'root': self.root, 'planet': self})
         nchunk.generateBlocks(self)
-        print nchunk.getChunkID()
+        #print nchunk.getChunkID()
         self.chunks[nchunk.getChunkID()] = nchunk
 
     def generateChunkMesh(self, x, y, z):
