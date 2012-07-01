@@ -1,25 +1,27 @@
 #Player
 import sys
 from panda3d.bullet import BulletRigidBodyNode
+from panda3d.bullet import BulletCharacterControllerNode
 from panda3d.bullet import BulletBoxShape
 from panda3d.core import Vec3
 from panda3d.core import PointLight
 from panda3d.core import Vec4
+from panda3d.core import WindowProperties
 from panda3d.core import VBase4
 from panda3d.core import CollisionRay, CollisionNode, GeomNode, CollisionTraverser
 from panda3d.core import CollisionHandlerQueue, CollisionSphere, BitMask32
 import math
-sys.path.insert(0, '..')
-from MovableEntity import *
+from CharacterController import *
+from mouseLook import MouseLook
+from direct.showbase.InputStateGlobal import inputState
 from Controls import *
 from Hud import *
 from Menus import InGameMenu
 
 
-class Player(MovableEntity):
+class Player:
     """Player"""
     def __init__(self, args):
-        MovableEntity.__init__(self, args)
         self.root = args['root']
         self.planet = args['planet']
         #setup camera
@@ -34,15 +36,86 @@ class Player(MovableEntity):
         self.hud = Hud(self.root)
         #create ingamemenu
         self.ingamemenu = InGameMenu(self.root, self)
-        #create player mesh
+        #setup controls
+        base.disableMouse()
+
+        self.ml = MouseLook()
+        self.ml.setMouseModeRelative(True)
+        self.ml.setCursorHidden(True)
+        self.ml.centerMouse = True
+        self.ml.mouseLookMode = self.ml.MLMFPP
+        self.ml.wheelSpeed = 1.0
+        self.ml.enable()
+
+        #~ base.accept("mouse2", ml.enable)
+        #~ base.accept("mouse2-up", ml.disable)
+        base.accept("wheel_up", self.ml.moveCamera, extraArgs=[Vec3(0, 1, 0)])
+        base.accept("wheel_down", self.ml.moveCamera, extraArgs=[Vec3(0, -1, 0)])
+
+        base.cam.node().getLens().setFov(70.0)
+
+        """self.mouseChangeX = 0
+        self.mouseChangeY = 0
+        self.windowSizeX = self.root.win.getXSize()
+        self.windowSizeY = self.root.win.getYSize()
+        self.centerX = self.windowSizeX / 2
+        self.centerY = self.windowSizeY / 2
+        self.H = self.root.camera.getH()
+        self.P = self.root.camera.getP()
+        self.pos = self.root.camera.getPos()
+        self.sensitivity = .05
+        self.speed = .1
+
+        #hide mouse
+        props = WindowProperties()
+        props.setCursorHidden(True)
+        base.win.requestProperties(props)
+        #set game bool
+        self.startLook()"""
+
+        #globalClock.setMode(globalClock.MLimited)
+        #globalClock.setFrameRate(120.0)
+
+        # Input
+        self.root.accept('escape', self.doExit)
+        self.root.accept('space', self.doJump)
+        #self.accept('c', self.doCrouch)
+        #self.accept('c-up', self.stopCrouch)
+
+        self.root.accept('control', self.startFly)
+        self.root.accept('control-up', self.stopFly)
+
+        inputState.watchWithModifiers('forward', 'w')
+        inputState.watchWithModifiers('left', 'a')
+        inputState.watchWithModifiers('reverse', 's')
+        inputState.watchWithModifiers('right', 'd')
+        inputState.watchWithModifiers('turnLeft', 'q')
+        inputState.watchWithModifiers('turnRight', 'e')
+
+        inputState.watchWithModifiers('run', 'shift')
+
+        inputState.watchWithModifiers('flyUp', 'r')
+        inputState.watchWithModifiers('flyDown', 'f')
+
+        # Physics
+        #self.playernp = self.root.render.attachNewNode('Player')
+        self.character = CharacterController(self.root.bulletworld, self.root.render, 2.0, 1.0, 0.1, 0.4)
+        #self.character.setPos(render, Point3(0, 0, 0.5))
+
+        #self.root.camera.reparentTo(self.character.movementParent)
+        #self.root.camera.setPos(0, 0, 0.5)
+
+        """#create player mesh
         shape = BulletBoxShape(Vec3(0.5, 0.5, 1))
-        self.bplayer = BulletRigidBodyNode('Player')
-        self.bplayer.setMass(200)
-        self.bplayer.addShape(shape)
-        self.bplayer.setDeactivationEnabled(False)
+        #self.bplayer = BulletRigidBodyNode('Player')
+        self.bplayer = BulletCharacterControllerNode(shape, 1.0, 'Player')
+        self.bplayer.setMaxSlope(1.5)
+        #self.bplayer.setMass(200)
+        #self.bplayer.addShape(shape)
+        #self.bplayer.setDeactivationEnabled(False)
         self.player = self.root.render.attachNewNode(self.bplayer)
         self.player.setPos(args['x'], args['y'], args['z'])
-        self.root.bulletworld.attachRigidBody(self.bplayer)
+        self.root.bulletworld.attachCharacter(self.bplayer)
         #model = self.root.loader.loadModel('models/box.egg')
         #model.flattenLight()
         #model.reparentTo(self.player)
@@ -55,7 +128,7 @@ class Player(MovableEntity):
         self.root.camera.setPos(0, 0, 0.5)
 
         #was used before start menu was working
-        #self.cont.gameMode()
+        #self.cont.gameMode()"""
 
         #setup picking
         #add mouse button 1 handler
@@ -63,8 +136,81 @@ class Player(MovableEntity):
         #add mouse collision to our world
         self.setupMouseCollision()
 
-    def __str__(self):
-        return "A Player"
+    def doExit(self):
+        self.cleanup()
+        sys.exit(1)
+
+    def doJump(self):
+        self.character.startJump(10)
+
+    def doCrouch(self):
+        self.character.startCrouch()
+
+    def stopCrouch(self):
+        self.character.stopCrouch()
+
+    def startFly(self):
+        self.character.startFly()
+
+    def stopFly(self):
+        self.character.stopFly()
+
+    def processInput(self, dt):
+        speed = Vec3(0, 0, 0)
+        omega = 0.0
+
+        v = 5.0
+
+        if inputState.isSet('run'): v = 15.0
+
+        if inputState.isSet('forward'): speed.setY(v)
+        if inputState.isSet('reverse'): speed.setY(-v)
+        if inputState.isSet('left'):    speed.setX(-v)
+        if inputState.isSet('right'):   speed.setX(v)
+
+        if inputState.isSet('flyUp'):   speed.setZ( 2.0)
+        if inputState.isSet('flyDown'):   speed.setZ( -2.0)
+
+        if inputState.isSet('turnLeft'):  omega =  120.0
+        if inputState.isSet('turnRight'): omega = -120.0
+
+        self.character.setAngularMovement(omega)
+        self.character.setLinearMovement(speed, True)
+
+    def update(self):
+        dt = globalClock.getDt()
+
+        self.processInput(dt)
+
+        self.character.setH(base.camera.getH(render))
+        self.character.update()  # WIP
+
+        #self.ml.orbitCenter = self.character.getPos(render)
+        #base.camera.setPos(base.camera.getPos(render) + delta)"""
+        base.camera.setPos(self.character.getPos(render) + Vec3(0, 0, 2))
+
+    def cleanup(self):
+        self.world = None
+        self.worldNP.removeNode()
+
+    def look(self, task):
+        mouse = self.root.win.getPointer(0)
+        x = mouse.getX()
+        y = mouse.getY()
+        if self.root.win.movePointer(0, self.centerX, self.centerY):
+            self.mouseChangeX = self.centerX - x
+            self.mouseChangeY = self.centerY - y
+            self.H += self.mouseChangeX * self.sensitivity
+            self.P += self.mouseChangeY * self.sensitivity
+            self.root.camera.setP(self.P)
+            self.root.camera.setH(self.H)
+            #print "H" + str(self.H)
+            #print "P" + str(self.P)
+        return Task.cont
+
+    def startLook(self):
+        self.root.win.movePointer(0, self.centerX, self.centerY)
+        taskMgr.add(self.look, 'look')
 
     def onMouseTask(self):
         """ """
@@ -142,10 +288,10 @@ class Player(MovableEntity):
         #self.mPickerTraverser.showCollisions(self.render)
 
     def getPos(self):
-        return self.player.getPos()
+        return self.character.getPos()
 
     def setPos(self, newpos):
-        self.player.setPos(newpos)
+        self.character.setPos(newpos)
 
     def getMass(self):
         return self.bplayer.getMass()
@@ -159,6 +305,12 @@ class Player(MovableEntity):
     def setAngularVelocity(self, omega):
         self.bplayer.setAngularVelocity(omega)
 
+    def setLinearMovement(self, force):
+        self.bplayer.setLinearMovement(force, True)
+
+    def setAngularMovement(self, omega):
+        self.bplayer.setAngularMovement(omega)
+
     def getLinearVelocity(self):
         return self.bplayer.getLinearVelocity()
 
@@ -166,7 +318,7 @@ class Player(MovableEntity):
         return self.bplayer.getAngularVelocity()
 
     def headsUp(self, planet):
-        self.player.headsUp(planet)
+        self.character.headsUp(planet)
 
     def setHpr(self, h, p, r):
         self.player.setHpr(h, p, r)

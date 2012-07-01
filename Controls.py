@@ -71,8 +71,8 @@ class Controls:
             self.mouseChangeY = self.centerY - y
             self.H += self.mouseChangeX * self.sensitivity
             self.P += self.mouseChangeY * self.sensitivity
-            self.root.camera.setHpr(0, self.P, 0)
-            self.player.setHpr(self.H, 0, 0)
+            self.root.camera.setP(self.P)
+            self.player.setAngularMovement(self.H)
             #print "H" + str(self.H)
             #print "P" + str(self.P)
         return Task.cont

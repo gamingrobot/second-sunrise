@@ -17,6 +17,8 @@ from panda3d.rocket import *
 
 from Menus import MainMenu
 from Hud import *
+from Player import *
+
 
 import math
 
@@ -63,12 +65,13 @@ class PlanetCraft(ShowBase):
         base.win.requestProperties(props)
 
     def bulletupdate(self, task):
-        G = 6.673 * 10 ** -11
+        """G = 6.673 * 10 ** -11
         playerpos = self.player.getPos()
         planetpos = (0, 0, 0)
-        playermass = self.player.getMass()
-        planetmass = 100000000000000
-        #planetmass = 100100000000000
+        #playermass = self.player.getMass()
+        playermass = 200
+        #planetmass = 100000000000000
+        planetmass = 1000000000000000
 
         #find chunk player is in
 
@@ -81,7 +84,7 @@ class PlanetCraft(ShowBase):
 
         fx = ((f / d) * difx) * -1
         fy = ((f / d) * dify) * -1
-        fz = ((f / d) * difz) * -1
+        fz = ((f / d) * difz) * -1"""
 
         """th = 1
         if math.fabs(difx) <= th and math.fabs(dify) <= th and math.fabs(difz) <= th:
@@ -90,33 +93,8 @@ class PlanetCraft(ShowBase):
         else:
             self.player.applyForce(Vec3(fx, fy, fz), False)"""
 
-        self.player.applyForce(Vec3(fx, fy, fz), False)
-
-        #player movement
-        speed = self.player.getLinearVelocity()
-        omega = self.player.getAngularVelocity()
-        move = 0.01
-
-        if inputState.isSet('forward'):
-            speed.setY(speed.getY() + move)
-        if inputState.isSet('reverse'):
-            speed.setY(speed.getY() + move * -1)
-        if inputState.isSet('left'):
-            speed.setX(speed.getX() + move * -1)
-        if inputState.isSet('right'):
-            speed.setX(speed.getX() + move)
-        if inputState.isSet('jump'):
-            speed.setZ(speed.getZ() + move)
-        #if inputState.isSet('turnLeft'):
-        #    omega = 10.0
-        #if inputState.isSet('turnRight'):
-        #    omega = -10.0
-
-        #self.player.setAngularVelocity(omega)
-        #print speed
-
-        self.player.setLinearVelocity(speed)
-
+        #self.player.applyForce(Vec3(fx, fy, fz), False)
+        self.player.update()
 
         dt = globalClock.getDt()
         self.bulletworld.doPhysics(dt, 10, 1.0 / 180.0)
@@ -147,6 +125,7 @@ class PlanetCraft(ShowBase):
         #create bullet world
         self.bulletworld = BulletWorld()
         self.bulletworld.setDebugNode(debugNP.node())
+        self.bulletworld.setGravity(Vec3(0, 0, -9.81))
 
         #test colision
         """shape2 = BulletSphereShape(64)

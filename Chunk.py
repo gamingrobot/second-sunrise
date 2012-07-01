@@ -7,6 +7,7 @@ from panda3d.core import GeomNode
 from panda3d.core import Geom
 from panda3d.core import Point3
 from panda3d.core import VBase3
+from panda3d.core import BitMask32
 from panda3d.bullet import BulletTriangleMeshShape
 from panda3d.bullet import BulletTriangleMesh
 from panda3d.bullet import BulletRigidBodyNode
@@ -409,10 +410,11 @@ class Chunk:
             self.bulletshape = BulletTriangleMeshShape(mesh, dynamic=False)
             self.bulletnode = BulletRigidBodyNode(self.id)
             self.bulletnode.addShape(self.bulletshape)
-            self.bulletnode.setDeactivationEnabled(False)
-            self.bulletnode.setAnisotropicFriction(VBase3(1, 1, 0))
+            #self.bulletnode.setDeactivationEnabled(False)
+            #self.bulletnode.setAnisotropicFriction(VBase3(10, 10, 0))
             self.bulletnp = self.planetNode.attachNewNode(self.bulletnode)
             self.bulletnp.setPos(self.x, self.y, self.z)
+            self.bulletnp.setCollideMask(BitMask32.allOn())
             self.root.bulletworld.attachRigidBody(self.bulletnode)
 
     def genHash(self, x, y, z):

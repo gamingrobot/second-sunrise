@@ -1,7 +1,6 @@
 #Entity package
-__all__ = ["MovableEntity", "Planet", "Player", "Sun"]
+__all__ = ["MovableEntity", "Planet", "Sun"]
 
 from MovableEntity import *
 from Planet import *
-from Player import *
 from Sun import *
