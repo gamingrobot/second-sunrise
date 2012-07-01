@@ -399,23 +399,23 @@ class Chunk:
         self.node.setTag('Pickable', '1')
 
         #do bullet meshing
-        if self.id == self.planet.playerchunk:
-            mesh = BulletTriangleMesh()
-            for triangle in triangles:
-                p0 = Point3(triangle[0][0], triangle[0][1], triangle[0][2])
-                p1 = Point3(triangle[1][0], triangle[1][1], triangle[1][2])
-                p2 = Point3(triangle[2][0], triangle[2][1], triangle[2][2])
-                mesh.addTriangle(p0, p1, p2)
+        #if self.id == self.planet.playerchunk:
+        mesh = BulletTriangleMesh()
+        for triangle in triangles:
+            p0 = Point3(triangle[0][0], triangle[0][1], triangle[0][2])
+            p1 = Point3(triangle[1][0], triangle[1][1], triangle[1][2])
+            p2 = Point3(triangle[2][0], triangle[2][1], triangle[2][2])
+            mesh.addTriangle(p0, p1, p2)
 
-            self.bulletshape = BulletTriangleMeshShape(mesh, dynamic=False)
-            self.bulletnode = BulletRigidBodyNode(self.id)
-            self.bulletnode.addShape(self.bulletshape)
-            #self.bulletnode.setDeactivationEnabled(False)
-            #self.bulletnode.setAnisotropicFriction(VBase3(10, 10, 0))
-            self.bulletnp = self.planetNode.attachNewNode(self.bulletnode)
-            self.bulletnp.setPos(self.x, self.y, self.z)
-            self.bulletnp.setCollideMask(BitMask32.allOn())
-            self.root.bulletworld.attachRigidBody(self.bulletnode)
+        self.bulletshape = BulletTriangleMeshShape(mesh, dynamic=False)
+        self.bulletnode = BulletRigidBodyNode(self.id)
+        self.bulletnode.addShape(self.bulletshape)
+        #self.bulletnode.setDeactivationEnabled(False)
+        #self.bulletnode.setAnisotropicFriction(VBase3(10, 10, 0))
+        self.bulletnp = self.planetNode.attachNewNode(self.bulletnode)
+        self.bulletnp.setPos(self.x, self.y, self.z)
+        self.bulletnp.setCollideMask(BitMask32.allOn())
+        self.root.bulletworld.attachRigidBody(self.bulletnode)
 
     def genHash(self, x, y, z):
         return str(x) + ":" + str(y) + ":" + str(z)

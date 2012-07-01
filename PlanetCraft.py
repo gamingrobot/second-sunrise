@@ -124,7 +124,7 @@ class PlanetCraft(ShowBase):
 
         #create bullet world
         self.bulletworld = BulletWorld()
-        self.bulletworld.setDebugNode(debugNP.node())
+        #self.bulletworld.setDebugNode(debugNP.node())
         self.bulletworld.setGravity(Vec3(0, 0, -9.81))
 
         #test colision

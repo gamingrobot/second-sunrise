@@ -42,7 +42,7 @@ class CharacterController(object):
         self.__mapMethods()
 
         self.gravity = self.__world.getGravity().z if gravity is None else gravity
-        self.setMaxSlope(60.0, True)
+        self.setMaxSlope(90.0, True)
         self.setActiveJumpLimiter(True)
 
         self.movementState = "ground"

@@ -99,7 +99,7 @@ class Player:
 
         # Physics
         #self.playernp = self.root.render.attachNewNode('Player')
-        self.character = CharacterController(self.root.bulletworld, self.root.render, 2.0, 1.0, 0.1, 0.4)
+        self.character = CharacterController(self.root.bulletworld, self.root.render, 2.0, 1.0, 0.0, 0.4)
         #self.character.setPos(render, Point3(0, 0, 0.5))
 
         #self.root.camera.reparentTo(self.character.movementParent)
