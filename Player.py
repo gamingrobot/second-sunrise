@@ -36,6 +36,7 @@ class Player:
         self.hud = Hud(self.root)
         #create ingamemenu
         self.ingamemenu = InGameMenu(self.root, self)
+        self.currentchunk = None
         #setup controls
         base.disableMouse()
 
@@ -182,12 +183,44 @@ class Player:
 
         self.processInput(dt)
 
-        self.character.setH(base.camera.getH(render))
+        self.character.setH(base.camera.getH())
         self.character.update()  # WIP
 
         #self.ml.orbitCenter = self.character.getPos(render)
         #base.camera.setPos(base.camera.getPos(render) + delta)"""
-        base.camera.setPos(self.character.getPos(render) + Vec3(0, 0, 2))
+        base.camera.setPos(self.character.getPos() + Vec3(0, 0, 2))
+
+        #find what chunk the player is in
+        charpos = self.character.getPos()
+        charx = int(math.floor(charpos.getX()))
+        chary = int(math.floor(charpos.getY()))
+        charz = int(math.floor(charpos.getZ()))
+        currentcord = self.currentchunk.split(":")
+        newx = currentcord[0]
+        newy = currentcord[1]
+        newz = currentcord[2]
+        #check naboring chunks to see if player is close to them
+        for key, value in self.planet.chunks.items():
+            cords = key.split(":")
+            if charx > int(cords[0]) and int(cords[0]) > 0:
+                newx = cords[0]
+            if chary > int(cords[1]) and int(cords[1]) > 0:
+                newy = cords[1]
+            if charz > int(cords[2])and int(cords[2]) > 0:
+                newz = cords[2]
+
+            if charx < int(cords[0]) and int(cords[0]) < 0:
+                newx = cords[0]
+            if chary < int(cords[1]) and int(cords[1]) < 0:
+                newy = cords[1]
+            if charz < int(cords[2])and int(cords[2]) < 0:
+                newz = cords[2]
+
+        self.currentchunk = self.planet.genHash(newx, newy, newz)
+
+        #print self.currentchunk
+
+
 
     def cleanup(self):
         self.world = None

@@ -49,6 +49,7 @@ class Planet(MovableEntity):
         #place player
         playerspl = Vec3(spl[0] + 4, spl[1] + 4, spl[2] + self.chunkSize + 4)
         player.setPos(playerspl)
+        player.currentchunk = self.playerchunk
 
     def addChunk(self, x, y, z):
         nchunk = Chunk({'x': x, 'y': y, 'z': z,
