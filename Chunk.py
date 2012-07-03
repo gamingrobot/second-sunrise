@@ -34,13 +34,13 @@ class Chunk:
     def getChunkID(self):
         return self.id
 
-    def generateBlocks(self, planet):
+    def generateBlocks(self):
         #make a nicer name for math.fabs()
         ab = math.fabs
 
-        self.size = planet.chunkSize
-        self.numchunks = planet.psize
-        self.radius = planet.radius  # in blocks
+        self.size = self.planet.chunkSize
+        self.numchunks = self.planet.psize
+        self.radius = self.planet.radius  # in blocks
         self.blocks = np.zeros((self.size, self.size, self.size), dtype=np.object)
         self.blockSize = 1
         #init numpy

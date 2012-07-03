@@ -6,6 +6,10 @@ from Chunk import *
 from panda3d.core import Vec3
 
 from direct.stdpy import threading
+from pandac.PandaModules import Thread
+from direct.showbase.PythonUtil import Queue
+
+_commandLineQueue = Queue()
 
 
 class Planet(MovableEntity):
@@ -25,9 +29,8 @@ class Planet(MovableEntity):
         self.psize = 16  # in chunks
         self.radius = self.chunkSize * (self.psize / 2)
 
-        model = self.root.loader.loadModel('models/box.egg')
-        model.reparentTo(self.planetNode)
-        model.setPos(0, 0, 0)
+        _thread = _ExecThread()
+        _thread.start()
 
     def __str__(self):
         return "A Planet"
@@ -46,6 +49,8 @@ class Planet(MovableEntity):
         print spl
         self.playerchunk = self.genHash(spl[0], spl[1], spl[2])
         #generate chunk
+        self.generateChunkBlocks(spl[0], spl[1], spl[2])
+        self.generateChunkMesh(spl[0], spl[1], spl[2])
         self.generateChunks(spl[0], spl[1], spl[2])
 
         #place player
@@ -60,17 +65,19 @@ class Planet(MovableEntity):
     def addChunk(self, x, y, z):
         nchunk = Chunk({'x': x, 'y': y, 'z': z,
             'planetNode': self.planetNode, 'root': self.root, 'planet': self})
-        nchunk.generateBlocks(self)
+        _commandLineQueue.push({'command': 'blocks', 'chunk': nchunk})
+        #nchunk.generateBlocks()
         #print nchunk.getChunkID()
         self.chunks[nchunk.getChunkID()] = nchunk
 
     def generateChunkMesh(self, x, y, z):
-        if not self.chunks[self.genHash(x, y, z)].isEmpty():
+        _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
+        """if not self.chunks[self.genHash(x, y, z)].isEmpty():
             if not self.chunks[self.genHash(x, y, z)].meshGenerated():
-                t = threading.Thread(target=self.chunks[self.genHash(x, y, z)].generateMarching, args=())
-                t.start()
+                #t = threading.Thread(target=self.chunks[self.genHash(x, y, z)].generateMarching, args=())
+                #t.start()
                 #self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)
-            """if self.debug:
+            if self.debug:
                 self.chunks[self.genHash(x, y, z)].generateVoxel()
             else:
                 self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)"""
@@ -100,68 +107,64 @@ class Planet(MovableEntity):
         cs = self.chunkSize
         #generate blocks
         self.generateChunkBlocks(x, y, z)
-        #generate naboring chunks
-        #x y
-        self.generateChunkBlocks(x + cs, y, z)              # (x + 1, y, z)
-        self.generateChunkBlocks(x + cs, y + cs, z)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x - cs, y + cs, z)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x - cs, y - cs, z)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x + cs, y - cs, z)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x, y + cs, z)              # (x, y + 1, z)
-        self.generateChunkBlocks(x - cs, y, z)              # (x + 1, y, z)
-        self.generateChunkBlocks(x, y - cs, z)              # (x, y + 1, z)
-        # +z
-        self.generateChunkBlocks(x, y, z + cs)                   # (x, y, z)
-        self.generateChunkBlocks(x + cs, y, z + cs)              # (x + 1, y, z)
-        self.generateChunkBlocks(x + cs, y + cs, z + cs)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x - cs, y + cs, z + cs)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x - cs, y - cs, z + cs)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x + cs, y - cs, z + cs)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x, y + cs, z + cs)              # (x, y + 1, z)
-        self.generateChunkBlocks(x - cs, y, z + cs)              # (x + 1, y, z)
-        self.generateChunkBlocks(x, y - cs, z + cs)              # (x, y + 1, z)
-        # -z
-        self.generateChunkBlocks(x, y, z - cs)              # (x, y, z)
-        self.generateChunkBlocks(x + cs, y, z - cs)              # (x + 1, y, z)
-        self.generateChunkBlocks(x + cs, y + cs, z - cs)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x - cs, y + cs, z - cs)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x - cs, y - cs, z - cs)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x + cs, y - cs, z - cs)         # (x + 1, y + 1, z)
-        self.generateChunkBlocks(x, y + cs, z - cs)              # (x, y + 1, z)
-        self.generateChunkBlocks(x - cs, y, z - cs)              # (x + 1, y, z)
-        self.generateChunkBlocks(x, y - cs, z - cs)              # (x, y + 1, z)
-
-        #generate meshes
         self.generateChunkMesh(x, y, z)
         #generate naboring chunks
         #x y
+        self.generateChunkBlocks(x + cs, y, z)              # (x + 1, y, z)
         self.generateChunkMesh(x + cs, y, z)              # (x + 1, y, z)
+        self.generateChunkBlocks(x + cs, y + cs, z)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x + cs, y + cs, z)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x - cs, y + cs, z)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x - cs, y + cs, z)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x - cs, y - cs, z)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x - cs, y - cs, z)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x + cs, y - cs, z)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x + cs, y - cs, z)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x, y + cs, z)              # (x, y + 1, z)
         self.generateChunkMesh(x, y + cs, z)              # (x, y + 1, z)
+        self.generateChunkBlocks(x - cs, y, z)              # (x + 1, y, z)
         self.generateChunkMesh(x - cs, y, z)              # (x + 1, y, z)
+        self.generateChunkBlocks(x, y - cs, z)              # (x, y + 1, z)
         self.generateChunkMesh(x, y - cs, z)              # (x, y + 1, z)
+
         # +z
+        self.generateChunkBlocks(x, y, z + cs)                   # (x, y, z)
         self.generateChunkMesh(x, y, z + cs)                   # (x, y, z)
+        self.generateChunkBlocks(x + cs, y, z + cs)              # (x + 1, y, z)
         self.generateChunkMesh(x + cs, y, z + cs)              # (x + 1, y, z)
+        self.generateChunkBlocks(x + cs, y + cs, z + cs)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x + cs, y + cs, z + cs)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x - cs, y + cs, z + cs)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x - cs, y + cs, z + cs)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x - cs, y - cs, z + cs)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x - cs, y - cs, z + cs)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x + cs, y - cs, z + cs)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x + cs, y - cs, z + cs)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x, y + cs, z + cs)              # (x, y + 1, z)
         self.generateChunkMesh(x, y + cs, z + cs)              # (x, y + 1, z)
+        self.generateChunkBlocks(x - cs, y, z + cs)              # (x + 1, y, z)
         self.generateChunkMesh(x - cs, y, z + cs)              # (x + 1, y, z)
+        self.generateChunkBlocks(x, y - cs, z + cs)              # (x, y + 1, z)
         self.generateChunkMesh(x, y - cs, z + cs)              # (x, y + 1, z)
+
         # -z
+        self.generateChunkBlocks(x, y, z - cs)              # (x, y, z)
         self.generateChunkMesh(x, y, z - cs)              # (x, y, z)
+        self.generateChunkBlocks(x + cs, y, z - cs)              # (x + 1, y, z)
         self.generateChunkMesh(x + cs, y, z - cs)              # (x + 1, y, z)
+        self.generateChunkBlocks(x + cs, y + cs, z - cs)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x + cs, y + cs, z - cs)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x - cs, y + cs, z - cs)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x - cs, y + cs, z - cs)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x - cs, y - cs, z - cs)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x - cs, y - cs, z - cs)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x + cs, y - cs, z - cs)         # (x + 1, y + 1, z)
         self.generateChunkMesh(x + cs, y - cs, z - cs)         # (x + 1, y + 1, z)
+        self.generateChunkBlocks(x, y + cs, z - cs)              # (x, y + 1, z)
         self.generateChunkMesh(x, y + cs, z - cs)              # (x, y + 1, z)
+        self.generateChunkBlocks(x - cs, y, z - cs)              # (x + 1, y, z)
         self.generateChunkMesh(x - cs, y, z - cs)              # (x + 1, y, z)
+        self.generateChunkBlocks(x, y - cs, z - cs)              # (x, y + 1, z)
         self.generateChunkMesh(x, y - cs, z - cs)              # (x, y + 1, z)
 
     def genHash(self, x, y, z):
@@ -190,3 +193,21 @@ class Planet(MovableEntity):
                     testchunk.generateVoxel()
 
                     self.chunks[testchunk.getChunkID()] = testchunk
+
+
+class _ExecThread(threading.Thread):
+    """ The main worker thread, from which all commands are executed using eval(). """
+    def run(self):
+        while True:
+            while not _commandLineQueue.isEmpty():
+                popque = _commandLineQueue.pop()
+                #print _commandLineQueue.top()
+                chunk = popque['chunk']
+                if popque['command'] == 'blocks':
+                    chunk.generateBlocks()
+                if popque['command'] == 'march':
+                    if not chunk.isEmpty():
+                        if not chunk.meshGenerated():
+                            chunk.generateMarching()
+                Thread.sleep(0.04)
+            Thread.sleep(0.04)
