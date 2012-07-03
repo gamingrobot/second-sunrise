@@ -49,8 +49,8 @@ class Planet(MovableEntity):
         print spl
         self.playerchunk = self.genHash(spl[0], spl[1], spl[2])
         #generate chunk
-        self.generateChunkBlocks(spl[0], spl[1], spl[2])
-        self.generateChunkMesh(spl[0], spl[1], spl[2])
+        self.generateSpawnChunkBlocks(spl[0], spl[1], spl[2])
+        self.generateSpawnChunkMesh(spl[0], spl[1], spl[2])
         self.generateChunks(spl[0], spl[1], spl[2])
 
         #place player
@@ -70,17 +70,45 @@ class Planet(MovableEntity):
         #print nchunk.getChunkID()
         self.chunks[nchunk.getChunkID()] = nchunk
 
+    def addNormChunk(self, x, y, z):
+        nchunk = Chunk({'x': x, 'y': y, 'z': z,
+            'planetNode': self.planetNode, 'root': self.root, 'planet': self})
+        #_commandLineQueue.push({'command': 'blocks', 'chunk': nchunk})
+        nchunk.generateBlocks()
+        #print nchunk.getChunkID()
+        self.chunks[nchunk.getChunkID()] = nchunk
+
     def generateChunkMesh(self, x, y, z):
         _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
-        """if not self.chunks[self.genHash(x, y, z)].isEmpty():
+
+    def generateSpawnChunkMesh(self, x, y, z):
+        #_commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
+        if not self.chunks[self.genHash(x, y, z)].isEmpty():
             if not self.chunks[self.genHash(x, y, z)].meshGenerated():
                 #t = threading.Thread(target=self.chunks[self.genHash(x, y, z)].generateMarching, args=())
                 #t.start()
-                #self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)
-            if self.debug:
-                self.chunks[self.genHash(x, y, z)].generateVoxel()
-            else:
-                self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)"""
+                self.chunks[self.genHash(x, y, z)].generateMarching()
+
+    def generateSpawnChunkBlocks(self, x, y, z):
+        #generate only positive chunks and check if they are already in the tree
+        if not self.genHash(x, y, z) in self.chunks:
+            self.addNormChunk(x, y, z)
+        #x y
+        if not self.genHash(x + 16, y, z) in self.chunks:
+            self.addNormChunk(x + 16, y, z)              # (x + 1, y, z)
+        if not self.genHash(x + 16, y + 16, z) in self.chunks:
+            self.addNormChunk(x + 16, y + 16, z)         # (x + 1, y + 1, z)
+        if not self.genHash(x, y + 16, z) in self.chunks:
+            self.addNormChunk(x, y + 16, z)              # (x, y + 1, z)
+        #z
+        if not self.genHash(x, y, z + 16) in self.chunks:
+            self.addNormChunk(x, y, z + 16)                   # (x, y, z)
+        if not self.genHash(x + 16, y, z + 16) in self.chunks:
+            self.addNormChunk(x + 16, y, z + 16)              # (x + 1, y, z)
+        if not self.genHash(x + 16, y + 16, z + 16) in self.chunks:
+            self.addNormChunk(x + 16, y + 16, z + 16)         # (x + 1, y + 1, z)
+        if not self.genHash(x, y + 16, z + 16) in self.chunks:
+            self.addNormChunk(x, y + 16, z + 16)              # (x, y + 1, z)
 
     def generateChunkBlocks(self, x, y, z):
         #generate only positive chunks and check if they are already in the tree
