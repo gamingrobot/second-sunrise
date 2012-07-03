@@ -11,3 +11,5 @@ sync-video False
 cursor-hidden True
 
 notify-level-thread spam
+
+thread-stack-size 41943040

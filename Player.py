@@ -138,7 +138,7 @@ class Player:
         self.setupMouseCollision()
 
     def doExit(self):
-        self.cleanup()
+        #self.cleanup()
         sys.exit(1)
 
     def doJump(self):
@@ -202,29 +202,31 @@ class Player:
         #check naboring chunks to see if player is close to them
         for key, value in self.planet.chunks.items():
             cords = key.split(":")
-            if charx > int(cords[0]) and int(cords[0]) > 0:
-                newx = cords[0]
-            if chary > int(cords[1]) and int(cords[1]) > 0:
-                newy = cords[1]
-            if charz > int(cords[2])and int(cords[2]) > 0:
-                newz = cords[2]
+            cordx = int(cords[0])
+            cordy = int(cords[1])
+            cordz = int(cords[2])
+            #check x
+            if charx >= cordx and charx < cordx + 16:
+                newx = cordx
 
-            if charx < int(cords[0]) and int(cords[0]) < 0:
-                newx = cords[0]
-            if chary < int(cords[1]) and int(cords[1]) < 0:
-                newy = cords[1]
-            if charz < int(cords[2])and int(cords[2]) < 0:
-                newz = cords[2]
+            #check y
+            if chary >= cordy and chary < cordy + 16:
+                newy = cordy
 
-        self.currentchunk = self.planet.genHash(newx, newy, newz)
+            #check z
+            if charz >= cordz and charz < cordz + 16:
+                newz = cordz
 
-        #print self.currentchunk
+        chunk = self.planet.genHash(newx, newy, newz)
+        if self.planet.playerchunk != chunk:
+            self.currentchunk = chunk
+            self.planet.playerchunk = self.currentchunk
+            print self.planet.playerchunk
+            self.planet.playerChangedChunk()
 
-
-
-    def cleanup(self):
-        self.world = None
-        self.worldNP.removeNode()
+    #def cleanup(self):
+     #   self.world = None
+        #self.worldNP.removeNode()
 
     def look(self, task):
         mouse = self.root.win.getPointer(0)

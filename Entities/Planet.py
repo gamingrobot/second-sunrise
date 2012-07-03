@@ -47,9 +47,13 @@ class Planet(MovableEntity):
         self.generateChunks(spl[0], spl[1], spl[2])
 
         #place player
-        playerspl = Vec3(spl[0] + 4, spl[1] + 4, spl[2] + self.chunkSize + 4)
+        playerspl = Vec3(spl[0] + 4, spl[1] + 4, spl[2] + self.chunkSize)
         player.setPos(playerspl)
         player.currentchunk = self.playerchunk
+
+    def playerChangedChunk(self):
+        chunkcord = self.playerchunk.split(":")
+        self.generateChunks(int(chunkcord[0]), int(chunkcord[1]), int(chunkcord[2]))
 
     def addChunk(self, x, y, z):
         nchunk = Chunk({'x': x, 'y': y, 'z': z,
@@ -59,10 +63,13 @@ class Planet(MovableEntity):
         self.chunks[nchunk.getChunkID()] = nchunk
 
     def generateChunkMesh(self, x, y, z):
-        if self.debug:
-            self.chunks[self.genHash(x, y, z)].generateVoxel()
-        else:
-            self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)
+        if not self.chunks[self.genHash(x, y, z)].isEmpty():
+            if not self.chunks[self.genHash(x, y, z)].meshGenerated():
+                self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)
+            """if self.debug:
+                self.chunks[self.genHash(x, y, z)].generateVoxel()
+            else:
+                self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)"""
 
     def generateChunkBlocks(self, x, y, z):
         #generate only positive chunks and check if they are already in the tree

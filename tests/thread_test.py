@@ -20,11 +20,11 @@ class ThreadingTest(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         #self.taskMgr.add(self.threadtest, 'thread')
-        t = threading.Thread(target=self.threadtest, args=())
+        t = threading.Thread(target=self.threadtest, args=(0.9))
         t.start()
 
     # Update
-    def threadtest(self):
+    def threadtest(self, shade):
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
 
@@ -36,7 +36,7 @@ class ThreadingTest(ShowBase):
         prim = GeomTriangles(Geom.UHStatic)
         self.vertexcount = 0
 
-        shade = 0.9
+        #shade = 0.9
         for x in range(10):
             #line corners
             #0

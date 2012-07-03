@@ -12,8 +12,7 @@ from panda3d.bullet import BulletTriangleMeshShape
 from panda3d.bullet import BulletTriangleMesh
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletBoxShape
-from direct.stdpy import threading
-from pandac.PandaModules import Thread
+
 import numpy as np
 import math
 from Blocks import *
@@ -29,6 +28,8 @@ class Chunk:
         self.planetNode = args['planetNode']
         self.root = args['root']
         self.planet = args['planet']
+        self.empty = True
+        self.meshed = False
 
     def getChunkID(self):
         return self.id
@@ -49,18 +50,12 @@ class Chunk:
             #arandom = random.randint(0, 1)
             #arandom = 1
             if math.sqrt((ab(self.x + index[0])) ** 2 + (ab(self.y + index[1])) ** 2 + (ab(self.z + index[2])) ** 2) <= self.radius:
+                self.empty = False
                 it[0] = Dirt(
                     {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
             else:
                 it[0] = Air(
                     {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(-1.0), 'name': '000'})
-
-            """if math.sqrt((ab(self.x)) ** 2 + (ab(self.y)) ** 2 + (ab(self.z)) ** 2) <= self.radius:
-                it[0] = Dirt(
-                        {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(1.0), 'name': '000'})
-            else:
-                it[0] = Air(
-                        {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(-1.0), 'name': '000'})"""
             it.iternext()
 
     def removeBlock(self, x, y, z):
@@ -72,6 +67,12 @@ class Chunk:
         self.bulletnode.removeShape(self.bulletshape)
         self.root.bulletworld.removeRigidBody(self.bulletnode)
         self.bulletnp.removeNode()
+
+    def isEmpty(self):
+        return self.empty
+
+    def meshGenerated(self):
+        return self.meshed
 
     def generateVoxel(self):
         #t = threading.Thread(target=self.generateVoxelThread, args=())
@@ -339,6 +340,7 @@ class Chunk:
             return True
 
     def generateMarching(self, chunks):
+        #self.chunks = chunks
         #t = threading.Thread(target=self.generateMarchingThread, args=())
         #t.start()
         self.generateMarchingThread(chunks)
@@ -358,6 +360,8 @@ class Chunk:
         #add the edge bocks of positive to the current block array
         draw = Iso(self, self.size, chunks)
         pixel = draw.grid()
+        #t = threading.Thread(target=draw.grid, args=())
+        #t.start()
         triangles = draw.triangles
         #threading currently hangs here
         for triangle in triangles:
@@ -397,6 +401,7 @@ class Chunk:
         self.node = self.planetNode.attachNewNode(node)
         self.node.setPos(self.x, self.y, self.z)
         self.node.setTag('Pickable', '1')
+        self.meshed = True
 
         #do bullet meshing
         #if self.id == self.planet.playerchunk:
@@ -508,6 +513,7 @@ class Iso:
         ntriangle = 0
         tt = triTable[cubeIndex]
         for i in range(0, 16, 3):
+            #Thread.forceYield()
             if tt[i] != -1:
                 self.triangles.append((vertexList[tt[i]],
                                        vertexList[tt[i + 1]],
@@ -520,6 +526,7 @@ class Iso:
         for x in xrange(0, self.size):
             for y in xrange(0, self.size):
                 for z in xrange(0, self.size):
+                    #Thread.forceYield()
                     #block = self.blocks[x, y, z]
                     p = self.GridCell()
                     position = p.position
