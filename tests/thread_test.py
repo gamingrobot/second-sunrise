@@ -10,21 +10,21 @@ from panda3d.core import GeomNode
 from panda3d.core import Geom
 from direct.stdpy import threading
 from pandac.PandaModules import Thread
+from panda3d.core import loadPrcFile
 
-#G = 0.981
-G = 6.673 * 10 ** -11
-#G = .5
+loadPrcFile("Config.prc")
 
 
 class ThreadingTest(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         #self.taskMgr.add(self.threadtest, 'thread')
-        t = threading.Thread(target=self.threadtest, args=(0.9))
+        t = threading.Thread(target=self.threadtest, args=())
         t.start()
 
     # Update
-    def threadtest(self, shade):
+    def threadtest(self):
+        print "Started thread"
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
 
@@ -36,7 +36,7 @@ class ThreadingTest(ShowBase):
         prim = GeomTriangles(Geom.UHStatic)
         self.vertexcount = 0
 
-        #shade = 0.9
+        shade = 0.9
         for x in range(10):
             #line corners
             #0
@@ -73,6 +73,7 @@ class ThreadingTest(ShowBase):
         node.addGeom(geom)
         self.node = self.render.attachNewNode(node)
         self.node.setPos(0, 0, 0)
+        print "Finished meshing"
 
 app = ThreadingTest()
 app.run()

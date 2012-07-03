@@ -19,9 +19,9 @@ from Menus import MainMenu
 from Hud import *
 from Player import *
 
-
 import math
 
+#TODO: figure out why cull/draw threading causes chunk to hang
 
 #uncomment and run when you add a block, then re comment on next run
 #import BlockIniter

@@ -339,13 +339,13 @@ class Chunk:
         else:
             return True
 
-    def generateMarching(self, chunks):
-        #self.chunks = chunks
+    def generateMarching(self):
+        self.chunks = self.planet.chunks
         #t = threading.Thread(target=self.generateMarchingThread, args=())
         #t.start()
-        self.generateMarchingThread(chunks)
+        self.generateMarchingThread()
 
-    def generateMarchingThread(self, chunks):
+    def generateMarchingThread(self):
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
 
@@ -358,7 +358,7 @@ class Chunk:
         self.vertexcount = 0
 
         #add the edge bocks of positive to the current block array
-        draw = Iso(self, self.size, chunks)
+        draw = Iso(self, self.size, self.chunks)
         pixel = draw.grid()
         #t = threading.Thread(target=draw.grid, args=())
         #t.start()

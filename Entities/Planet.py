@@ -5,6 +5,8 @@ from MovableEntity import *
 from Chunk import *
 from panda3d.core import Vec3
 
+from direct.stdpy import threading
+
 
 class Planet(MovableEntity):
     """Planet"""
@@ -65,7 +67,9 @@ class Planet(MovableEntity):
     def generateChunkMesh(self, x, y, z):
         if not self.chunks[self.genHash(x, y, z)].isEmpty():
             if not self.chunks[self.genHash(x, y, z)].meshGenerated():
-                self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)
+                t = threading.Thread(target=self.chunks[self.genHash(x, y, z)].generateMarching, args=())
+                t.start()
+                #self.chunks[self.genHash(x, y, z)].generateMarching(self.chunks)
             """if self.debug:
                 self.chunks[self.genHash(x, y, z)].generateVoxel()
             else:
