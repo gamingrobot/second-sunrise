@@ -44,7 +44,7 @@ class PlanetCraft(ShowBase):
         from panda3d.core import Thread
         print "Threading Supported: " + str(Thread.isThreadingSupported())
         #create rocketregion
-        LoadFontFace("tests/rocket-sample/assets/Delicious-Roman.otf")
+        LoadFontFace("media/Delicious-Roman.otf")
 
         self.r = RocketRegion.make("mainmenu", base.win)
         self.r.setActive(1)
