@@ -18,7 +18,7 @@ import math
 from Blocks import *
 
 
-class Chunk:
+class PCChunk:
     """Chunk contains 16x16x16 blocks"""
     def __init__(self, args):
         self.x = args['x']
