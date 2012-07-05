@@ -63,7 +63,13 @@ class PChunk:
         print "removing" + str(x) + "," + str(y) + "," + str(z)
         print self.blocks[x][y][z]
         self.blocks[x][y][z] = Air(
-                    {'x': x * self.blockSize, 'y': y * self.blockSize, 'z': z * self.blockSize, 'density': float(-1.0), 'name': '000'})
+                    {'x': x, 'y': y, 'z': z, 'density': float(-1.0), 'name': '000'})
+
+    def placeBlock(self, x, y, z, voxel=False):
+        print "placing" + str(x) + "," + str(y) + "," + str(z)
+        print self.blocks[x][y][z]
+        self.blocks[x][y][z] = Dirt(
+                    {'x': x, 'y': y, 'z': z, 'density': float(1.0), 'name': '000'})
 
     def isEmpty(self):
         return self.empty

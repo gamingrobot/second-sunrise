@@ -212,6 +212,16 @@ class Planet(MovableEntity):
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
             t.start()
 
+    def placeBlock(self, chunkid, x, y, z):
+        if not self.debug:
+            self.chunks[chunkid].placeBlock(x, y, z)
+            t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=())
+            t.start()
+        else:
+            self.chunks[chunkid].placeBlock(x, y, z, True)
+            t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
+            t.start()
+
     def testBox(self, x, y, z):
         model = self.root.loader.loadModel('models/box.egg')
         model.reparentTo(self.planetNode)

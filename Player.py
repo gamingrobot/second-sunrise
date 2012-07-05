@@ -38,6 +38,7 @@ class Player:
         plnp = self.root.camera.attachNewNode(plight)
         plnp.setPos(0, 0, 0)
         self.root.render.setLight(plnp)
+        self.selection = None
         #create hud
         self.hud = Hud(self.root)
         #create ingamemenu
@@ -86,6 +87,8 @@ class Player:
         # Input
         self.root.accept('escape', self.doExit)
         self.root.accept('space', self.doJump)
+        self.root.accept('mouse1', self.removeBlock)
+        self.root.accept('mouse3', self.placeBlock)
         #self.accept('c', self.doCrouch)
         #self.accept('c-up', self.stopCrouch)
 
@@ -239,13 +242,6 @@ class Player:
         self.select.reparentTo(self.root.render)
         self.select.setPos(0, 0, 0)"""
 
-        #setup picking
-        #add mouse button 1 handler
-        self.root.accept('mouse1', self.onMouseTask)
-        #taskMgr.add(self.onMouseTask, 'pick')
-        #add mouse collision to our world
-        self.setupMouseCollision()
-
     def doExit(self):
         #self.cleanup()
         sys.exit(1)
@@ -333,9 +329,55 @@ class Player:
             print self.planet.playerchunk
             self.planet.playerChangedChunk()
 
+        #do picking
+        # Get to and from pos in camera coordinates
+        pMouse = base.mouseWatcherNode.getMouse()
+        pFrom = Point3()
+        pTo = Point3()
+        base.camLens.extrude(pMouse, pFrom, pTo)
+
+        # Transform to global coordinates
+        pFrom = render.getRelativePoint(base.cam, pFrom)
+        pTo = render.getRelativePoint(base.cam, pTo)
+
+        result = self.root.bulletworld.rayTestClosest(pFrom, pTo)
+        """if result.hasHit():
+            print result.getHitPos()
+            print result.getHitNormal()
+            print result.getHitFraction()
+            print result.getNode().getName()"""
+        if result.hasHit():
+            #here is how you get the surface collsion
+            block = result.getHitPos()
+            chunkname = result.getNode().getName()
+            cord = chunkname.split(":")
+
+            x = int(round(block[0] - int(cord[0]), 0))
+            y = int(round(block[1] - int(cord[1]), 0))
+            z = int(round(block[2] - int(cord[2]), 0))
+            #print block
+            #print chunkname
+            #print str(x) + "," + str(y) + "," + str(z)
+
+            #self.planet.removeBlock(chunkname, x, y, z)
+            self.selection = (chunkname, (x, y, z))
+            self.select.setPos(int(math.floor(block[0])), int(math.floor(block[1])), int(math.floor(block[2])))
+        else:
+            self.selection = None
+
     #def cleanup(self):
      #   self.world = None
         #self.worldNP.removeNode()
+
+    def removeBlock(self):
+        print "Removing Block"
+        if self.selection != None:
+            self.planet.removeBlock(self.selection[0], self.selection[1][0], self.selection[1][1], self.selection[1][2])
+
+    def placeBlock(self):
+        print "Placing Block"
+        if self.selection != None:
+            self.planet.placeBlock(self.selection[0], self.selection[1][0], self.selection[1][1], self.selection[1][2] + 1)
 
     def look(self, task):
         mouse = self.root.win.getPointer(0)
@@ -355,83 +397,6 @@ class Player:
     def startLook(self):
         self.root.win.movePointer(0, self.centerX, self.centerY)
         taskMgr.add(self.look, 'look')
-
-    def onMouseTask(self):
-        """ """
-        #do we have a mouse
-        if (self.root.mouseWatcherNode.hasMouse() == False):
-            return
-
-        #get the mouse position
-        mpos = base.mouseWatcherNode.getMouse()
-
-        #Set the position of the ray based on the mouse position
-        self.mPickRay.setFromLens(self.root.camNode, mpos.getX(), mpos.getY())
-
-        #for this small example I will traverse everything, for bigger projects
-        #this is probably a bad idea
-        self.mPickerTraverser.traverse(self.planet.planetNode)
-
-        if (self.mCollisionQue.getNumEntries() > 0):
-            self.mCollisionQue.sortEntries()
-            entry = self.mCollisionQue.getEntry(0)
-            chunk = entry.getIntoNodePath()
-
-            chunk = chunk.findNetTag('Pickable')
-            if not chunk.isEmpty():
-                #here is how you get the surface collsion
-                block = entry.getSurfacePoint(self.root.render)
-                chunkname = chunk.getName()
-                cord = chunkname.split(":")
-
-                x = int(round(block[0] - int(cord[0]), 0))
-                y = int(round(block[1] - int(cord[1]), 0))
-                z = int(round(block[2] - int(cord[2]), 0))
-                print block
-                print chunkname
-                print str(x) + "," + str(y) + "," + str(z)
-
-                self.planet.removeBlock(chunkname, x, y, z)
-                self.select.setPos(int(math.floor(block[0])), int(math.floor(block[1])), int(math.floor(block[2])))
-                #handleBlockClick(chunk, block)
-        #return Task.cont
-
-    def setupMouseCollision(self):
-        """ """
-        #Since we are using collision detection to do picking, we set it up
-        #any other collision detection system with a traverser and a handler
-        self.mPickerTraverser = CollisionTraverser()  # Make a traverser
-        self.mCollisionQue = CollisionHandlerQueue()
-
-        #create a collision solid ray to detect against
-        self.mPickRay = CollisionRay()
-        self.mPickRay.setOrigin(self.root.camera.getPos(self.root.render))
-        self.mPickRay.setDirection(render.getRelativeVector(camera, Vec3(0, 1, 0)))
-
-        #create our collison Node to hold the ray
-        self.mPickNode = CollisionNode('pickRay')
-        self.mPickNode.addSolid(self.mPickRay)
-
-        #Attach that node to the camera since the ray will need to be positioned
-        #relative to it, returns a new nodepath
-        #well use the default geometry mask
-        #this is inefficent but its for mouse picking only
-
-        self.mPickNP = self.root.camera.attachNewNode(self.mPickNode)
-
-        #well use what panda calls the "from" node.  This is reall a silly convention
-        #but from nodes are nodes that are active, while into nodes are usually passive environments
-        #this isnt a hard rule, but following it usually reduces processing
-
-        #Everything to be picked will use bit 1. This way if we were doing other
-        #collision we could seperate it, we use bitmasks to determine what we check other objects against
-        #if they dont have a bitmask for bit 1 well skip them!
-        self.mPickNode.setFromCollideMask(GeomNode.getDefaultCollideMask())
-
-        #Register the ray as something that can cause collisions
-        self.mPickerTraverser.addCollider(self.mPickNP, self.mCollisionQue)
-        #if you want to show collisions for debugging turn this on
-        #self.mPickerTraverser.showCollisions(self.render)
 
     def getPos(self):
         return self.character.getPos()
