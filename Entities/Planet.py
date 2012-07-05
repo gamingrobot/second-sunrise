@@ -2,7 +2,7 @@
 import sys
 sys.path.insert(0, '..')
 from MovableEntity import *
-from PCChunk import *
+from PChunk import *
 from panda3d.core import Vec3
 
 from direct.stdpy import threading
@@ -63,7 +63,7 @@ class Planet(MovableEntity):
         self.generateChunks(int(chunkcord[0]), int(chunkcord[1]), int(chunkcord[2]))
 
     def addChunk(self, x, y, z):
-        nchunk = PCChunk({'x': x, 'y': y, 'z': z,
+        nchunk = PChunk({'x': x, 'y': y, 'z': z,
             'planetNode': self.planetNode, 'root': self.root, 'planet': self})
         _commandLineQueue.push({'command': 'blocks', 'chunk': nchunk})
         #nchunk.generateBlocks()
@@ -71,7 +71,7 @@ class Planet(MovableEntity):
         self.chunks[nchunk.getChunkID()] = nchunk
 
     def addNormChunk(self, x, y, z):
-        nchunk = PCChunk({'x': x, 'y': y, 'z': z,
+        nchunk = PChunk({'x': x, 'y': y, 'z': z,
             'planetNode': self.planetNode, 'root': self.root, 'planet': self})
         #_commandLineQueue.push({'command': 'blocks', 'chunk': nchunk})
         nchunk.generateBlocks()
