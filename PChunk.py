@@ -30,6 +30,7 @@ class PChunk:
         self.planet = args['planet']
         self.empty = True
         self.meshed = False
+        self.level = float(0.0)
 
     def getChunkID(self):
         return self.id
@@ -58,15 +59,11 @@ class PChunk:
                     {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(-1.0), 'name': '000'})
             it.iternext()
 
-    def removeBlock(self, x, y, z):
+    def removeBlock(self, x, y, z, voxel=False):
         print "removing" + str(x) + "," + str(y) + "," + str(z)
         print self.blocks[x][y][z]
         self.blocks[x][y][z] = Air(
                     {'x': x * self.blockSize, 'y': y * self.blockSize, 'z': z * self.blockSize, 'density': float(-1.0), 'name': '000'})
-        self.node.removeNode()
-        self.bulletnode.removeShape(self.bulletshape)
-        self.root.bulletworld.removeRigidBody(self.bulletnode)
-        self.bulletnp.removeNode()
 
     def isEmpty(self):
         return self.empty
@@ -74,278 +71,13 @@ class PChunk:
     def meshGenerated(self):
         return self.meshed
 
-    def generateVoxel(self):
-        #t = threading.Thread(target=self.generateVoxelThread, args=())
-        #t.start()
-        self.generateVoxelThread()
-
-    def generateVoxelThread(self):
-        #render a cube
-        format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
-        vdata = GeomVertexData('chunk', format, Geom.UHStatic)
-
-        vertex = GeomVertexWriter(vdata, 'vertex')
-        normal = GeomVertexWriter(vdata, 'normal')
-        color = GeomVertexWriter(vdata, 'color')
-        texcoord = GeomVertexWriter(vdata, 'texcoord')
-
-        prim = GeomTriangles(Geom.UHStatic)
-        self.vertexcount = 0
-
-        for x in xrange(0, self.size):
-            for y in xrange(0, self.size):
-                for z in xrange(0, self.size):
-                    block = self.blocks[x, y, z]
-                    #current block exists
-                    if not self.isEmptyBlock(block):
-                        shade = 0.5
-                        #Not air or space block render
-                        #left
-                        block = None
-                        if x >= 1:
-                            block = self.blocks[x - 1, y, z]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Left Side" + str(x) + "," + str(y) + "," + str(z)
-                            #line corners
-                            #0
-                            vertex.addData3f(x, y, z)
-                            normal.addData3f(-1, 0, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #1
-                            vertex.addData3f(x, y + 1, z + 1)
-                            normal.addData3f(-1, 0, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x, y, z + 1)
-                            normal.addData3f(-1, 0, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #3
-                            vertex.addData3f(x, y + 1, z)
-                            normal.addData3f(-1, 0, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
-                        #front
-                        block = None
-                        if y >= 1:
-                            block = self.blocks[x, y - 1, z]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Front Side" + str(x) + "," + str(y) + "," + str(z)
-                            #line corners
-                            #0
-                            vertex.addData3f(x + 1, y, z)
-                            normal.addData3f(0, -1, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #1
-                            vertex.addData3f(x, y, z + 1)
-                            normal.addData3f(0, -1, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y, z + 1)
-                            normal.addData3f(0, -1, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #3
-                            vertex.addData3f(x, y, z)
-                            normal.addData3f(0, -1, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
-
-                        #right
-                        block = None
-                        if x < self.size - 1:
-                            block = self.blocks[x + 1, y, z]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Right Side" + str(x) + "," + str(y) + "," + str(z)
-                            #line corners
-                            #0
-                            vertex.addData3f(x + 1, y + 1, z + 1)
-                            normal.addData3f(1, 0, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #1
-                            vertex.addData3f(x + 1, y, z)
-                            normal.addData3f(1, 0, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y, z + 1)
-                            normal.addData3f(1, 0, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #3
-                            vertex.addData3f(x + 1, y + 1, z)
-                            normal.addData3f(1, 0, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
-
-                        #back
-                        block = None
-                        if y < self.size - 1:
-                            block = self.blocks[x, y + 1, z]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Back Side" + str(x) + "," + str(y) + "," + str(z)
-                            #line corners
-                            #0
-                            vertex.addData3f(x, y + 1, z + 1)
-                            normal.addData3f(0, 1, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #1
-                            vertex.addData3f(x + 1, y + 1, z)
-                            normal.addData3f(0, 1, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y + 1, z + 1)
-                            normal.addData3f(0, 1, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #3
-                            vertex.addData3f(x, y + 1, z)
-                            normal.addData3f(0, 1, 0)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
-
-                        #bottom
-                        block = None
-                        if z > 1:
-                            block = self.blocks[x, y, z - 1]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Bottom Side" + str(x) + "," + str(y) + "," + str(z)
-                            #line corners
-                            #0
-                            vertex.addData3f(x, y + 1, z)
-                            normal.addData3f(0, 0, -1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #1
-                            vertex.addData3f(x + 1, y, z)
-                            normal.addData3f(0, 0, -1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #edge corners
-                            #2
-                            vertex.addData3f(x + 1, y + 1, z)
-                            normal.addData3f(0, 0, -1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #3
-                            vertex.addData3f(x, y, z)
-                            normal.addData3f(0, 0, -1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
-
-                        #top
-                        block = None
-                        if z < self.size - 1:
-                            block = self.blocks[x, y, z + 1]
-                        if(self.isEmptyBlock(block)):
-                            #render that side
-                            #print "Render Top Side" + str(x) + "," + str(y) + "," + str(z)
-                            #line corners
-                            #0
-                            vertex.addData3f(x + 1, y, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 0)
-                            #1
-                            vertex.addData3f(x, y + 1, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 1)
-                            #edge corners
-                            #22
-                            vertex.addData3f(x + 1, y + 1, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(1, 1)
-                            #3
-                            vertex.addData3f(x, y, z + 1)
-                            normal.addData3f(0, 0, 1)
-                            color.addData4f(shade, shade, shade, 1)
-                            texcoord.addData2f(0, 0)
-                            #draw triangles
-                            prim.addVertices(self.vertexcount, self.vertexcount + 2, self.vertexcount + 1)
-                            prim.addVertices(self.vertexcount + 1, self.vertexcount + 3, self.vertexcount)
-                            #increment vertexcount
-                            self.vertexcount += 4
-
-        prim.closePrimitive()
-        #attach primitives and render
-        geom = Geom(vdata)
-        geom.addPrimitive(prim)
-
-        #add bullet
-        """col = BulletTriangleMesh()
-        col.addGeom(geom)
-        shape = BulletTriangleMeshShape(col, dynamic=False)
-        bulletnode = BulletRigidBodyNode('Chunk')
-        bulletnode.addShape(shape)
-        bulletnp = self.planetNode.attachNewNode(bulletnode)
-        bulletnp.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
-        self.root.bulletworld.attachRigidBody(bulletnode)"""
-
-        node = GeomNode(self.id)
-        node.addGeom(geom)
-        self.node = self.planetNode.attachNewNode(node)
-        self.node.setPos(self.x, self.y, self.z)
-        self.node.setTag('Pickable', '1')
-        #self.node.writeBamFile("./chunks/" + self.name + ".bam")
-
-    def isEmptyBlock(self, block):
-        if block == None:
-            return True
-        elif block.__class__.__name__ != "Air" and block.__class__.__name__ != "Space":
-            return False
-        else:
-            return True
-
-    def generateMarching(self):
+    def generateMesh(self, voxel=False):
         self.chunks = self.planet.chunks
-        #t = threading.Thread(target=self.generateMarchingThread, args=())
-        #t.start()
-        self.generateMarchingThread()
+        if not voxel:
+            triangles = self.generateMarchingMesh()
+        else:
+            triangles = self.generateVoxelMesh()
 
-    def generateMarchingThread(self):
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         vdata = GeomVertexData('chunk', format, Geom.UHStatic)
 
@@ -353,17 +85,9 @@ class PChunk:
         normal = GeomVertexWriter(vdata, 'normal')
         color = GeomVertexWriter(vdata, 'color')
         texcoord = GeomVertexWriter(vdata, 'texcoord')
-
         prim = GeomTriangles(Geom.UHStatic)
-        self.vertexcount = 0
 
-        #add the edge bocks of positive to the current block array
-        draw = Iso(self, self.size, self.chunks)
-        pixel = draw.grid()
-        #t = threading.Thread(target=draw.grid, args=())
-        #t.start()
-        triangles = draw.triangles
-        #threading currently hangs here
+        self.vertexcount = 0
         for triangle in triangles:
             for avertex in triangle:
                 #print triangle
@@ -396,10 +120,21 @@ class PChunk:
         geom = Geom(vdata)
         geom.addPrimitive(prim)
 
+        try:
+            self.node.removeNode()
+            self.bulletnode.removeShape(self.bulletshape)
+            self.root.bulletworld.removeRigidBody(self.bulletnode)
+            self.bulletnp.removeNode()
+        except AttributeError:
+            pass
+
         node = GeomNode(self.id)
         node.addGeom(geom)
         self.node = self.planetNode.attachNewNode(node)
-        self.node.setPos(self.x, self.y, self.z)
+        if not voxel:
+            self.node.setPos(self.x, self.y, self.z - 0.5)
+        else:
+            self.node.setPos(self.x, self.y, self.z)
         self.node.setTag('Pickable', '1')
         self.meshed = True
 
@@ -418,9 +153,78 @@ class PChunk:
         #self.bulletnode.setDeactivationEnabled(False)
         #self.bulletnode.setAnisotropicFriction(VBase3(10, 10, 0))
         self.bulletnp = self.planetNode.attachNewNode(self.bulletnode)
-        self.bulletnp.setPos(self.x, self.y, self.z)
+        if not voxel:
+            self.bulletnp.setPos(self.x, self.y, self.z - 0.5)
+        else:
+            self.bulletnp.setPos(self.x, self.y, self.z)
         self.bulletnp.setCollideMask(BitMask32.allOn())
         self.root.bulletworld.attachRigidBody(self.bulletnode)
+
+    def generateMarchingMesh(self):
+        draw = Iso(self, self.size, self.chunks)
+        triangles = draw.grid()
+        return triangles
+
+    def generateVoxelMesh(self):
+        triangles = []
+        for x in xrange(0, self.size):
+            for y in xrange(0, self.size):
+                for z in xrange(0, self.size):
+                    block = self.blocks[x, y, z]
+                    #current block exists
+                    if not self.isEmptyBlock(block):
+                        #left
+                        block = None
+                        if x >= 1:
+                            block = self.blocks[x - 1, y, z]
+                        if self.isEmptyBlock(block):
+                            #triangles.append([[], [], []])
+                            triangles.append([[x, y, z], [x, y, z + 1], [x, y + 1, z + 1]])
+                            triangles.append([[x, y + 1, z + 1], [x, y + 1, z], [x, y, z]])
+                        #front
+                        block = None
+                        if y >= 1:
+                            block = self.blocks[x, y - 1, z]
+                        if self.isEmptyBlock(block):
+                            triangles.append([[x + 1, y, z], [x + 1, y, z + 1], [x, y, z + 1]])
+                            triangles.append([[x, y, z + 1], [x, y, z], [x + 1, y, z]])
+                        #right
+                        block = None
+                        if x < self.size - 1:
+                            block = self.blocks[x + 1, y, z]
+                        if self.isEmptyBlock(block):
+                            triangles.append([[x + 1, y + 1, z + 1], [x + 1, y, z + 1], [x + 1, y, z]])
+                            triangles.append([[x + 1, y, z], [x + 1, y + 1, z], [x + 1, y + 1, z + 1]])
+                        #back
+                        block = None
+                        if y < self.size - 1:
+                            block = self.blocks[x, y + 1, z]
+                        if self.isEmptyBlock(block):
+                            triangles.append([[x, y + 1, z + 1], [x + 1, y + 1, z + 1], [x + 1, y + 1, z]])
+                            triangles.append([[x + 1, y + 1, z], [x, y + 1, z], [x, y + 1, z + 1]])
+                        #bottom
+                        block = None
+                        if z > 1:
+                            block = self.blocks[x, y, z - 1]
+                        if self.isEmptyBlock(block):
+                            triangles.append([[x, y + 1, z], [x + 1, y + 1, z], [x + 1, y, z]])
+                            triangles.append([[x + 1, y, z], [x, y, z], [x, y + 1, z]])
+                        #top
+                        block = None
+                        if z < self.size - 1:
+                            block = self.blocks[x, y, z + 1]
+                        if self.isEmptyBlock(block):
+                            triangles.append([[x + 1, y, z + 1], [x + 1, y + 1, z + 1], [x, y + 1, z + 1]])
+                            triangles.append([[x, y + 1, z + 1], [x, y, z + 1], [x + 1, y, z + 1]])
+        return triangles
+
+    def isEmptyBlock(self, block):
+        if block == None:
+            return True
+        elif block.__class__.__name__ != "Air" and block.__class__.__name__ != "Space":
+            return False
+        else:
+            return True
 
     def genHash(self, x, y, z):
         return str(x) + ":" + str(y) + ":" + str(z)
@@ -543,14 +347,6 @@ class Iso:
                     #print self.genHash(x,y,z)
                     if x == self.size - 1 and y == self.size - 1 and z == self.size - 1:
                         #print "in if 1" + self.genHash(x, y, z)
-                        """p.value = (self.blocks[x, y, z].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[1, 0, 0].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[1, 1, 0].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 1, 0].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 0, 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[1, 0, 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 0, 0].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 1, 1].getDensity())"""
                         p.value = (self.blocks[x, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, 15].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, 15].getDensity(),
@@ -559,25 +355,9 @@ class Iso:
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, 15, 0].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 0, 0].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[15, 0, 0].getDensity())
-                        """p.value = (-1.0,
-                                -1.0,
-                                -1.0,
-                                -1.0,
-                                -1.0,
-                                -1.0,
-                                -1.0,
-                                -1.0)"""
 
                     elif x == self.size - 1 and y == self.size - 1:
                         #print "in if 2" + self.genHash(x, y, z)
-                        """p.value = (self.blocks[x, y, z].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[1, 0, z].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 1, z].getDensity(),
-                                self.blocks[x, y, z + 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[1, 0, z + 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[1, 1, z + 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 1, z + 1].getDensity())"""
                         p.value = (self.blocks[x, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z].getDensity(),  # watch out here might cause problem
@@ -589,14 +369,6 @@ class Iso:
 
                     elif x == self.size - 1 and z == self.size - 1:
                         #print "in if 3 " + self.genHash(x, y, z)
-                        """p.value = (self.blocks[x, y, z].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[1, y, 0].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[1, y + 1, 0].getDensity(),
-                                self.blocks[x, y + 1, z].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y, 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y, 0].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[1, y + 1, 1].getDensity(),
-                                self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y + 1, 1].getDensity())"""
                         p.value = (self.blocks[x, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y, 15].getDensity(),
                                 self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y + 1, 15].getDensity(),
@@ -608,14 +380,6 @@ class Iso:
 
                     elif y == self.size - 1 and z == self.size - 1:
                         #print "in if 4" + self.genHash(x, y, z)
-                        """p.value = (self.blocks[x, y, z].getDensity(),
-                                self.blocks[x + 1, y, z].getDensity(),
-                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 1, 0].getDensity(),
-                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 1, 0].getDensity(),
-                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 1].getDensity(),
-                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 0, 1].getDensity(),
-                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 1, 1].getDensity(),
-                                self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 0].getDensity())"""
                         p.value = (self.blocks[x, y, z].getDensity(),
                                 self.blocks[x + 1, y, z].getDensity(),
                                 self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x + 1, 0, 15].getDensity(),
@@ -669,6 +433,7 @@ class Iso:
                                 self.blocks[x + 1, y + 1, z + 1].getDensity(),
                                 self.blocks[x, y + 1, z + 1].getDensity())
                     self.cube(p)
+        return self.triangles
 
     def genHash(self, x, y, z):
         return str(x) + ":" + str(y) + ":" + str(z)

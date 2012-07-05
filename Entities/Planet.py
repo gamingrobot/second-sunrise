@@ -8,6 +8,7 @@ from panda3d.core import Vec3
 from direct.stdpy import threading
 from pandac.PandaModules import Thread
 from direct.showbase.PythonUtil import Queue
+import random
 
 _commandLineQueue = Queue()
 
@@ -79,15 +80,18 @@ class Planet(MovableEntity):
         self.chunks[nchunk.getChunkID()] = nchunk
 
     def generateChunkMesh(self, x, y, z):
-        _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
+        if not self.debug:
+            _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
+        else:
+            _commandLineQueue.push({'command': 'voxel', 'chunk': self.chunks[self.genHash(x, y, z)]})
 
     def generateSpawnChunkMesh(self, x, y, z):
-        #_commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
         if not self.chunks[self.genHash(x, y, z)].isEmpty():
             if not self.chunks[self.genHash(x, y, z)].meshGenerated():
-                #t = threading.Thread(target=self.chunks[self.genHash(x, y, z)].generateMarching, args=())
-                #t.start()
-                self.chunks[self.genHash(x, y, z)].generateMarching()
+                if not self.debug:
+                    self.chunks[self.genHash(x, y, z)].generateMesh()
+                else:
+                    self.chunks[self.genHash(x, y, z)].generateMesh(voxel=True)
 
     def generateSpawnChunkBlocks(self, x, y, z):
         #generate only positive chunks and check if they are already in the tree
@@ -199,28 +203,19 @@ class Planet(MovableEntity):
         return str(x) + ":" + str(y) + ":" + str(z)
 
     def removeBlock(self, chunkid, x, y, z):
-        self.chunks[chunkid].removeBlock(x, y, z)
-        cord = chunkid.split(":")
-        #fix so it doesnt regenerate the entire mesh/might run into artificats tho
-        self.generateChunkMesh(int(cord[0]), int(cord[1]), int(cord[2]))
+        if not self.debug:
+            self.chunks[chunkid].removeBlock(x, y, z)
+            t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=())
+            t.start()
+        else:
+            self.chunks[chunkid].removeBlock(x, y, z, True)
+            t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
+            t.start()
 
     def testBox(self, x, y, z):
         model = self.root.loader.loadModel('models/box.egg')
         model.reparentTo(self.planetNode)
         model.setPos(x, y, z)
-
-    def testChunk(self):
-        for i in range(-2, 2):
-            for j in range(-2, 2):
-                for k in range(-2, 2):
-                    temp = (i * self.chunkSize, j * self.chunkSize, k * self.chunkSize)
-
-                    testchunk = Chunk({'x': temp[0], 'y': temp[1], 'z': temp[2],
-                        'planetNode': self.planetNode, 'root': self.root})
-                    testchunk.generateBlocks(self)
-                    testchunk.generateVoxel()
-
-                    self.chunks[testchunk.getChunkID()] = testchunk
 
 
 class _ExecThread(threading.Thread):
@@ -236,6 +231,10 @@ class _ExecThread(threading.Thread):
                 if popque['command'] == 'march':
                     if not chunk.isEmpty():
                         if not chunk.meshGenerated():
-                            chunk.generateMarching()
+                            chunk.generateMesh()
+                if popque['command'] == 'voxel':
+                    if not chunk.isEmpty():
+                        if not chunk.meshGenerated():
+                            chunk.generateMesh(voxel=True)
                 Thread.sleep(0.04)
             Thread.sleep(0.04)

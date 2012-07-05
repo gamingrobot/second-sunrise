@@ -10,6 +10,12 @@ from panda3d.core import WindowProperties
 from panda3d.core import VBase4
 from panda3d.core import CollisionRay, CollisionNode, GeomNode, CollisionTraverser
 from panda3d.core import CollisionHandlerQueue, CollisionSphere, BitMask32
+from panda3d.core import GeomVertexFormat
+from panda3d.core import GeomVertexData
+from panda3d.core import GeomVertexWriter
+from panda3d.core import GeomLines
+from panda3d.core import GeomNode
+from panda3d.core import Geom
 import math
 from CharacterController import *
 from mouseLook import MouseLook
@@ -131,9 +137,112 @@ class Player:
         #was used before start menu was working
         #self.cont.gameMode()"""
 
+        #create selection mesh
+        format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
+        vdata = GeomVertexData('chunk', format, Geom.UHStatic)
+
+        vertex = GeomVertexWriter(vdata, 'vertex')
+        normal = GeomVertexWriter(vdata, 'normal')
+        color = GeomVertexWriter(vdata, 'color')
+        texcoord = GeomVertexWriter(vdata, 'texcoord')
+
+        prim = GeomLines(Geom.UHStatic)
+        shade = 1.0
+
+        #0
+        vertex.addData3f(0, 0, 0)
+        normal.addData3f(0, 0, 1)
+        color.addData4f(shade, 0.0, 0.0, 1)
+        texcoord.addData2f(0, 0)
+
+        #1
+        vertex.addData3f(0, 1, 0)
+        normal.addData3f(0, 0, 1)
+        color.addData4f(shade, 0.0, 0.0, 1)
+        texcoord.addData2f(0, 0)
+
+        #2
+        vertex.addData3f(1, 1, 0)
+        normal.addData3f(0, 0, 1)
+        color.addData4f(shade, 0.0, 0.0, 1)
+        texcoord.addData2f(0, 0)
+
+        #3
+        vertex.addData3f(1, 0, 0)
+        normal.addData3f(0, 0, 1)
+        color.addData4f(shade, 0.0, 0.0, 1)
+        texcoord.addData2f(0, 0)
+
+        #top side
+        prim.addVertices(0, 1)
+        prim.addVertices(1, 2)
+        prim.addVertices(2, 3)
+        prim.addVertices(3, 0)
+
+        #4
+        vertex.addData3f(0, 0, -1)
+        normal.addData3f(0, 0, 1)
+        color.addData4f(shade, 0.0, 0.0, 1)
+        texcoord.addData2f(0, 0)
+
+        #5
+        vertex.addData3f(0, 1, -1)
+        normal.addData3f(0, 0, 1)
+        color.addData4f(shade, 0.0, 0.0, 1)
+        texcoord.addData2f(0, 0)
+
+        #6
+        vertex.addData3f(1, 1, -1)
+        normal.addData3f(0, 0, 1)
+        color.addData4f(shade, 0.0, 0.0, 1)
+        texcoord.addData2f(0, 0)
+
+        #7
+        vertex.addData3f(1, 0, -1)
+        normal.addData3f(0, 0, 1)
+        color.addData4f(shade, 0.0, 0.0, 1)
+        texcoord.addData2f(0, 0)
+
+        #bottom side
+        prim.addVertices(4, 5)
+        prim.addVertices(5, 6)
+        prim.addVertices(6, 7)
+        prim.addVertices(7, 4)
+
+        #other sides
+        prim.addVertices(0, 4)
+        prim.addVertices(1, 5)
+        prim.addVertices(2, 6)
+        prim.addVertices(3, 7)
+
+        prim.closePrimitive()
+        #attach primitives and render
+        geom = Geom(vdata)
+        geom.addPrimitive(prim)
+
+        #add bullet
+        """col = BulletTriangleMesh()
+        col.addGeom(geom)
+        shape = BulletTriangleMeshShape(col, dynamic=False)
+        bulletnode = BulletRigidBodyNode('Chunk')
+        bulletnode.addShape(shape)
+        bulletnp = self.planetNode.attachNewNode(bulletnode)
+        bulletnp.setPos(self.x + self.size, self.y + self.size, self.z + self.size)
+        self.root.bulletworld.attachRigidBody(bulletnode)"""
+
+        node = GeomNode('picker')
+        node.addGeom(geom)
+        self.select = self.root.render.attachNewNode(node)
+        self.select.setPos(0, 0, 0)
+
+        """self.select = self.root.loader.loadModel('models/box.egg')
+        self.select.reparentTo(self.root.render)
+        self.select.setPos(0, 0, 0)"""
+
         #setup picking
         #add mouse button 1 handler
         self.root.accept('mouse1', self.onMouseTask)
+        #taskMgr.add(self.onMouseTask, 'pick')
         #add mouse collision to our world
         self.setupMouseCollision()
 
@@ -261,7 +370,7 @@ class Player:
 
         #for this small example I will traverse everything, for bigger projects
         #this is probably a bad idea
-        self.mPickerTraverser.traverse(self.root.render)
+        self.mPickerTraverser.traverse(self.planet.planetNode)
 
         if (self.mCollisionQue.getNumEntries() > 0):
             self.mCollisionQue.sortEntries()
@@ -275,15 +384,17 @@ class Player:
                 chunkname = chunk.getName()
                 cord = chunkname.split(":")
 
-                x = int(math.floor(block[0] - int(cord[0])))
-                y = int(math.floor(block[1] - int(cord[1])))
-                z = int(math.floor(block[2] - int(cord[2])))
+                x = int(round(block[0] - int(cord[0]), 0))
+                y = int(round(block[1] - int(cord[1]), 0))
+                z = int(round(block[2] - int(cord[2]), 0))
                 print block
                 print chunkname
                 print str(x) + "," + str(y) + "," + str(z)
 
                 self.planet.removeBlock(chunkname, x, y, z)
+                self.select.setPos(int(math.floor(block[0])), int(math.floor(block[1])), int(math.floor(block[2])))
                 #handleBlockClick(chunk, block)
+        #return Task.cont
 
     def setupMouseCollision(self):
         """ """

@@ -41,6 +41,7 @@ loadPrcFile("config/Config.prc")
 class PlanetCraft(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
+        #base.wireframeOn()
         from panda3d.core import Thread
         print "Threading Supported: " + str(Thread.isThreadingSupported())
         #create rocketregion
@@ -107,7 +108,8 @@ class PlanetCraft(ShowBase):
         return task.cont
 
     def startVoxel(self):
-        self.startGame(debug=True)
+        #self.startGame(debug=True)
+        pass
 
     def startMarch(self):
         self.startGame()
