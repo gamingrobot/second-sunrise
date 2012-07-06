@@ -338,6 +338,7 @@ class Iso:
                 for z in xrange(0, self.size):
                     #Thread.forceYield()
                     #block = self.blocks[x, y, z]
+                    print test
                     p = self.GridCell()
                     position = p.position
                     #(x, y, z) = (float(i), float(j), float(k))
