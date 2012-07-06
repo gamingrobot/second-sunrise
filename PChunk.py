@@ -138,7 +138,7 @@ class PChunk:
         node.addGeom(geom)
         self.node = self.planetNode.attachNewNode(node)
         if not voxel:
-            self.node.setPos(self.x, self.y, self.z - 0.5)
+            self.node.setPos(self.x, self.y, self.z)
         else:
             self.node.setPos(self.x, self.y, self.z)
         self.node.setTag('Pickable', '1')
@@ -160,7 +160,7 @@ class PChunk:
         #self.bulletnode.setAnisotropicFriction(VBase3(10, 10, 0))
         self.bulletnp = self.planetNode.attachNewNode(self.bulletnode)
         if not voxel:
-            self.bulletnp.setPos(self.x, self.y, self.z - 0.5)
+            self.bulletnp.setPos(self.x, self.y, self.z)
         else:
             self.bulletnp.setPos(self.x, self.y, self.z)
         self.bulletnp.setCollideMask(BitMask32.allOn())
@@ -341,14 +341,22 @@ class Iso:
                     p = self.GridCell()
                     position = p.position
                     #(x, y, z) = (float(i), float(j), float(k))
-                    position[0] = (x, y, z)
+                    """position[0] = (x, y, z)
                     position[1] = (x + 1, y, z)
                     position[2] = (x + 1, y + 1, z)
                     position[3] = (x, y + 1, z)
                     position[4] = (x, y, z + 1)
                     position[5] = (x + 1, y, z + 1)
                     position[6] = (x + 1, y + 1, z + 1)
-                    position[7] = (x, y + 1, z + 1)
+                    position[7] = (x, y + 1, z + 1)"""
+                    position[0] = (x + 0.5, y + 0.5, z + 0.5)
+                    position[1] = (x + 1.5, y + 0.5, z + 0.5)
+                    position[2] = (x + 1.5, y + 1.5, z + 0.5)
+                    position[3] = (x + 0.5, y + 1.5, z + 0.5)
+                    position[4] = (x + 0.5, y + 0.5, z + 1.5)
+                    position[5] = (x + 1.5, y + 0.5, z + 1.5)
+                    position[6] = (x + 1.5, y + 1.5, z + 1.5)
+                    position[7] = (x + 0.5, y + 1.5, z + 1.5)
 
                     #print self.genHash(x,y,z)
                     if x == self.size - 1 and y == self.size - 1 and z == self.size - 1:

@@ -80,6 +80,11 @@ class Planet(MovableEntity):
         self.chunks[nchunk.getChunkID()] = nchunk
 
     def generateChunkMesh(self, x, y, z):
+        """rand = random.randint(0, 1)
+        if rand == 1:
+            _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
+        else:
+            _commandLineQueue.push({'command': 'voxel', 'chunk': self.chunks[self.genHash(x, y, z)]})"""
         if not self.debug:
             _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
         else:
