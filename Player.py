@@ -352,9 +352,9 @@ class Player:
             chunkname = result.getNode().getName()
             cord = chunkname.split(":")
 
-            x = int(round(block[0] - int(cord[0]), 0))
-            y = int(round(block[1] - int(cord[1]), 0))
-            z = int(round(block[2] - int(cord[2]), 0))
+            x = int(round(block[0] - int(cord[0]), 0) - 1)
+            y = int(round(block[1] - int(cord[1]), 0) - 1)
+            z = int(round(block[2] - int(cord[2]), 0) - 1)
             #print block
             #print chunkname
             #print str(x) + "," + str(y) + "," + str(z)
@@ -362,6 +362,7 @@ class Player:
             #self.planet.removeBlock(chunkname, x, y, z)
             self.selection = (chunkname, (x, y, z))
             self.select.setPos(int(math.floor(block[0])), int(math.floor(block[1])), int(math.floor(block[2])))
+            print (int(math.floor(block[0])), int(math.floor(block[1])), int(math.floor(block[2])))
         else:
             self.selection = None
 
