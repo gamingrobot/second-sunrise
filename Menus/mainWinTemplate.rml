@@ -6,7 +6,7 @@
 <body>
     <div id='contain'>
         <div id="title-bar">
-            <img src="../media/pcLogo.png" width="400px" height="127px" id="title" />
+            <img src="../media/ssLogo.png" width="500px" height="101px" id="title" />
         </div>
         <div id="content">
         </div>

@@ -15,7 +15,7 @@ body
 
 #contain
 {
-    width: 400px;
+    width: 500px;
 
     margin: 10% auto auto auto;
 }
