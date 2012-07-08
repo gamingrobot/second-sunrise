@@ -38,7 +38,7 @@ from Entities import *
 loadPrcFile("config/Config.prc")
 
 
-class PlanetCraft(ShowBase):
+class Second_Sunrise(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         #base.wireframeOn()

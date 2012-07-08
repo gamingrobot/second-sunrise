@@ -86,43 +86,11 @@ class Planet(MovableEntity):
             _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
         else:
             _commandLineQueue.push({'command': 'voxel', 'chunk': self.chunks[self.genHash(x, y, z)]})"""
-        if not self.debug:
-            thetype = 'march'
-        else:
-            thetype = 'voxel'
 
-        print self.chunks[self.genHash(x, y, z)].meshcounter
-        if self.chunks[self.genHash(x, y, z)].meshcounter < 1:
-            _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[self.genHash(x, y, z)]})
-        #regen negitive
-        ch = self.genHash(x - 16, y, z)
-        if ch in self.chunks:
-            if self.chunks[ch].meshcounter < 8:
-                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
-        ch = self.genHash(x, y - 16, z)
-        if ch in self.chunks:
-            if self.chunks[ch].meshcounter < 8:
-                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
-        ch = self.genHash(x, y, z - 16)
-        if ch in self.chunks:
-            if self.chunks[ch].meshcounter < 8:
-                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
-        ch = self.genHash(x - 16, y - 16, z)
-        if ch in self.chunks:
-            if self.chunks[ch].meshcounter < 8:
-                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
-        ch = self.genHash(x - 16, y, z - 16)
-        if ch in self.chunks:
-            if self.chunks[ch].meshcounter < 8:
-                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
-        ch = self.genHash(x, y - 16, z - 16)
-        if ch in self.chunks:
-            if self.chunks[ch].meshcounter < 8:
-                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
-        ch = self.genHash(x - 16, y - 16, z - 16)
-        if ch in self.chunks:
-            if self.chunks[ch].meshcounter < 8:
-                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
+        if not self.debug:
+            _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
+        else:
+            _commandLineQueue.push({'command': 'voxel', 'chunk': self.chunks[self.genHash(x, y, z)]})
 
     def generateSpawnChunkMesh(self, x, y, z):
         if not self.chunks[self.genHash(x, y, z)].isEmpty():
@@ -281,12 +249,8 @@ class _ExecThread(threading.Thread):
                     chunk.generateBlocks()
                 if popque['command'] == 'march':
                     #if not chunk.isEmpty():
-                    #if not chunk.meshGenerated():
-                    chunk.generateMesh()
-                if popque['command'] == 'regen_march':
-                    #if not chunk.isEmpty():
-                    #if not chunk.meshGenerated():
-                    chunk.generateMesh()
+                    if not chunk.meshGenerated():
+                        chunk.generateMesh()
                 if popque['command'] == 'voxel':
                     #if not chunk.isEmpty():
                     #    if not chunk.meshGenerated():
