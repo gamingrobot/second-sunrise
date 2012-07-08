@@ -63,6 +63,8 @@ class Planet(MovableEntity):
         print "Current Player Chunk " + self.playerchunk
         chunkcord = self.playerchunk.split(":")
         self.generateChunks(int(chunkcord[0]), int(chunkcord[1]), int(chunkcord[2]))
+        #recalculate gravity
+        #self.root.bulletworld.setGravity(Vec3(int(chunkcord[0]) * -1, int(chunkcord[1]) * -1, int(chunkcord[2]) * -1))
 
     def addChunk(self, x, y, z):
         nchunk = PChunk({'x': x, 'y': y, 'z': z,

@@ -282,7 +282,7 @@ class CharacterController(object):
         oldPos = float(self.__currentPos.z)
 
         self.jumpTime += self.__timeStep
-
+        #set horazontal gravity here
         self.__currentPos.z = (self.gravity * self.jumpTime ** 2) + (self.jumpSpeed * self.jumpTime) + self.jumpStartPos
 
         if round(self.__currentPos.z, 2) >= self.jumpMaxHeight:
