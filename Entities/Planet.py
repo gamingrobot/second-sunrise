@@ -210,26 +210,24 @@ class Planet(MovableEntity):
         return str(x) + ":" + str(y) + ":" + str(z)
 
     def removeBlock(self, chunkid, x, y, z):
-        pass
-        """if not self.debug:
+        if not self.debug:
             self.chunks[chunkid].removeBlock(x, y, z)
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=())
             t.start()
         else:
             self.chunks[chunkid].removeBlock(x, y, z, True)
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
-            t.start()"""
+            t.start()
 
     def placeBlock(self, chunkid, x, y, z):
-        pass
-        """if not self.debug:
+        if not self.debug:
             self.chunks[chunkid].placeBlock(x, y, z)
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=())
             t.start()
         else:
             self.chunks[chunkid].placeBlock(x, y, z, True)
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
-            t.start()"""
+            t.start()
 
     def testBox(self, x, y, z):
         model = self.root.loader.loadModel('models/box.egg')

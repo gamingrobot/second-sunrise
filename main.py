@@ -190,5 +190,5 @@ class Second_Sunrise(ShowBase):
         pass'''
 
 
-app = PlanetCraft()
+app = Second_Sunrise()
 app.run()
