@@ -31,6 +31,8 @@ class PChunk:
         self.empty = True
         self.meshed = False
         self.level = float(0.0)
+        self.blocks = None
+        self.meshcounter = 0
 
     def getChunkID(self):
         return self.id
@@ -78,6 +80,7 @@ class PChunk:
         return self.meshed
 
     def generateMesh(self, voxel=False):
+        print "Generating Chunk " + self.id
         self.chunks = self.planet.chunks
         if not voxel:
             triangles = self.generateMarchingMesh()
@@ -165,6 +168,7 @@ class PChunk:
             self.bulletnp.setPos(self.x, self.y, self.z)
         self.bulletnp.setCollideMask(BitMask32.allOn())
         self.root.bulletworld.attachRigidBody(self.bulletnode)
+        self.meshcounter += 1
 
     def generateMarchingMesh(self):
         draw = Iso(self, self.size, self.chunks)
@@ -337,7 +341,6 @@ class Iso:
             for y in xrange(0, self.size):
                 for z in xrange(0, self.size):
                     #Thread.forceYield()
-                    #block = self.blocks[x, y, z]
                     p = self.GridCell()
                     pv = []
                     position = p.position
@@ -360,74 +363,199 @@ class Iso:
                     position[7] = (x + 0.5, y + 1.5, z + 1.5)
 
                     if x == self.size - 1 and y == self.size - 1 and z == self.size - 1:
-                        pv.append(self.blocks[x, y, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, 15].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, 15].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[15, 0, 15].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[15, 15, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, 15, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y + 16, self.z + 16)].blocks[0, 0, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[15, 0, 0].getDensity())
+                        currentdensity = self.blocks[x, y, z].getDensity()
+                        pv.append(currentdensity)
+                        ch = self.genHash(self.x + 16, self.y, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, 15, 15].getDensity())
+                        else:
+                            pv.append(currentdensity)
+
+                        ch = self.genHash(self.x + 16, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, 0, 15].getDensity())
+                        else:
+                            pv.append(currentdensity)
+
+                        ch = self.genHash(self.x, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[15, 0, 15].getDensity())
+                        else:
+                            pv.append(currentdensity)
+
+                        ch = self.genHash(self.x, self.y, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[15, 15, 0].getDensity())
+                        else:
+                            pv.append(currentdensity)
+
+                        ch = self.genHash(self.x + 16, self.y, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, 15, 0].getDensity())
+                        else:
+                            pv.append(currentdensity)
+
+                        ch = self.genHash(self.x + 16, self.y + 16, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, 0, 0].getDensity())
+                        else:
+                            pv.append(currentdensity)
+
+                        ch = self.genHash(self.x, self.y + 16, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[15, 0, 0].getDensity())
+                        else:
+                            pv.append(currentdensity)
 
                     elif x == self.size - 1 and y == self.size - 1:
-                        pv.append(self.blocks[x, y, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[15, 0, z].getDensity())
+                        currentdensity = self.blocks[x, y, z].getDensity()
+                        pv.append(currentdensity)
+                        ch = self.genHash(self.x + 16, self.y, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, 15, z].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                        ch = self.genHash(self.x + 16, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, 0, z].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                        ch = self.genHash(self.x, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[15, 0, z].getDensity())
+                        else:
+                            pv.append(currentdensity)
                         pv.append(self.blocks[x, y, z + 1].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, 15, z + 1].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y + 16, self.z)].blocks[0, 0, z + 1].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[15, 0, z + 1].getDensity())
+                        ch = self.genHash(self.x + 16, self.y, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, 15, z + 1].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                        ch = self.genHash(self.x + 16, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, 0, z + 1].getDensity())
+                        else:
+                            pv.append(self.blocks[x, y, z + 1].getDensity())
+                        ch = self.genHash(self.x, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[15, 0, z + 1].getDensity())
+                        else:
+                            pv.append(self.blocks[x, y, z + 1].getDensity())
 
                     elif x == self.size - 1 and z == self.size - 1:
-                        pv.append(self.blocks[x, y, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y, 15].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y + 1, 15].getDensity())
+                        currentdensity = self.blocks[x, y, z].getDensity()
+                        pv.append(currentdensity)
+                        ch = self.genHash(self.x + 16, self.y, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, y, 15].getDensity())
+                            pv.append(self.chunks[ch].blocks[0, y + 1, 15].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                            pv.append(self.blocks[x, y + 1, z].getDensity())
                         pv.append(self.blocks[x, y + 1, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[15, y, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z + 16)].blocks[0, y + 1, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[15, y + 1, 0].getDensity())
+                        ch = self.genHash(self.x, self.y, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[15, y, 0].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                        ch = self.genHash(self.x + 16, self.y, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, y, 0].getDensity())
+                            pv.append(self.chunks[ch].blocks[0, y + 1, 0].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                            pv.append(self.blocks[x, y + 1, z].getDensity())
+                        ch = self.genHash(self.x, self.y, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[15, y + 1, 0].getDensity())
+                        else:
+                            pv.append(self.blocks[x, y + 1, z].getDensity())
 
                     elif y == self.size - 1 and z == self.size - 1:
-                        pv.append(self.blocks[x, y, z].getDensity())
+                        currentdensity = self.blocks[x, y, z].getDensity()
+                        pv.append(currentdensity)
                         pv.append(self.blocks[x + 1, y, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x + 1, 0, 15].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x, 0, 15].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x, 15, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x + 1, 15, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x + 1, 0, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z + 16)].blocks[x, 0, 0].getDensity())
+                        ch = self.genHash(self.x, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[x + 1, 0, 15].getDensity())
+                            pv.append(self.chunks[ch].blocks[x, 0, 15].getDensity())
+                        else:
+                            pv.append(self.blocks[x + 1, y, z].getDensity())
+                            pv.append(currentdensity)
+                        ch = self.genHash(self.x, self.y, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[x, 15, 0].getDensity())
+                            pv.append(self.chunks[ch].blocks[x + 1, 15, 0].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                            pv.append(self.blocks[x + 1, y, z].getDensity())
+                        ch = self.genHash(self.x, self.y + 16, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[x + 1, 0, 0].getDensity())
+                            pv.append(self.chunks[ch].blocks[x, 0, 0].getDensity())
+                        else:
+                            pv.append(self.blocks[x + 1, y, z].getDensity())
+                            pv.append(currentdensity)
 
                     elif x == self.size - 1:
-                        pv.append(self.blocks[x, y, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y + 1, z].getDensity())
+                        currentdensity = self.blocks[x, y, z].getDensity()
+                        pv.append(currentdensity)
+                        ch = self.genHash(self.x + 16, self.y, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, y, z].getDensity())
+                            pv.append(self.chunks[ch].blocks[0, y + 1, z].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                            pv.append(self.blocks[x, y + 1, z].getDensity())
                         pv.append(self.blocks[x, y + 1, z].getDensity())
                         pv.append(self.blocks[x, y, z + 1].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y, z + 1].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x + 16, self.y, self.z)].blocks[0, y + 1, z + 1].getDensity())
+                        ch = self.genHash(self.x + 16, self.y, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[0, y, z + 1].getDensity())
+                            pv.append(self.chunks[ch].blocks[0, y + 1, z + 1].getDensity())
+                        else:
+                            pv.append(self.blocks[x, y, z + 1].getDensity())
+                            pv.append(self.blocks[x, y + 1, z + 1].getDensity())
                         pv.append(self.blocks[x, y + 1, z + 1].getDensity())
 
                     elif y == self.size - 1:
-                        pv.append(self.blocks[x, y, z].getDensity())
+                        currentdensity = self.blocks[x, y, z].getDensity()
+                        pv.append(currentdensity)
                         pv.append(self.blocks[x + 1, y, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x + 1, 0, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x, 0, z].getDensity())
+                        ch = self.genHash(self.x, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[x + 1, 0, z].getDensity())
+                            pv.append(self.chunks[ch].blocks[x, 0, z].getDensity())
+                        else:
+                            pv.append(self.blocks[x + 1, y, z].getDensity())
+                            pv.append(currentdensity)
                         pv.append(self.blocks[x, y, z + 1].getDensity())
                         pv.append(self.blocks[x + 1, y, z + 1].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x + 1, 0, z + 1].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y + 16, self.z)].blocks[x, 0, z + 1].getDensity())
+                        ch = self.genHash(self.x, self.y + 16, self.z)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[x + 1, 0, z + 1].getDensity())
+                            pv.append(self.chunks[ch].blocks[x, 0, z + 1].getDensity())
+                        else:
+                            pv.append(self.blocks[x + 1, y, z + 1].getDensity())
+                            pv.append(self.blocks[x, y, z + 1].getDensity())
 
                     elif z == self.size - 1:
-                        pv.append(self.blocks[x, y, z].getDensity())
+                        currentdensity = self.blocks[x, y, z].getDensity()
+                        pv.append(currentdensity)
                         pv.append(self.blocks[x + 1, y, z].getDensity())
                         pv.append(self.blocks[x + 1, y + 1, z].getDensity())
                         pv.append(self.blocks[x, y + 1, z].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x, y, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x + 1, y, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x + 1, y + 1, 0].getDensity())
-                        pv.append(self.chunks[self.genHash(self.x, self.y, self.z + 16)].blocks[x, y + 1, 0].getDensity())
+                        ch = self.genHash(self.x, self.y, self.z + 16)
+                        if ch in self.chunks and self.chunks[ch].blocks != None:
+                            pv.append(self.chunks[ch].blocks[x, y, 0].getDensity())
+                            pv.append(self.chunks[ch].blocks[x + 1, y, 0].getDensity())
+                            pv.append(self.chunks[ch].blocks[x + 1, y + 1, 0].getDensity())
+                            pv.append(self.chunks[ch].blocks[x, y + 1, 0].getDensity())
+                        else:
+                            pv.append(currentdensity)
+                            pv.append(self.blocks[x + 1, y, z].getDensity())
+                            pv.append(self.blocks[x + 1, y + 1, z].getDensity())
+                            pv.append(self.blocks[x, y + 1, z].getDensity())
 
                     else:
                         pv.append(self.blocks[x, y, z].getDensity())

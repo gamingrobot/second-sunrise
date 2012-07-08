@@ -326,7 +326,7 @@ class Player:
         if self.planet.playerchunk != chunk:
             self.currentchunk = chunk
             self.planet.playerchunk = self.currentchunk
-            print self.planet.playerchunk
+            #print self.planet.playerchunk
             self.planet.playerChangedChunk()
 
         #do picking
@@ -362,7 +362,7 @@ class Player:
             #self.planet.removeBlock(chunkname, x, y, z)
             self.selection = (chunkname, (x, y, z))
             self.select.setPos(int(math.floor(block[0])), int(math.floor(block[1])), int(math.floor(block[2])))
-            print (int(math.floor(block[0])), int(math.floor(block[1])), int(math.floor(block[2])))
+            #print (int(math.floor(block[0])), int(math.floor(block[1])), int(math.floor(block[2])))
         else:
             self.selection = None
 

@@ -45,7 +45,7 @@ class Planet(MovableEntity):
         cs = self.chunkSize
         #find a surface chunk
         #spl = (0 * cs, 0 * cs, ((self.psize / 2) - 1) * cs)
-        spl = (0 * cs, 0 * cs, ((self.psize / 2) - 1) * cs)
+        spl = (1 * cs, 1 * cs, ((self.psize / 2) - 1) * cs)
 
         print spl
         self.playerchunk = self.genHash(spl[0], spl[1], spl[2])
@@ -60,6 +60,7 @@ class Planet(MovableEntity):
         player.currentchunk = self.playerchunk
 
     def playerChangedChunk(self):
+        print "Current Player Chunk " + self.playerchunk
         chunkcord = self.playerchunk.split(":")
         self.generateChunks(int(chunkcord[0]), int(chunkcord[1]), int(chunkcord[2]))
 
@@ -86,9 +87,42 @@ class Planet(MovableEntity):
         else:
             _commandLineQueue.push({'command': 'voxel', 'chunk': self.chunks[self.genHash(x, y, z)]})"""
         if not self.debug:
-            _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
+            thetype = 'march'
         else:
-            _commandLineQueue.push({'command': 'voxel', 'chunk': self.chunks[self.genHash(x, y, z)]})
+            thetype = 'voxel'
+
+        print self.chunks[self.genHash(x, y, z)].meshcounter
+        if self.chunks[self.genHash(x, y, z)].meshcounter < 1:
+            _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[self.genHash(x, y, z)]})
+        #regen negitive
+        ch = self.genHash(x - 16, y, z)
+        if ch in self.chunks:
+            if self.chunks[ch].meshcounter < 8:
+                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
+        ch = self.genHash(x, y - 16, z)
+        if ch in self.chunks:
+            if self.chunks[ch].meshcounter < 8:
+                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
+        ch = self.genHash(x, y, z - 16)
+        if ch in self.chunks:
+            if self.chunks[ch].meshcounter < 8:
+                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
+        ch = self.genHash(x - 16, y - 16, z)
+        if ch in self.chunks:
+            if self.chunks[ch].meshcounter < 8:
+                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
+        ch = self.genHash(x - 16, y, z - 16)
+        if ch in self.chunks:
+            if self.chunks[ch].meshcounter < 8:
+                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
+        ch = self.genHash(x, y - 16, z - 16)
+        if ch in self.chunks:
+            if self.chunks[ch].meshcounter < 8:
+                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
+        ch = self.genHash(x - 16, y - 16, z - 16)
+        if ch in self.chunks:
+            if self.chunks[ch].meshcounter < 8:
+                _commandLineQueue.push({'command': thetype, 'chunk': self.chunks[ch]})
 
     def generateSpawnChunkMesh(self, x, y, z):
         if not self.chunks[self.genHash(x, y, z)].isEmpty():
@@ -102,7 +136,7 @@ class Planet(MovableEntity):
         #generate only positive chunks and check if they are already in the tree
         if not self.genHash(x, y, z) in self.chunks:
             self.addNormChunk(x, y, z)
-        #x y
+        """#x y
         if not self.genHash(x + 16, y, z) in self.chunks:
             self.addNormChunk(x + 16, y, z)              # (x + 1, y, z)
         if not self.genHash(x + 16, y + 16, z) in self.chunks:
@@ -117,13 +151,13 @@ class Planet(MovableEntity):
         if not self.genHash(x + 16, y + 16, z + 16) in self.chunks:
             self.addNormChunk(x + 16, y + 16, z + 16)         # (x + 1, y + 1, z)
         if not self.genHash(x, y + 16, z + 16) in self.chunks:
-            self.addNormChunk(x, y + 16, z + 16)              # (x, y + 1, z)
+            self.addNormChunk(x, y + 16, z + 16)              # (x, y + 1, z)"""
 
     def generateChunkBlocks(self, x, y, z):
         #generate only positive chunks and check if they are already in the tree
         if not self.genHash(x, y, z) in self.chunks:
             self.addChunk(x, y, z)
-        #x y
+        """#x y
         if not self.genHash(x + 16, y, z) in self.chunks:
             self.addChunk(x + 16, y, z)              # (x + 1, y, z)
         if not self.genHash(x + 16, y + 16, z) in self.chunks:
@@ -138,7 +172,7 @@ class Planet(MovableEntity):
         if not self.genHash(x + 16, y + 16, z + 16) in self.chunks:
             self.addChunk(x + 16, y + 16, z + 16)         # (x + 1, y + 1, z)
         if not self.genHash(x, y + 16, z + 16) in self.chunks:
-            self.addChunk(x, y + 16, z + 16)              # (x, y + 1, z)
+            self.addChunk(x, y + 16, z + 16)              # (x, y + 1, z)"""
 
     def generateChunks(self, x, y, z):
         cs = self.chunkSize
@@ -208,24 +242,26 @@ class Planet(MovableEntity):
         return str(x) + ":" + str(y) + ":" + str(z)
 
     def removeBlock(self, chunkid, x, y, z):
-        if not self.debug:
+        pass
+        """if not self.debug:
             self.chunks[chunkid].removeBlock(x, y, z)
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=())
             t.start()
         else:
             self.chunks[chunkid].removeBlock(x, y, z, True)
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
-            t.start()
+            t.start()"""
 
     def placeBlock(self, chunkid, x, y, z):
-        if not self.debug:
+        pass
+        """if not self.debug:
             self.chunks[chunkid].placeBlock(x, y, z)
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=())
             t.start()
         else:
             self.chunks[chunkid].placeBlock(x, y, z, True)
             t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
-            t.start()
+            t.start()"""
 
     def testBox(self, x, y, z):
         model = self.root.loader.loadModel('models/box.egg')
@@ -244,12 +280,16 @@ class _ExecThread(threading.Thread):
                 if popque['command'] == 'blocks':
                     chunk.generateBlocks()
                 if popque['command'] == 'march':
-                    if not chunk.isEmpty():
-                        if not chunk.meshGenerated():
-                            chunk.generateMesh()
+                    #if not chunk.isEmpty():
+                    #if not chunk.meshGenerated():
+                    chunk.generateMesh()
+                if popque['command'] == 'regen_march':
+                    #if not chunk.isEmpty():
+                    #if not chunk.meshGenerated():
+                    chunk.generateMesh()
                 if popque['command'] == 'voxel':
-                    if not chunk.isEmpty():
-                        if not chunk.meshGenerated():
-                            chunk.generateMesh(voxel=True)
+                    #if not chunk.isEmpty():
+                    #    if not chunk.meshGenerated():
+                    chunk.generateMesh(voxel=True)
                 Thread.sleep(0.04)
             Thread.sleep(0.04)
