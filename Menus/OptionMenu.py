@@ -10,9 +10,20 @@ class OptionMenu(Menu):
         temp = self.doc.GetElementById('temp')
         temp.AddEventListener('click', self.goBackMenu, True)
 
+        self.musicCtrl = self.doc.GetElementById('musicCtrl')
+        self.musicCtrl.AddEventListener('click', self.toggleMusic, True)
+
         # read options here and set the appropriate elements
         #to the appropriate values
 
     # reads options from however they're stored - called by __init__
     def readOptions(self):
         pass
+
+    def toggleMusic(self):
+        self.root.toggleMusic()
+
+        if self.musicCtrl.inner_rml == "Kill the music":
+            self.musicCtrl.inner_rml = "Revive the music"
+        else:
+            self.musicCtrl.inner_rml = "Kill the music"

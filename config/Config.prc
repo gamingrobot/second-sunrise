@@ -2,7 +2,7 @@ win-size 720 480
 
 show-frame-rate-meter  True
 
-window-title Second_Sunrise
+window-title Second Sunrise
 
 sync-video False
 

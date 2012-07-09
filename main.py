@@ -60,6 +60,10 @@ class Second_Sunrise(ShowBase):
 
         self.setBackgroundColor(0, 0, 0, 1)
 
+        self.mainMusic = self.loader.loadSfx("media/mainThemeAttempt1.mp3")
+        self.mainMusic.setVolume(0.3)
+        self.toggleMusic()
+
         #show mouse
         props = WindowProperties()
         props.setCursorHidden(False)
@@ -178,6 +182,14 @@ class Second_Sunrise(ShowBase):
         #do physics
         self.taskloopcounter = 0
         self.taskMgr.add(self.bulletupdate, 'bulletupdate')
+
+    def toggleMusic(self):
+        if self.mainMusic.status() == self.mainMusic.PLAYING:
+            self.mainMusic.stop()
+        elif self.mainMusic.status() == self.mainMusic.READY:
+            self.mainMusic.play()
+        else:
+            print "There was an error toggling the music"
 
     def stop(self):
         exit()
