@@ -41,7 +41,8 @@ class CharacterController(object):
         self.__setup(walkHeight, crouchHeight, stepHeight, radius)
         self.__mapMethods()
 
-        self.gravity = self.__world.getGravity().z if gravity is None else gravity
+        #self.gravity = self.__world.getGravity() if gravity is None else gravity
+        self.gravity = self.__world.getGravity()
         self.setMaxSlope(90.0, True)
         self.setActiveJumpLimiter(True)
 
@@ -62,7 +63,9 @@ class CharacterController(object):
         self.isCrouching = False
 
         self.__fallTime = 0.0
-        self.__fallStartPos = self.__currentPos.z
+        self.__fallStartPosz = self.__currentPos.z
+        self.__fallStartPosx = self.__currentPos.x
+        self.__fallStartPosy = self.__currentPos.y
         self.__linearVelocity = Vec3(0, 0, 0)
         self.__headContact = None
         self.__footContact = None
@@ -170,6 +173,7 @@ class CharacterController(object):
         """
         Update method. Call this around doPhysics.
         """
+        #self.gravity = self.__world.getGravity()
         processStates = {
             "ground": self.__processGround,
             "jumping": self.__processJumping,
@@ -199,7 +203,9 @@ class CharacterController(object):
     def __fall(self):
         self.movementState = "falling"
 
-        self.__fallStartPos = self.__currentPos.z
+        self.__fallStartPosz = self.__currentPos.z
+        self.__fallStartPosx = self.__currentPos.x
+        self.__fallStartPosy = self.__currentPos.y
         self.fallDelta = 0.0
         self.__fallTime = 0.0
 
@@ -219,7 +225,7 @@ class CharacterController(object):
         self.jumpStartPos = self.__currentPos.z
         self.jumpTime = 0.0
 
-        bsq = -4.0 * self.gravity * (maxZ - self.jumpStartPos)
+        bsq = -4.0 * self.gravity.z * (maxZ - self.jumpStartPos)
         try:
             b = math.sqrt(bsq)
         except:
@@ -260,10 +266,14 @@ class CharacterController(object):
 
     def __processFalling(self):
         self.__fallTime += self.__timeStep
-        self.fallDelta = self.gravity * (self.__fallTime) ** 2
+        self.fallDeltaz = self.gravity.z * (self.__fallTime) ** 2
+        #self.fallDeltax = self.gravity.x * (self.__fallTime) ** 2
+        #self.fallDeltay = self.gravity.y * (self.__fallTime) ** 2
 
         newPos = Vec3(self.__currentPos)
-        newPos.z = self.__fallStartPos + self.fallDelta
+        newPos.z = self.__fallStartPosz + self.fallDeltaz
+        #newPos.x = self.__fallStartPosx + self.fallDeltax
+        #newPos.y = self.__fallStartPosy + self.fallDeltay
 
         self.__currentPos = newPos
 
@@ -283,7 +293,7 @@ class CharacterController(object):
 
         self.jumpTime += self.__timeStep
         #set horazontal gravity here
-        self.__currentPos.z = (self.gravity * self.jumpTime ** 2) + (self.jumpSpeed * self.jumpTime) + self.jumpStartPos
+        self.__currentPos.z = (self.gravity.z * self.jumpTime ** 2) + (self.jumpSpeed * self.jumpTime) + self.jumpStartPos
 
         if round(self.__currentPos.z, 2) >= self.jumpMaxHeight:
             self.__fall()
@@ -361,7 +371,7 @@ class CharacterController(object):
             absSlopeDot = round(floorNormal.dot(Vec3.up()), 2)
 
             def applyGravity():
-                self.__currentPos -= Vec3(floorNormal.x, floorNormal.y, 0.0) * self.gravity * self.__timeStep * 0.1
+                self.__currentPos -= Vec3(floorNormal.x, floorNormal.y, floorNormal.z) * self.gravity * self.__timeStep * 0.1
 
             if absSlopeDot <= self.minSlopeDot:
                 applyGravity()
@@ -375,7 +385,7 @@ class CharacterController(object):
 
                     velDot = 1.0 - globalVelDir.angleDeg(fn) / 180.0
                     if velDot < 0.5:
-                        self.__currentPos -= Vec3(fn.x * globalVel.x, fn.y * globalVel.y, 0.0) * velDot
+                        self.__currentPos -= Vec3(fn.x * globalVel.x, fn.y * globalVel.y, globalVel.z) * velDot
 
                     globalVel *= velDot
 

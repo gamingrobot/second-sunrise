@@ -127,7 +127,7 @@ class Second_Sunrise(ShowBase):
         #create bullet world
         self.bulletworld = BulletWorld()
         #self.bulletworld.setDebugNode(debugNP.node())
-        self.bulletworld.setGravity(Vec3(0, 9.81, 0))
+        self.bulletworld.setGravity(Vec3(0, 0, -9.8))
 
         #test colision
         """shape2 = BulletSphereShape(64)
