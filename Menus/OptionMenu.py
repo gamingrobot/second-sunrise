@@ -23,7 +23,7 @@ class OptionMenu(Menu):
     def toggleMusic(self):
         self.root.toggleMusic()
 
-        if self.musicCtrl.inner_rml == "Kill the music":
-            self.musicCtrl.inner_rml = "Revive the music"
+        if self.musicCtrl.inner_rml == "Play music":
+            self.musicCtrl.inner_rml = "Stop music"
         else:
-            self.musicCtrl.inner_rml = "Kill the music"
+            self.musicCtrl.inner_rml = "Play music"
