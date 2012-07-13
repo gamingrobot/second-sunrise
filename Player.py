@@ -33,7 +33,7 @@ class Player:
         #setup camera
         self.root.camera.setPos(args['x'], args['y'], args['z'])
         plight = PointLight('plight')
-        plight.setColor(VBase4(1, 1, 1, 1))
+        plight.setColor(VBase4(3, 3, 3, 3))
         #plight.setAttenuation(Point3(0, 0, 0.5))
         plnp = self.root.camera.attachNewNode(plight)
         plnp.setPos(0, 0, 0)

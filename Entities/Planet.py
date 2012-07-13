@@ -10,6 +10,8 @@ from pandac.PandaModules import Thread
 from direct.showbase.PythonUtil import Queue
 import random
 
+from panda3d.core import PerlinNoise3
+
 _commandLineQueue = Queue()
 
 
@@ -32,6 +34,8 @@ class Planet(MovableEntity):
 
         _thread = _ExecThread()
         _thread.start()
+        scale = 15
+        self.perlin = PerlinNoise3(scale, scale, scale * 2)
 
     def __str__(self):
         return "A Planet"
@@ -68,7 +72,7 @@ class Planet(MovableEntity):
 
     def addChunk(self, x, y, z):
         nchunk = PChunk({'x': x, 'y': y, 'z': z,
-            'planetNode': self.planetNode, 'root': self.root, 'planet': self})
+            'planetNode': self.planetNode, 'root': self.root, 'planet': self, 'noise': self.perlin})
         _commandLineQueue.push({'command': 'blocks', 'chunk': nchunk})
         #nchunk.generateBlocks()
         #print nchunk.getChunkID()
@@ -76,7 +80,7 @@ class Planet(MovableEntity):
 
     def addNormChunk(self, x, y, z):
         nchunk = PChunk({'x': x, 'y': y, 'z': z,
-            'planetNode': self.planetNode, 'root': self.root, 'planet': self})
+            'planetNode': self.planetNode, 'root': self.root, 'planet': self, 'noise': self.perlin})
         #_commandLineQueue.push({'command': 'blocks', 'chunk': nchunk})
         nchunk.generateBlocks()
         #print nchunk.getChunkID()

@@ -60,9 +60,9 @@ class Second_Sunrise(ShowBase):
 
         self.setBackgroundColor(0, 0, 0, 1)
 
-        self.mainMusic = self.loader.loadSfx("media/mainThemeAttempt1.mp3")
-        self.mainMusic.setVolume(0.3)
-        self.toggleMusic()
+        #self.mainMusic = self.loader.loadSfx("media/mainThemeAttempt1.mp3")
+        #self.mainMusic.setVolume(0.3)
+        #self.toggleMusic()
 
         #show mouse
         props = WindowProperties()
