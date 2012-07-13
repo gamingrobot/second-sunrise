@@ -16,7 +16,7 @@
                 
                 <input type="submit">Back</input>
             </form>
-            <button id='musicCtrl'>Kill the music</button><br/>
+            <button id='musicCtrl'>Play music</button><br/>
             <button id='temp'>Back</button>
         </div>
     </body>
