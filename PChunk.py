@@ -53,7 +53,7 @@ class PChunk:
         while not it.finished:
             index = it.multi_index
             den = Util.getDensity((self.x, self.y, self.z), (index[0], index[1], index[2]), self.radius, self.noise)
-            if den >= 0.0:
+            if den >= 0:
                 self.empty = False
                 it[0] = Dirt(
                     {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(den), 'name': '000'})
@@ -124,9 +124,9 @@ class PChunk:
 
             #make triangles
             prim.addVertices(self.vertexcount, self.vertexcount + 1, self.vertexcount + 2)
+            prim.closePrimitive()
             self.vertexcount += 3
 
-        prim.closePrimitive()
         #print prim
         #attach primitives and render
         geom = Geom(vdata)

@@ -11,6 +11,7 @@ from direct.showbase.PythonUtil import Queue
 import random
 
 from panda3d.core import PerlinNoise3
+from panda3d.core import PerlinNoise2
 
 _commandLineQueue = Queue()
 
@@ -35,7 +36,8 @@ class Planet(MovableEntity):
         _thread = _ExecThread()
         _thread.start()
         scale = 15
-        self.perlin = PerlinNoise3(scale, scale, scale * 2)
+        self.perlin = PerlinNoise3(scale, scale, scale * 3)
+        #self.perlin = PerlinNoise2(scale, scale)
 
     def __str__(self):
         return "A Planet"
