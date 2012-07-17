@@ -15,7 +15,7 @@ def getDensity(chunkcords, blockcords, radius, noise):
     #RAVINES
     x, y, z = blockcords[0], blockcords[1], blockcords[2]
     cx, cy, cz = chunkcords[0], chunkcords[1], chunkcords[2]
-    noise.setScale(15)
+    #noise.setScale(15)
     density = 0.1 - 2 * ((z + cz) / 128)
     density += octave((x + cx), (y + cy), (z + cz), 3, noise)
     density += noise.noise((x + cx), (y + cy), (z + cz))
