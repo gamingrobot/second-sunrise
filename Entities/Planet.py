@@ -36,8 +36,8 @@ class Planet(MovableEntity):
         _thread = _ExecThread()
         _thread.start()
         scale = 100
-        self.perlin = PerlinNoise3(scale, scale, 10)
-        #self.perlin = PerlinNoise2(scale, scale)
+        #self.perlin = PerlinNoise3(scale, scale, 10)
+        self.perlin = PerlinNoise2(10, 10)
 
     def __str__(self):
         return "A Planet"

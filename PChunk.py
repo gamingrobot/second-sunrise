@@ -22,6 +22,8 @@ import numpy as np
 import math
 from Blocks import *
 
+isovalue = 0
+
 
 class PChunk:
     """Chunk contains 16x16x16 blocks"""
@@ -53,7 +55,7 @@ class PChunk:
         while not it.finished:
             index = it.multi_index
             den = Util.getDensity((self.x, self.y, self.z), (index[0], index[1], index[2]), self.radius, self.noise)
-            if den >= 0:
+            if den >= isovalue:
                 self.empty = False
                 it[0] = Dirt(
                     {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(den), 'name': '000'})
@@ -260,7 +262,7 @@ class Iso:
         self.y = chunk.y
         self.z = chunk.z
         self.size = size
-        self.level = float(0.0)
+        self.level = float(isovalue)
         self.triangles = []
         self.chunks = chunks
         self.radius = pradius
