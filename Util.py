@@ -2,6 +2,12 @@
 import math
 
 
+class MeshType:
+    Voxel = 0
+    MarchingCubes = 1
+    SurfaceNet = 2
+
+
 def getDensity(chunkcords, blockcords, radius, noise):
     ab = math.fabs
     x, y, z = chunkcords[0] + blockcords[0], chunkcords[1] + blockcords[1], chunkcords[2] + blockcords[2]
@@ -64,5 +70,5 @@ def octave(x, y, z, octa, noise):
     return (2.0 / octa) * noise.noise(x * octa, y * octa, z * octa)
 
 
-def genHash(self, x, y, z):
+def genHash(x, y, z):
     return str(x) + ":" + str(y) + ":" + str(z)

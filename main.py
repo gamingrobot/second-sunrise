@@ -19,6 +19,8 @@ from Menus import MainMenu
 from Hud import *
 from Player import *
 
+from Util import MeshType
+
 import math
 
 #TODO: figure out why cull/draw threading causes chunk to hang
@@ -112,13 +114,15 @@ class Second_Sunrise(ShowBase):
         return task.cont
 
     def startVoxel(self):
-        #self.startGame(debug=True)
-        pass
+        self.startGame(MeshType.Voxel)
 
     def startMarch(self):
-        self.startGame()
+        self.startGame(MeshType.MarchingCubes)
 
-    def startGame(self, debug=False):
+    def startSurfaceNet(self):
+        self.startGame(MeshType.SurfaceNet)
+
+    def startGame(self, meshtype):
         #bullet debug node
         debugNode = BulletDebugNode('Debug')
         debugNode.showWireframe(True)
@@ -146,7 +150,7 @@ class Second_Sunrise(ShowBase):
         #model.setPos(0, 0, 0)
 
         #create planet
-        self.gamma = Planet({'x': 0, 'y': 0, 'z': 0, 'render': self.render, 'root': self, 'debug': debug})
+        self.gamma = Planet({'x': 0, 'y': 0, 'z': 0, 'render': self.render, 'root': self, 'meshtype': meshtype})
 
         #create player
         self.player = Player({'x': -10, 'y': 25, 'z': 10, 'root': self, 'planet': self.gamma})

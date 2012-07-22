@@ -12,18 +12,20 @@ class WorldSelectMenu(Menu):
         march = self.doc.GetElementById('march')
         march.AddEventListener('click', self.startMarch, True)
 
+        net = self.doc.GetElementById('net')
+        net.AddEventListener('click', self.startSurfaceNet, True)
+
         back = self.doc.GetElementById('back')
         back.AddEventListener('click', self.goBackMenu, True)
 
     def startVoxel(self):
-        self.startGame(voxel=True)
+        self.closeAllMenus()
+        self.root.startVoxel()
 
     def startMarch(self):
-        self.startGame()
-
-    def startGame(self, voxel=False):
         self.closeAllMenus()
-        if voxel:
-            self.root.startVoxel()
-        else:
-            self.root.startMarch()
+        self.root.startMarch()
+
+    def startSurfaceNet(self):
+        self.closeAllMenus()
+        self.root.startSurfaceNet()

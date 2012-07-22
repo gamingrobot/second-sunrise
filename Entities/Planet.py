@@ -8,6 +8,9 @@ from panda3d.core import Vec3
 from direct.stdpy import threading
 from pandac.PandaModules import Thread
 from direct.showbase.PythonUtil import Queue
+
+from Util import MeshType
+
 import random
 
 from panda3d.core import PerlinNoise3
@@ -25,7 +28,7 @@ class Planet(MovableEntity):
         self.z = args['z']
         self.root = args['root']
         self.planetNode = args['render'].attachNewNode("Planet_Gamma")
-        self.debug = args['debug']
+        self.meshtype = args['meshtype']
         self.planetNode.setPos(self.x, self.y, self.z)
         #init chunks
         self.chunkSize = 16
@@ -95,18 +98,12 @@ class Planet(MovableEntity):
         else:
             _commandLineQueue.push({'command': 'voxel', 'chunk': self.chunks[self.genHash(x, y, z)]})"""
 
-        if not self.debug:
-            _commandLineQueue.push({'command': 'march', 'chunk': self.chunks[self.genHash(x, y, z)]})
-        else:
-            _commandLineQueue.push({'command': 'voxel', 'chunk': self.chunks[self.genHash(x, y, z)]})
+        _commandLineQueue.push({'command': self.meshtype, 'chunk': self.chunks[self.genHash(x, y, z)]})
 
     def generateSpawnChunkMesh(self, x, y, z):
         if not self.chunks[self.genHash(x, y, z)].isEmpty():
             if not self.chunks[self.genHash(x, y, z)].meshGenerated():
-                if not self.debug:
-                    self.chunks[self.genHash(x, y, z)].generateMesh()
-                else:
-                    self.chunks[self.genHash(x, y, z)].generateMesh(voxel=True)
+                self.chunks[self.genHash(x, y, z)].generateMesh(self.meshtype)
 
     def generateSpawnChunkBlocks(self, x, y, z):
         #generate only positive chunks and check if they are already in the tree
@@ -218,24 +215,14 @@ class Planet(MovableEntity):
         return str(x) + ":" + str(y) + ":" + str(z)
 
     def removeBlock(self, chunkid, x, y, z):
-        if not self.debug:
-            self.chunks[chunkid].removeBlock(x, y, z)
-            t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=())
-            t.start()
-        else:
-            self.chunks[chunkid].removeBlock(x, y, z, True)
-            t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
-            t.start()
+        self.chunks[chunkid].removeBlock(x, y, z)
+        t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(self.meshtype,))
+        t.start()
 
     def placeBlock(self, chunkid, x, y, z):
-        if not self.debug:
-            self.chunks[chunkid].placeBlock(x, y, z)
-            t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=())
-            t.start()
-        else:
-            self.chunks[chunkid].placeBlock(x, y, z, True)
-            t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(True,))
-            t.start()
+        self.chunks[chunkid].placeBlock(x, y, z)
+        t = threading.Thread(target=self.chunks[chunkid].generateMesh, args=(self.meshtype,))
+        t.start()
 
     def testBox(self, x, y, z):
         model = self.root.loader.loadModel('models/box.egg')
@@ -253,13 +240,17 @@ class _ExecThread(threading.Thread):
                 chunk = popque['chunk']
                 if popque['command'] == 'blocks':
                     chunk.generateBlocks()
-                if popque['command'] == 'march':
+                if popque['command'] == MeshType.MarchingCubes:
                     #if not chunk.isEmpty():
                     if not chunk.meshGenerated():
-                        chunk.generateMesh()
-                if popque['command'] == 'voxel':
+                        chunk.generateMesh(MeshType.MarchingCubes)
+                if popque['command'] == MeshType.SurfaceNet:
+                    #if not chunk.isEmpty():
+                    if not chunk.meshGenerated():
+                        chunk.generateMesh(MeshType.SurfaceNet)
+                if popque['command'] == MeshType.Voxel:
                     #if not chunk.isEmpty():
                     #    if not chunk.meshGenerated():
-                    chunk.generateMesh(voxel=True)
+                    chunk.generateMesh(MeshType.Voxel)
                 Thread.sleep(0.04)
             Thread.sleep(0.04)
