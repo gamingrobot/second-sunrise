@@ -22,6 +22,11 @@ import numpy as np
 import math
 from Blocks import *
 
+import numpy.linalg as la
+import scipy.optimize as opt
+import itertools as it
+import math
+
 isovalue = 0
 
 
@@ -112,41 +117,97 @@ class SurfaceNet:
         self.radius = pradius
         self.noise = noise
 
-        self.cube_edges = []
-        self.edge_table = []
-        #possible improvement is to compute these as normal tables like the marching cubes
-        for i in xrange(8):
-            for j in [1, 2, 4]:
-                p = i ^ j
-                if i <= p:
-                    self.cube_edges.append(i)
-                    self.cube_edges.append(p)
+        self.center = np.array([16, 16, 16])
+        self.radius = 10
 
-        print len(self.cube_edges)
-        for i in xrange(256):
-            em = 0
-            for j in [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]:
-                a = bool(i & (1 << self.cube_edges[j]))
-                b = bool(i & (1 << self.cube_edges[j + 1]))
-                if a != b:
-                    em |= (1 << (j >> 1))
-                else:
-                    em |= 0
-            self.edge_table.append(em)
+        #Cardinal directions
+        self.dirs = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+
+        #Vertices of cube
+        self.cube_verts = [np.array([x, y, z])
+            for x in range(2)
+            for y in range(2)
+            for z in range(2)]
+
+        #Edges of cube
+        self.cube_edges = [
+            [k for (k, v) in enumerate(self.cube_verts) if v[i] == a and v[j] == b]
+            for a in range(2)
+            for b in range(2)
+            for i in range(3)
+            for j in range(3) if i != j]
 
     def generateMesh(self):
-        buff = []
-        vertices = []
-        n = 0
-        x = []
-        R = []
-        grid = []
-        buf_no = 1
+        triangles = self.dual_contour(self.test_f, self.test_df, 16)
+        #print triangles
+        return triangles
 
-        return self.triangles
+    #Use non-linear root finding to compute intersection point
+    def estimate_hermite(self, f, df, v0, v1):
+        t0 = opt.brentq(lambda t: f((1. - t) * v0 + t * v1), 0, 1)
+        x0 = (1. - t0) * v0 + t0 * v1
+        return (x0, df(x0))
 
-    def genHash(self, x, y, z):
-        return str(x) + ":" + str(y) + ":" + str(z)
+    #Input:
+    # f = implicit function
+    # df = gradient of f
+    # nc = resolution
+    def dual_contour(self, f, df, nc):
+        #Compute vertices
+        dc_verts = []
+        vindex = {}
+        for x, y, z in it.product(range(nc), range(nc), range(nc)):
+            o = np.array([x, y, z])
+
+            #Get signs for cube
+            cube_signs = [f(o + v) > 0 for v in self.cube_verts]
+
+            if all(cube_signs) or not any(cube_signs):
+                continue
+
+            #Estimate hermite data
+            h_data = [self.estimate_hermite(f, df, o + self.cube_verts[e[0]], o + self.cube_verts[e[1]])
+                for e in self.cube_edges if cube_signs[e[0]] != cube_signs[e[1]]]
+
+            #Solve qef to get vertex
+            A = [n for p, n in h_data]
+            b = [np.dot(p, n) for p, n in h_data]
+            v, residue, rank, s = la.lstsq(A, b)
+
+            #Throw out failed solutions
+            if la.norm(v - o) > 2:
+                continue
+
+            #Emit one vertex per every cube that crosses
+            vindex[tuple(o)] = len(dc_verts)
+            dc_verts.append(v)
+
+        #Construct faces
+        dc_faces = []
+        for x, y, z in it.product(range(nc), range(nc), range(nc)):
+            if not (x, y, z) in vindex:
+                continue
+
+            #Emit one face per each edge that crosses
+            o = np.array([x, y, z])
+            for i in range(3):
+                for j in range(i):
+                    if tuple(o + self.dirs[i]) in vindex and tuple(o + self.dirs[j]) in vindex and tuple(o + self.dirs[i] + self.dirs[j]) in vindex:
+                        dc_faces.append((vindex[tuple(o)], vindex[tuple(o + self.dirs[i])], vindex[tuple(o + self.dirs[j])]))
+                        dc_faces.append((vindex[tuple(o + self.dirs[i] + self.dirs[j])], vindex[tuple(o + self.dirs[j])], vindex[tuple(o + self.dirs[i])]))
+
+        dc_triangles = []
+        for face in dc_faces:
+            dc_triangles.append(((dc_verts[face[0]][0],dc_verts[face[0]][1],dc_verts[face[0]][2]),(dc_verts[face[1]][0],dc_verts[face[1]][1],dc_verts[face[1]][2]),(dc_verts[face[2]][0],dc_verts[face[2]][1],dc_verts[face[2]][2])))
+        return dc_triangles
+
+    def test_f(self, x):
+        d = x - self.center
+        return np.dot(d, d) - self.radius ** 2
+
+    def test_df(self, x):
+        d = x - self.center
+        return d / math.sqrt(np.dot(d, d))
 
 
 class MarchingCubes:
@@ -480,6 +541,7 @@ class MarchingCubes:
 
                     p.value = (pv[0], pv[1], pv[2], pv[3], pv[4], pv[5], pv[6], pv[7])
                     self.cube(p)
+        #print self.triangles
         return self.triangles
 
 
