@@ -23,8 +23,8 @@ import math
 from Blocks import *
 
 import numpy.linalg as la
-import scipy.optimize as opt
-import itertools as it
+#import scipy.optimize as opt
+#import itertools as it
 import math
 
 isovalue = 0
@@ -117,8 +117,108 @@ class SurfaceNet:
         self.radius = pradius
         self.noise = noise
 
+        self.dirs = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+        self.R = [1, (16 + 1), (16 + 1) * (16 + 1)]
+        self.cube_edges = [
+            0, 1,  # First 3 edges are used for generating faces
+            0, 2,
+            0, 4,
+            1, 3,  # Order for these edges does not matter
+            1, 5,
+            2, 3,
+            2, 6,
+            3, 7,
+            4, 5,
+            4, 6,
+            5, 7,
+            6, 7]
+
+    def generateMesh(self):
+        vertices = []
+        faces = []
+        vindex = {}
+        for x in xrange(0, self.size - 1):
+            for y in xrange(0, self.size - 1):
+                for z in xrange(0, self.size - 1):
+                    pv = []
+                    #note try and do this without flipped
+                    pv.append(self.blocks[x, y, z].getDensity())
+                    pv.append(self.blocks[x + 1, y, z].getDensity())
+                    pv.append(self.blocks[x, y + 1, z].getDensity())  # flipped
+                    pv.append(self.blocks[x + 1, y + 1, z].getDensity())  # flipped
+                    pv.append(self.blocks[x, y, z + 1].getDensity())
+                    pv.append(self.blocks[x + 1, y, z + 1].getDensity())
+                    pv.append(self.blocks[x, y + 1, z + 1].getDensity())  # flipped
+                    pv.append(self.blocks[x + 1, y + 1, z + 1].getDensity())  # flipped
+                    g = 0
+                    mask = 0
+                    for p in pv:
+                        if p < self.level:
+                            mask |= 1 << g
+                        else:
+                            mask |= 0
+                        g += 1
+                    #check edgemask
+                    edge_mask = edgeTable[mask]
+                    if not edge_mask:
+                        continue
+                    #sum up intersections
+                    v = [0.0, 0.0, 0.0]
+                    e_count = 0
+                    for i in xrange(0, 12):
+                        if not (edge_mask & (1 << i)):
+                            continue
+                        e_count += 1
+                        e0 = self.cube_edges[i << 1]
+                        e1 = self.cube_edges[(i << 1) + 1]
+                        g0 = pv[e0]
+                        g1 = pv[e1]
+                        t = g0 - g1
+                        if math.fabs(t) > 0.000001:
+                            t = g0 / t
+                        else:
+                            continue
+                        k = 1
+                        for j in xrange(0, 3):
+                            a = e0 & k
+                            if a & (~e1):
+                                if a:  # was !!a
+                                    v[j] += 1.0 - t
+                                else:
+                                    v[j] += t
+                            else:
+                                if a:  # was !!a
+                                    v[j] += 1.0
+                                else:
+                                    v[j] += 0
+                            k <<= 1
+
+                    #adverage edge intersections to get vertex
+                    s = 1.0 / e_count
+                    v[0] = x + s * v[0]
+                    v[1] = y + s * v[1]
+                    v[2] = z + s * v[2]
+                    vindex[(x, y, z)] = len(vertices)
+                    vertices.append(v)
+
+        return self.triangles
+
+
+"""class SurfaceNet:
+    def __init__(self, chunk, size, chunks, pradius, noise):
+        self.blocks = chunk.blocks
+        self.x = chunk.x
+        self.y = chunk.y
+        self.z = chunk.z
+        self.size = size
+        self.level = float(isovalue)
+        self.triangles = []
+        self.chunks = chunks
+        self.radius = pradius
+        self.noise = noise
+
         self.center = np.array([16, 16, 16])
-        self.radius = 10
+        self.radius = 5
 
         #Cardinal directions
         self.dirs = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
@@ -138,7 +238,7 @@ class SurfaceNet:
             for j in range(3) if i != j]
 
     def generateMesh(self):
-        triangles = self.dual_contour(self.test_f, self.test_df, 16)
+        triangles = self.dual_contour(self.test_f, self.test_df, 25)
         #print triangles
         return triangles
 
@@ -157,6 +257,24 @@ class SurfaceNet:
         dc_verts = []
         vindex = {}
         for x, y, z in it.product(range(nc), range(nc), range(nc)):
+            pv = []
+            #note try and do this without flipped
+            pv.append(self.blocks[x, y, z].getDensity())
+            pv.append(self.blocks[x + 1, y, z].getDensity())
+            pv.append(self.blocks[x, y + 1, z].getDensity())  # flipped
+            pv.append(self.blocks[x + 1, y + 1, z].getDensity())  # flipped
+            pv.append(self.blocks[x, y, z + 1].getDensity())
+            pv.append(self.blocks[x + 1, y, z + 1].getDensity())
+            pv.append(self.blocks[x, y + 1, z + 1].getDensity())  # flipped
+            pv.append(self.blocks[x + 1, y + 1, z + 1].getDensity())  # flipped
+            g = 0
+            mask = 0
+            for p in pv:
+                if p < self.level:
+                    mask |= 1 << g
+                else:
+                    mask |= 0
+                g += 1
             o = np.array([x, y, z])
 
             #Get signs for cube
@@ -192,13 +310,37 @@ class SurfaceNet:
             o = np.array([x, y, z])
             for i in range(3):
                 for j in range(i):
-                    if tuple(o + self.dirs[i]) in vindex and tuple(o + self.dirs[j]) in vindex and tuple(o + self.dirs[i] + self.dirs[j]) in vindex:
+                    if mask & 1:
                         dc_faces.append((vindex[tuple(o)], vindex[tuple(o + self.dirs[i])], vindex[tuple(o + self.dirs[j])]))
                         dc_faces.append((vindex[tuple(o + self.dirs[i] + self.dirs[j])], vindex[tuple(o + self.dirs[j])], vindex[tuple(o + self.dirs[i])]))
+                    else:
+                        dc_faces.append((vindex[tuple(o + self.dirs[j])], vindex[tuple(o + self.dirs[i])], vindex[tuple(o)]))
+                        dc_faces.append((vindex[tuple(o + self.dirs[i])], vindex[tuple(o + self.dirs[j])], vindex[tuple(o + self.dirs[i] + self.dirs[j])]))
+                    #if tuple(o + self.dirs[i]) in vindex and tuple(o + self.dirs[j]) in vindex and tuple(o + self.dirs[i] + self.dirs[j]) in vindex:
+                        #dc_faces.append((vindex[tuple(o)], vindex[tuple(o + self.dirs[i])], vindex[tuple(o + self.dirs[j])]))
+                        #dc_faces.append((vindex[tuple(o + self.dirs[i] + self.dirs[j])], vindex[tuple(o + self.dirs[j])], vindex[tuple(o + self.dirs[i])]))
+                        #v0_1 = vindex[tuple(o)]
+                        #v0_2 = vindex[tuple(o + self.dirs[i] + self.dirs[j])]
+                        #v1 = vindex[tuple(o + self.dirs[j])]
+                        #v2 = vindex[tuple(o + self.dirs[i])]
+                        #if i == 1 and j == 0:
+                        #    dc_faces.append((v0_1, v2, v1))
+                        #    dc_faces.append((v0_2, v1, v2))
+                        #elif i == 2 and j == 0:
+                        #    dc_faces.append((v0_2, v2, v1))
+                        #    dc_faces.append((v0_1, v1, v2))
+                        #elif i == 2 and j == 1:
+                        #    dc_faces.append((v0_2, v1, v2))
+                        #    dc_faces.append((v0_1, v2, v1))
 
         dc_triangles = []
         for face in dc_faces:
-            dc_triangles.append(((dc_verts[face[0]][0],dc_verts[face[0]][1],dc_verts[face[0]][2]),(dc_verts[face[1]][0],dc_verts[face[1]][1],dc_verts[face[1]][2]),(dc_verts[face[2]][0],dc_verts[face[2]][1],dc_verts[face[2]][2])))
+            v1 = dc_verts[face[0]]
+            v2 = dc_verts[face[1]]
+            v3 = dc_verts[face[2]]
+            dc_triangles.append(((v1[0], v1[1], v1[2]),
+                (v2[0], v2[1], v2[2]),
+                (v3[0], v3[1], v3[2])))
         return dc_triangles
 
     def test_f(self, x):
@@ -207,7 +349,7 @@ class SurfaceNet:
 
     def test_df(self, x):
         d = x - self.center
-        return d / math.sqrt(np.dot(d, d))
+        return d / math.sqrt(np.dot(d, d))"""
 
 
 class MarchingCubes:

@@ -9,7 +9,7 @@ class MeshType:
 
 
 def getDensity(chunkcords, blockcords, radius, noise):
-    ab = math.fabs
+    """ab = math.fabs
     x, y, z = chunkcords[0] + blockcords[0], chunkcords[1] + blockcords[1], chunkcords[2] + blockcords[2]
 
     #if math.sqrt((ab(x)) ** 2 + (ab(y)) ** 2 + (ab(z)) ** 2) <= self.radius:
@@ -37,7 +37,7 @@ def getDensity(chunkcords, blockcords, radius, noise):
         return ret
     else:
         ret = (Depth - int(Depth)) * -1
-        return ret
+        return ret"""
 
     #SetBlocksInVolume(x, TopGenerate, z, x, Depth, z)
     """public static void GenerateTerrainOnBlock(int x, int z)
@@ -56,13 +56,12 @@ def getDensity(chunkcords, blockcords, radius, noise):
     }"""
     #print density
     #RAVINES
-    """x, y, z = blockcords[0], blockcords[1], blockcords[2]
+    x, y, z = blockcords[0], blockcords[1], blockcords[2]
     cx, cy, cz = chunkcords[0], chunkcords[1], chunkcords[2]
     #noise.setScale(15)
     density = 0.1 - 2 * ((z + cz) / 128)
     density += octave((x + cx), (y + cy), (z + cz), 3, noise)
-    density += noise.noise((x + cx), (y + cy), (z + cz))"""
-    return 0
+    density += noise.noise((x + cx), (y + cy), (z + cz))
     return density
 
 

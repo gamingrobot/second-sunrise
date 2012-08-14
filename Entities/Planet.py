@@ -39,8 +39,8 @@ class Planet(MovableEntity):
         _thread = _ExecThread()
         _thread.start()
         scale = 100
-        #self.perlin = PerlinNoise3(scale, scale, 10)
-        self.perlin = PerlinNoise2(10, 10)
+        self.perlin = PerlinNoise3(scale, scale, 10)
+        #self.perlin = PerlinNoise2(10, 10)
 
     def __str__(self):
         return "A Planet"
@@ -231,7 +231,6 @@ class Planet(MovableEntity):
 
 
 class _ExecThread(threading.Thread):
-    """ The main worker thread, from which all commands are executed using eval(). """
     def run(self):
         while True:
             while not _commandLineQueue.isEmpty():
