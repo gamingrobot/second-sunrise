@@ -1,6 +1,7 @@
 from Menu import *
 from OptionMenu import *
 from WorldSelectMenu import *
+from ConsoleMenu import *
 
 
 class MainMenu(Menu):
@@ -14,6 +15,8 @@ class MainMenu(Menu):
         #create world menu (root, currentmenu)
         self.worldSelectMenu = WorldSelectMenu(self.root, self)
 
+        self.consoleMenu = ConsoleMenu(self.root, self)
+
         #set self.root for use in the stop method
         self.root = root
 
@@ -23,6 +26,9 @@ class MainMenu(Menu):
 
         option = self.doc.GetElementById('options')
         option.AddEventListener('click', self.ShowOptions, True)
+
+        console = self.doc.GetElementById('console')
+        console.AddEventListener('click', self.ShowConsole, True)
 
         quit = self.doc.GetElementById('quit')
         quit.AddEventListener('click', self.stop, True)
@@ -34,6 +40,10 @@ class MainMenu(Menu):
 
     def ShowWorldMenu(self):
         self.goToMenu(self.worldSelectMenu)
+
+    def ShowConsole(self):
+        self.goToMenu(self.consoleMenu)
+
 
     def stop(self):
         self.root.stop()

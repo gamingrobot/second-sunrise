@@ -6,6 +6,7 @@
 <body template="mainWindow" class="window">
     <div id="content">
         <button id="play">Play Game</button><br/>
+        <button id="console">Console Test</button><br/>
         <button id="options">Options</button><br/>
         <button id="quit">Quit Game</button>
     </div>

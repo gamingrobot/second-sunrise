@@ -1,0 +1,12 @@
+<rml>
+    <head>
+        <title>Console Test</title>
+        <link type="text/template" href="mainWinTemplate.rml"/>
+    </head>
+    <body template="mainWindow">
+        <div id="content">
+            <textarea id="output"></textarea>
+            <input type="text" id="input">Testhere </input>
+        </div>
+    </body>
+</rml>
