@@ -1,21 +1,4 @@
-#Chunk.py
-from panda3d.core import GeomVertexFormat
-from panda3d.core import GeomVertexData
-from panda3d.core import GeomVertexWriter
-from panda3d.core import GeomTriangles
-from panda3d.core import GeomNode
-from panda3d.core import Geom
-from panda3d.core import Point3
-from panda3d.core import VBase3
-from panda3d.core import BitMask32
-from panda3d.bullet import BulletTriangleMeshShape
-from panda3d.bullet import BulletTriangleMesh
-from panda3d.bullet import BulletRigidBodyNode
-from panda3d.bullet import BulletBoxShape
-from pandac.PandaModules import TexGenAttrib
-from pandac.PandaModules import Texture
-from pandac.PandaModules import TextureStage
-
+#Meshgenerators.py
 import Util
 
 import numpy as np
@@ -137,9 +120,15 @@ class SurfaceNet:
         vertices = []
         faces = []
         vindex = {}
+        buf_no = 1
         for x in xrange(0, self.size - 1):
+            buf_no ^= 1
+            self.R[2] = -self.R[2]
+            m = 1 + (16 + 1) * (1 + buf_no * (16 + 1))
             for y in xrange(0, self.size - 1):
+                m += 2
                 for z in xrange(0, self.size - 1):
+                    m += 1
                     pv = []
                     #note try and do this without flipped
                     pv.append(self.blocks[x, y, z].getDensity())
@@ -198,9 +187,25 @@ class SurfaceNet:
                     v[0] = x + s * v[0]
                     v[1] = y + s * v[1]
                     v[2] = z + s * v[2]
-                    vindex[(x, y, z)] = len(vertices)
+                    vindex[m] = len(vertices)
                     vertices.append(v)
 
+                    for i in xrange(0, 3):
+                        if not (edge_mask & (1 << i)):
+                            continue
+                        iu = (i + 1) % 3
+                        iv = (i + 2) % 3
+                        cord = [x, y, z]
+                        if cord[iu] == 0 or cord[iv] == 0:
+                            continue
+
+                        du = self.R[iu]
+                        dv = self.R[iv]
+                        if(mask & 1):
+                            faces.append([vindex[m], vindex[m - du], vindex[m - du - dv], vindex[m - dv]])
+                        else:
+                            faces.append([vindex[m], vindex[m - dv], vindex[m - du - dv], vindex[m - du]])
+        print faces
         return self.triangles
 
 
