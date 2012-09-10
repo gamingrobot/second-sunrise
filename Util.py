@@ -1,7 +1,6 @@
 # UTITLTY CLASS USED FOR ODD FUNCTION
 import math
 from simplexnoise import *
-from simplex import SimplexNoise
 
 
 class MeshType:
@@ -81,7 +80,7 @@ def getDensity(chunkcords, blockcords, radius, noise):
     print den
     return den"""
     x, y, z = chunkcords[0] + blockcords[0], chunkcords[1] + blockcords[1], chunkcords[2] + blockcords[2]
-    den = scaled_raw_noise_3d(-5, 15, x/50.0, y/50.0, z/50.0)
+    den, der = raw_noise_3d(x/15.0, y/15.0, z/15.0)
     return den
 
 

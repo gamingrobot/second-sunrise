@@ -390,7 +390,6 @@ def raw_noise_3d(x, y, z):
     dz += temp2 * z2
     
     temp3 = t23 * t3 * dot3d(_grad3[gi3], x3, y3, z3 )
-    print _grad3[gi3]
     dx += temp3 * x3
     dy += temp3 * y3
     dz += temp3 * z3
@@ -404,8 +403,8 @@ def raw_noise_3d(x, y, z):
     dx *= 32.0 #/* Scale derivative to match the noise scaling */
     dy *= 32.0
     dz *= 32.0
-    print noise, dx, dy, dz
-    return noise
+    #print noise, dx, dy, dz
+    return noise, [dx, dy, dz]
 
 def raw_noise_4d(x, y, z, w):
     """4D Raw Simplex noise."""
