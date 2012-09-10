@@ -1,5 +1,7 @@
 # UTITLTY CLASS USED FOR ODD FUNCTION
 import math
+from simplexnoise import *
+from simplex import SimplexNoise
 
 
 class MeshType:
@@ -43,7 +45,7 @@ def getDensity(chunkcords, blockcords, radius, noise):
     """public static void GenerateTerrainOnBlock(int x, int z)
     {
         const int TopGenerate = 256, GenerateDepth = 128, Water = 150;
-        
+
         double NoiseY = CreateNoise(x, y);
 
         int Depth = TopGenerate - (int)(NoiseY * GenerateDepth);
@@ -55,14 +57,32 @@ def getDensity(chunkcords, blockcords, radius, noise):
         //Set blocks here in whatever way you do set blocks
     }"""
     #print density
-    #RAVINES
+    """#RAVINES
     x, y, z = blockcords[0], blockcords[1], blockcords[2]
     cx, cy, cz = chunkcords[0], chunkcords[1], chunkcords[2]
     #noise.setScale(15)
     density = 0.1 - 2 * ((z + cz) / 128)
     density += octave((x + cx), (y + cy), (z + cz), 3, noise)
     density += noise.noise((x + cx), (y + cy), (z + cz))
-    return density
+    return density"""
+    """x, y, z = chunkcords[0] + blockcords[0], chunkcords[1] + blockcords[1], chunkcords[2] + blockcords[2]
+    scale = 100.0
+    hiBound = 30
+    loBound = -5
+    imp = [x / scale, y / scale, z / scale]
+    den = scaled_raw_noise(-5, 30, x/100.0, y/100.0, z/100.0)
+    return den"""
+    """x, y, z = chunkcords[0] + blockcords[0], chunkcords[1] + blockcords[1], chunkcords[2] + blockcords[2]
+    noise.setScale(1)
+    scale = 15.0
+    print x, y, z
+    print x / scale, y / scale, z / scale
+    den = noise.noise(x / scale, y / scale, z / scale)
+    print den
+    return den"""
+    x, y, z = chunkcords[0] + blockcords[0], chunkcords[1] + blockcords[1], chunkcords[2] + blockcords[2]
+    den = scaled_raw_noise_3d(-5, 15, x/50.0, y/50.0, z/50.0)
+    return den
 
 
 def octave(x, y, z, octa, noise):

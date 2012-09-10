@@ -25,7 +25,7 @@ import math
 from Blocks import *
 from MeshGenerators import *
 
-isovalue = 0
+isovalue = 0.0
 
 
 class PChunk:
@@ -122,9 +122,10 @@ class PChunk:
                 normy = (x1 - x2) * (z3 - z2) - (z1 - z2) * (x3 - x2)
                 normz = (y1 - y2) * (x3 - x2) - (x1 - x2) * (y3 - y2)
                 normlength = math.sqrt(normx ** 2 + normy ** 2 + normz ** 2)
-                normx /= normlength
-                normy /= normlength
-                normz /= normlength
+                if normlength != 0:
+                    normx /= normlength
+                    normy /= normlength
+                    normz /= normlength
 
                 normal.addData3f(normx, normy, normz)
                 color.addData4f(shade, shade, shade, 1)
