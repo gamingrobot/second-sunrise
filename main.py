@@ -119,8 +119,8 @@ class Second_Sunrise(ShowBase):
     def startMarch(self):
         self.startGame(MeshType.MarchingCubes)
 
-    def startSurfaceNet(self):
-        self.startGame(MeshType.SurfaceNet)
+    def startDualContour(self):
+        self.startGame(MeshType.DualContour)
 
     def startGame(self, meshtype):
         #bullet debug node

@@ -13,7 +13,7 @@ class WorldSelectMenu(Menu):
         march.AddEventListener('click', self.startMarch, True)
 
         net = self.doc.GetElementById('net')
-        net.AddEventListener('click', self.startSurfaceNet, True)
+        net.AddEventListener('click', self.startDualContour, True)
 
         back = self.doc.GetElementById('back')
         back.AddEventListener('click', self.goBackMenu, True)
@@ -26,6 +26,6 @@ class WorldSelectMenu(Menu):
         self.closeAllMenus()
         self.root.startMarch()
 
-    def startSurfaceNet(self):
+    def startDualContour(self):
         self.closeAllMenus()
-        self.root.startSurfaceNet()
+        self.root.startDualContour()

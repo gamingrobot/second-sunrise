@@ -6,7 +6,7 @@ from simplexnoise import *
 class MeshType:
     Voxel = 0
     MarchingCubes = 1
-    SurfaceNet = 2
+    DualContour = 2
 
 
 def getDensity(chunkcords, blockcords, radius, noise):

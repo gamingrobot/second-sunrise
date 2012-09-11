@@ -243,10 +243,10 @@ class _ExecThread(threading.Thread):
                     #if not chunk.isEmpty():
                     if not chunk.meshGenerated():
                         chunk.generateMesh(MeshType.MarchingCubes)
-                if popque['command'] == MeshType.SurfaceNet:
+                if popque['command'] == MeshType.DualContour:
                     #if not chunk.isEmpty():
                     if not chunk.meshGenerated():
-                        chunk.generateMesh(MeshType.SurfaceNet)
+                        chunk.generateMesh(MeshType.DualContour)
                 if popque['command'] == MeshType.Voxel:
                     #if not chunk.isEmpty():
                     #    if not chunk.meshGenerated():

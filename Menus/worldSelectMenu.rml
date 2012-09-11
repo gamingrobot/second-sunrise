@@ -7,7 +7,7 @@
         <div id="content">
             <button id="voxel">Voxel</button><br/>
             <button id="march">Marching Cubes</button><br/>
-            <button id="net">Surface Net</button><br/>
+            <button id="net">Dual Contour</button><br/>
             <button id="back">Back</button><br/>
         </div>
     </body>

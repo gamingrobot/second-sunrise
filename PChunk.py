@@ -90,8 +90,8 @@ class PChunk:
         self.chunks = self.planet.chunks
         if meshtype == MeshType.MarchingCubes:
             mesher = MarchingCubes(self, self.size, self.chunks, self.radius, self.noise)
-        elif meshtype == MeshType.SurfaceNet:
-            mesher = SurfaceNet(self, self.size, self.chunks, self.radius, self.noise)
+        elif meshtype == MeshType.DualContour:
+            mesher = DualContour(self, self.size, self.chunks, self.radius, self.noise)
         else:
             mesher = Voxel(self, self.size, self.chunks, self.radius, self.noise)
 
