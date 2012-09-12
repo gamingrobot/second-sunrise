@@ -9,7 +9,7 @@ class MeshType:
     DualContour = 2
 
 
-def getDensity(chunkcords, blockcords, radius, noise):
+def getDensity(chunkcords, blockcords, radius, noise, getDer=False):
     """ab = math.fabs
     x, y, z = chunkcords[0] + blockcords[0], chunkcords[1] + blockcords[1], chunkcords[2] + blockcords[2]
 
@@ -81,7 +81,10 @@ def getDensity(chunkcords, blockcords, radius, noise):
     return den"""
     x, y, z = chunkcords[0] + blockcords[0], chunkcords[1] + blockcords[1], chunkcords[2] + blockcords[2]
     den, der = raw_noise_3d(x/15.0, y/15.0, z/15.0)
-    return den
+    if getDer:
+        return den, der
+    else:
+        return den
 
 
 def octave(x, y, z, octa, noise):

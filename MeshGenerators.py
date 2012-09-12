@@ -112,18 +112,49 @@ class DualContour:
             for y in range(2)
             for z in range(2)]
 
-        #Edges of cube
-        self.cube_edges = [
-            [k for (k, v) in enumerate(self.cube_verts) if v[i] == a and v[j] == b]
-            for a in range(2)
-            for b in range(2)
-            for i in range(3)
-            for j in range(3) if i != j]
-
     def generateMesh(self):
-        #triangles = self.dual_contour(self.test_f, self.test_df, 25)
-        triangles = []
-        return triangles
+        for x in xrange(0, self.size - 1):
+            for y in xrange(0, self.size - 1):
+                for z in xrange(0, self.size - 1):
+                    #Solve qef to get vertex
+                    A = [n for p, n in h_data]
+                    b = [np.dot(p, n) for p, n in h_data]
+                    v, residue, rank, s = la.lstsq(A, b)
+
+                    #Throw out failed solutions
+                    if la.norm(v - o) > 2:
+                        continue
+
+                    #Emit one vertex per every cube that crosses
+                    vindex[tuple(o)] = len(dc_verts)
+                    dc_verts.append(v)
+
+                #Construct faces
+                dc_faces = []
+                for x, y, z in it.product(range(nc), range(nc), range(nc)):
+                    if not (x, y, z) in vindex:
+                        continue
+
+                    #Emit one face per each edge that crosses
+                    o = np.array([x, y, z])
+                    for i in range(3):
+                        for j in range(i):
+                            if mask & 1:
+                                dc_faces.append((vindex[tuple(o)], vindex[tuple(o + self.dirs[i])], vindex[tuple(o + self.dirs[j])]))
+                                dc_faces.append((vindex[tuple(o + self.dirs[i] + self.dirs[j])], vindex[tuple(o + self.dirs[j])], vindex[tuple(o + self.dirs[i])]))
+                            else:
+                                dc_faces.append((vindex[tuple(o + self.dirs[j])], vindex[tuple(o + self.dirs[i])], vindex[tuple(o)]))
+                                dc_faces.append((vindex[tuple(o + self.dirs[i])], vindex[tuple(o + self.dirs[j])], vindex[tuple(o + self.dirs[i] + self.dirs[j])]))
+
+        dc_triangles = []
+        for face in dc_faces:
+            v1 = dc_verts[face[0]]
+            v2 = dc_verts[face[1]]
+            v3 = dc_verts[face[2]]
+            dc_triangles.append(((v1[0], v1[1], v1[2]),
+                (v2[0], v2[1], v2[2]),
+                (v3[0], v3[1], v3[2])))
+        return dc_triangles
 
 
 class MarchingCubes:
