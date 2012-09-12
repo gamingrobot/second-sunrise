@@ -128,10 +128,13 @@ class DualContour:
     def estimate_hermite(self, v0, v1):
         den, der = raw_noise_3d(v0[0]/15.0, v0[1]/15.0, v0[2]/15.0)
         den2, der2 = raw_noise_3d(v1[0]/15.0, v1[1]/15.0, v1[2]/15.0)
-        t0 = (den + den) / 2
+        den = (den + 1) / 2
+        den2 = (den2 + 1) / 2
+        t0 = (den + den2) / 2
         x0 = (1.-t0)*v0 + t0*v1
         tempder = der + der2
         dfx0 = [0,0,0]
+        #fix scaling for this just like the density
         dfx0[0], dfx0[1], dfx0[2] = tempder[0] / 2, tempder[1] / 2, tempder[2] / 2
         return (x0, dfx0)
 
@@ -181,7 +184,7 @@ class DualContour:
             o = np.array([x, y, z])
             for i in range(3):
                 for j in range(i):
-                    if tuple(o + self.self.dirs[i]) in self.vindex and tuple(o + self.self.dirs[j]) in self.vindex and tuple(o + self.dirs[i] + self.dirs[j]) in self.vindex:
+                    if tuple(o + self.dirs[i]) in self.vindex and tuple(o + self.dirs[j]) in self.vindex and tuple(o + self.dirs[i] + self.dirs[j]) in self.vindex:
                         dc_faces.append( [self.vindex[tuple(o)], self.vindex[tuple(o+self.dirs[i])], self.vindex[tuple(o+self.dirs[j])]] )
                         dc_faces.append( [self.vindex[tuple(o+self.dirs[i]+self.dirs[j])], self.vindex[tuple(o+self.dirs[j])], self.vindex[tuple(o+self.dirs[i])]] )
 
