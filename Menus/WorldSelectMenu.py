@@ -3,20 +3,32 @@ from Menu import *
 
 class WorldSelectMenu(Menu):
     def __init__(self, root, prevmenu):
-        Menu.__init__(self, root, prevmenu, "Menus/worldSelectMenu.rml")
+        Menu.__init__(self, root, prevmenu)
 
-        #create events
-        voxel = self.doc.GetElementById('voxel')
-        voxel.AddEventListener('click', self.startVoxel, True)
+        #DirectGui
+        self.playButton = self.addButton(
+            text = ("Voxel"),  
+            pos=(0,0.6),
+            command=self.startVoxel
+            )
 
-        march = self.doc.GetElementById('march')
-        march.AddEventListener('click', self.startMarch, True)
+        self.optionsButton = self.addButton(
+            text = ("Marching Cubes"),  
+            pos=(0,0.1),
+            command=self.startMarch
+            )
 
-        net = self.doc.GetElementById('net')
-        net.AddEventListener('click', self.startDualContour, True)
+        self.consoleButton = self.addButton(
+            text = ("Dual Contour"),  
+            pos=(0,-0.4),
+            command=self.startDualContour
+            )
 
-        back = self.doc.GetElementById('back')
-        back.AddEventListener('click', self.goBackMenu, True)
+        self.quitButton = self.addButton(
+            text = ("Back"),  
+            pos=(0,-0.8),
+            command=self.goBackMenu
+            )
 
     def startVoxel(self):
         self.closeAllMenus()

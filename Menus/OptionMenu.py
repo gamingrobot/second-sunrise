@@ -3,18 +3,19 @@ from Menu import *
 
 class OptionMenu(Menu):
     def __init__(self, root, prevmenu):
-        Menu.__init__(self, root, prevmenu, "Menus/optionMenu.rml")
+        Menu.__init__(self, root, prevmenu)
 
-        #create events
-        #remove this if/when forms work
-        temp = self.doc.GetElementById('temp')
-        temp.AddEventListener('click', self.goBackMenu, True)
+        self.musicButton = self.addButton(
+            text = ("ToggleMusic"),  
+            pos=(0,-0.3),
+            command=self.toggleMusic
+            )
 
-        self.musicCtrl = self.doc.GetElementById('musicCtrl')
-        self.musicCtrl.AddEventListener('click', self.toggleMusic, True)
-
-        # read options here and set the appropriate elements
-        #to the appropriate values
+        self.backButton = self.addButton(
+            text = ("Back"),  
+            pos=(0,-0.8),
+            command=self.goBackMenu
+            )
 
     # reads options from however they're stored - called by __init__
     def readOptions(self):
@@ -22,8 +23,4 @@ class OptionMenu(Menu):
 
     def toggleMusic(self):
         self.root.toggleMusic()
-
-        if self.musicCtrl.inner_rml == "Play music":
-            self.musicCtrl.inner_rml = "Stop music"
-        else:
-            self.musicCtrl.inner_rml = "Play music"
+        #Set musicbutton text here
