@@ -60,7 +60,7 @@ class Second_Sunrise(ShowBase):
         self.mainmenu = MainMenu(self, None)
         #self.mainmenu.doc.Show()
 
-        self.setBackgroundColor(0, 0, 0, 1)
+        #self.setBackgroundColor(0, 0, 0, 1)
 
         self.mainMusic = self.loader.loadSfx("media/mainThemeAttempt1.mp3")
         self.mainMusic.setVolume(0.5)

@@ -11,26 +11,26 @@ class MainMenu(Menu):
 
         #DirectGui
         self.playButton = self.addButton(
-            text = ("Play", "Games", "Alot"),  
-            pos=(0,0.6),
+            text = ("Play", "Games", "Alot"),
+            pos=(0, 0.6),
             command=self.ShowWorldMenu
             )
 
         self.optionsButton = self.addButton(
-            text = ("Options"),  
-            pos=(0,0.1),
+            text = ("Options"),
+            pos=(0, 0.1),
             command=self.ShowOptions
             )
 
         self.consoleButton = self.addButton(
-            text = ("Console"),  
-            pos=(0,-0.4),
+            text = ("Console"),
+            pos=(0, -0.4),
             command=self.ShowConsole
             )
 
         self.quitButton = self.addButton(
-            text = ("Quit"),  
-            pos=(0,-0.8),
+            text = ("Quit"),
+            pos=(0, -0.8),
             command=self.stop
             )
 
