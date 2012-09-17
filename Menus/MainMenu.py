@@ -11,7 +11,7 @@ class MainMenu(Menu):
 
         #DirectGui
         self.playButton = self.addButton(
-            text = ("Play"),  
+            text = ("Play", "Games", "Alot"),  
             pos=(0,0.6),
             command=self.ShowWorldMenu
             )
