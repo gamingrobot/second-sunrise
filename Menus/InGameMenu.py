@@ -4,21 +4,32 @@ from OptionMenu import *
 
 class InGameMenu(Menu):
     def __init__(self, root, player):
-        Menu.__init__(self, root, None, "Menus/inGameMenu.rml")
+        Menu.__init__(self, root, None)
         self.player = player
 
-        el = self.doc.GetElementById('resume')
-        el.AddEventListener('click', self.toggle, True)
+        self.resumeButton = self.addButton(
+            text = ("Resume"),  
+            pos=(0,-0.8),
+            command=self.toggle
+            )
 
-        pause = self.doc.GetElementById('pauseQuit')
-        pause.AddEventListener('click', self.stop, True)
+        self.quitButton = self.addButton(
+            text = ("Quit"),  
+            pos=(0,-0.8),
+            command=self.stop
+            )
 
-        option = self.doc.GetElementById('options')
-        option.AddEventListener('click', self.ShowOptions, True)
+        self.optionsButton = self.addButton(
+            text = ("Options"),  
+            pos=(0,-0.8),
+            command=self.ShowOptions
+            )
+
+        self.mainFrame.hide()
 
     def ShowOptions(self):
-        self.optionMenu = OptionMenu(self.root, self)
-        self.goToMenu(self.optionMenu)
+        optionMenu = OptionMenu(self.root, self)
+        self.goToMenu(optionMenu)
 
     def toggle(self):
         self.player.toggleInGameMenu()

@@ -49,21 +49,21 @@ class Second_Sunrise(ShowBase):
         #create rocketregion
         LoadFontFace("media/Delicious-Roman.otf")
 
-        self.r = RocketRegion.make("mainmenu", base.win)
+        """self.r = RocketRegion.make("mainmenu", base.win)
         self.r.setActive(1)
         self.rocketContext = self.r.getContext()
 
         self.ih = RocketInputHandler()
         base.mouseWatcher.attachNewNode(self.ih)
-        self.r.setInputHandler(self.ih)
+        self.r.setInputHandler(self.ih)"""
 
         self.mainmenu = MainMenu(self, None)
-        self.mainmenu.doc.Show()
+        #self.mainmenu.doc.Show()
 
-        self.setBackgroundColor(0, 0, 0, 1)
+        #self.setBackgroundColor(0, 0, 0, 1)
 
-        #self.mainMusic = self.loader.loadSfx("media/mainThemeAttempt1.mp3")
-        #self.mainMusic.setVolume(0.3)
+        self.mainMusic = self.loader.loadSfx("media/mainThemeAttempt1.mp3")
+        self.mainMusic.setVolume(0.5)
         #self.toggleMusic()
 
         #show mouse
