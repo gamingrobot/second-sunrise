@@ -1,5 +1,6 @@
 class SurfaceNet:
     def __init__(self, chunk, size, chunks, pradius, noise):
+        #Random test comment
         self.blocks = chunk.blocks
         self.x = chunk.x
         self.y = chunk.y
