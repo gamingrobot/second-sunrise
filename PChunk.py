@@ -22,7 +22,7 @@ from Util import MeshType
 
 import numpy as np
 import math
-from Blocks import *
+from Blocks import Block
 from MeshGenerators import *
 
 isovalue = 0.0
@@ -60,24 +60,25 @@ class PChunk:
             den = Util.getDensity((self.x, self.y, self.z), (index[0], index[1], index[2]), self.radius, self.noise)
             if den >= isovalue:
                 self.empty = False
-                it[0] = Dirt(
-                    {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(den), 'name': '000'})
+                newblock = Block()
+                newblock.density = den
+                newblock.block_id = 1
+                it[0] = newblock
             else:
-                it[0] = Air(
-                    {'x': index[0], 'y': index[1], 'z': index[2], 'density': float(den), 'name': '000'})
+                newblock = Block()
+                newblock.density = den
+                it[0] = newblock
             it.iternext()
 
     def removeBlock(self, x, y, z):
         print "removing" + str(x) + "," + str(y) + "," + str(z)
         print self.blocks[x][y][z]
-        self.blocks[x][y][z] = Air(
-                    {'x': x, 'y': y, 'z': z, 'density': float(-1.0), 'name': '000'})
+        self.blocks[x][y][z].density = 0.0
 
     def placeBlock(self, x, y, z):
         print "placing" + str(x) + "," + str(y) + "," + str(z)
         print self.blocks[x][y][z]
-        self.blocks[x][y][z] = Dirt(
-                    {'x': x, 'y': y, 'z': z, 'density': float(1.0), 'name': '000'})
+        self.blocks[x][y][z].density = 1.0
 
     def isEmpty(self):
         return self.empty
