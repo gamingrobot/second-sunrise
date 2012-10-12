@@ -16,7 +16,6 @@ import math
 
 isovalue = 0
 
-
 class Voxel:
     def __init__(self, chunk, size, chunks, pradius, noise):
         self.blocks = chunk.blocks
