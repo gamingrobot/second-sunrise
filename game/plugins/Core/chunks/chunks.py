@@ -4,7 +4,7 @@ class Chunks:
         self.reload(manager, xml)
 
     def reload(self, manager, xml):
-        meshgen = xml.find('mesh')
+        meshgen = xml.find('meshgen')
         if meshgen != None:
             print "DEBUG: " + meshgen.get('plugin')
             self.track = manager.get(meshgen.get('plugin')).getGenType()
