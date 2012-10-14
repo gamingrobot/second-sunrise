@@ -1,0 +1,19 @@
+<config>
+  <obj type="Window" name="window">
+    <antialias/>
+  </obj>
+  <obj type="Loading" name="loading"/>
+
+  <obj type="EscExit" name="esc_exit"/>
+  <obj type="FrameRate" name="frame_rate"/>
+  <obj type="Profile" name="profile"/>
+
+  <obj type="Global" name="paths">
+    <objects path="data/objects"/>
+    <particles path="data/particles"/>
+    <shaders path="data/shaders"/>
+    <textures path="data/textures"/>
+    <misc path="data/misc"/>
+    <cache path="cache" temp="True"/>
+  </obj>
+</config>

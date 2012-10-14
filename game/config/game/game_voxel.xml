@@ -1,0 +1,5 @@
+<config>
+  <obj type="Include" config="playable"/>
+  
+  <obj type="MeshGenerators" name="meshgen" gentype="voxel" />
+</config>

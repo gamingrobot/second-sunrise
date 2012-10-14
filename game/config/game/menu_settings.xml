@@ -1,0 +1,8 @@
+<config>
+  <obj type="Include" config="base"/>
+
+  <obj type="QuickMenu" name="menu_settings_buttons">
+    <button text="Some Settings Sufff" target=""/>
+    <button text="Back" target="menu_main"/>
+  </obj>
+</config>
