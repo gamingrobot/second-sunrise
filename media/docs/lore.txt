@@ -1,0 +1,11 @@
+PlanetCraft lore
+
+Brief history of planet Gamma
+
+Millions of years ago, a great civilization prospered on Gamma. It discovered spaceflight, explored the solar system, and discovered its sun was dying. Out of necessity, interstellar travel was developed, and the civilization left Gamma.
+
+The sun eventually faded away, and for millenia, Gamma was blanketed in darkness. By happenstance, a wayward asteroid composed mostly of <glowing_element> became caught in orbit of Gamma, and light returned to the planet.
+
+Life has also returned to Gamma over time, and small pockets of animal life exist.
+
+And you find yourself somewhere on the surface...

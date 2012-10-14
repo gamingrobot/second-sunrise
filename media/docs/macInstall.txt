@@ -1,0 +1,19 @@
+Panda 3d/Numpy installation - Mac
+
+Download the SS Repo
+Extract numpy.zip (in the docs folder)
+
+Download NVIDIA Cg Toolkit (http://developer.download.nvidia.com/cg/Cg_3.1/Cg-3.1_April2012.dmg)
+Install NVIDIA Cg Toolkit
+
+Download panda3d (http://www.panda3d.org/download/panda3d-1.8.0/Panda3D-1.8.0.dmg)
+Install Panda 3d
+-- Follow instructions, making sure that C++ Header Files is selected at the custom installation screen
+
+If you are running Mountain Lion (or later), you'll need to install XQuartz (successor to X11)
+(http://xquartz.macosforge.org/downloads/SL/XQuartz-2.7.3.dmg)
+
+Copy the folder you extracted from numpy.zip (numpy) to /System/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/
+Type in an administrator password
+
+In Terminal (located in /Applications/Utilities), navigate to the Repo directory and run ppython main.py to make sure it works
