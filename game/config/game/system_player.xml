@@ -12,8 +12,4 @@
     <track plugin="player" node="view"/>
   </obj>
 
-  <obj type="Universe" name="universe" />
-  <obj type="Planets" name="planets" />
-  <obj type="Chunks" name="chunks" />
-
 </config>

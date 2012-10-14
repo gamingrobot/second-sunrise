@@ -4,7 +4,8 @@ class MeshGenerators:
         self.reload(manager, xml)
 
     def reload(self, manager, xml):
-        pass
+        self.meshgentype = xml.get('gentype')
+        print "DEBUG: " + self.meshgentype
 
     def start(self):
         pass
@@ -14,3 +15,6 @@ class MeshGenerators:
 
     def destroy(self):
         pass
+
+    def getGenType(self):
+        return self.meshgentype

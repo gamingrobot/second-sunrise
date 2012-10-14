@@ -1,0 +1,7 @@
+<config>
+  <obj type="Chunks" name="chunks">
+    <mesh plugin="meshgen" />
+  </obj>
+  <obj type="Planets" name="planets" />
+  <obj type="Universe" name="universe" />
+</config>

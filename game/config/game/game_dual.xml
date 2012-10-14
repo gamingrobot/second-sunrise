@@ -1,5 +1,7 @@
 <config>
-  <obj type="Include" config="playable"/>
+  <obj type="Include" config="system_player"/>
   
   <obj type="MeshGenerators" name="meshgen" gentype="dual" />
+
+  <obj type="Include" config="system_world"/>
 </config>
