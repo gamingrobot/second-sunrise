@@ -1,10 +1,19 @@
+from panda3d.core import Vec3
+from planet import Planet
+
+
 class Planets:
     """Well the Planets"""
     def __init__(self, manager, xml):
         self.reload(manager, xml)
+        self.planets = {}
 
     def reload(self, manager, xml):
-        pass
+        chunks = xml.find('chunks')
+        if chunks != None:
+            self.chunks = manager.get(chunks.get('plugin'))
+        else:
+            self.chunks = None
 
     def start(self):
         pass
@@ -14,3 +23,7 @@ class Planets:
 
     def destroy(self):
         pass
+
+    def makePlanet(self, cords, name, parentnode):
+        self.planets[name] = Planet(cords, name, parentnode)
+        self.chunks.makeChunk(Vec3(0, 0, 0), self.planets[name].getNode(), name)

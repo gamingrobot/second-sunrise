@@ -19,6 +19,8 @@ import xml.etree.ElementTree as et
 import imp
 import types
 
+messagespam = False
+
 
 class Manager:
     """The simple plugin system - this is documented in the docs directory."""
@@ -26,6 +28,7 @@ class Manager:
         # Basic configuratrion variables...
         self.baseDir = baseDir
         self.pluginDir = 'plugins.Core'
+        self.modPluginDir = 'plugins.Mods'
         self.configDir = self.baseDir + 'config/game/'
         self.loadingInvFrameRate = 1.0 / 20.0
 
@@ -134,32 +137,38 @@ class Manager:
 
         # Step 2 - get the plugin - load it if it is not already loaded...
         if not (plugin in self.plugin):
-            print 'Loading plugin', plugin
+            if messagespam:
+                print 'Loading plugin', plugin
             base = self.pluginDir + '.' + plugin.lower()
             plug = __import__(base, globals(), locals(), [plugin.lower()])
             plug = getattr(plug, plugin.lower())
             self.plugin[plugin] = plug
-            print 'Loaded', plugin
+            if messagespam:
+                print 'Loaded', plugin
             yield None
 
         # Step 3a - check if there is an old object that can be repurposed, otherwise create a new object...
         #done = False
         if (name in self.oldNamed) and isinstance(self.oldNamed[name], getattr(self.plugin[plugin], plugin)) and getattr(self.oldNamed[name], 'reload', None) != None:
-            print 'Reusing', plugin
+            if messagespam:
+                print 'Reusing', plugin
             inst = self.oldNamed[name]
             self.oldNamed[name] = True  # So we know its been re-used for during the deletion phase.
             inst.reload(self, element)
             yield None
-            print 'Reused', plugin
+            if messagespam:
+                print 'Reused', plugin
             if getattr(inst, 'postReload', None) != None:
                 for blah in inst.postReload():
                     yield None
                 print 'post reload', plugin
         else:
-            print 'Making', plugin
+            if messagespam:
+                print 'Making', plugin
             inst = getattr(self.plugin[plugin], plugin)(self, element)
             yield None
-            print 'Made', plugin
+            if messagespam:
+                print 'Made', plugin
             if getattr(inst, 'postInit', None) != None:
                 for blah in inst.postInit():
                     yield None
