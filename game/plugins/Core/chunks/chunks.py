@@ -40,8 +40,8 @@ class Chunks:
             #generate terrain
             chunk.setTerrain(self.terraingen.generate(chunk.abscords, self.chunksize))
             #generate mesh for now it passes one terrain block, but it will soon be a list of 8, the current and all positive neighbors
-            #chunk.setMesh(self.meshgen.generate(chunk.getTerrain(), self.chunksize, lod=1.0))
+            chunk.setMesh(self.meshgen.generate(chunk.getTerrain(), self.chunksize, lod=1.0))
             #add to render
-            #chunk.setNode(parentnode.attachNewNode(chunk.getMesh()))
-            #chunk.getNode.setPos(chunk.abscords)
-            #chunk.getNode.setTag('Pickable', '1')
+            chunk.setNode(parentnode.attachNewNode(chunk.getMesh()))
+            chunk.getNode().setPos(chunk.abscords)
+            chunk.getNode().setTag('Pickable', '1')

@@ -1,5 +1,5 @@
 import numpy as np
-from panda3d.core import Vec3
+from panda3d.core import Point3
 
 
 class TerrainGeneration:
@@ -31,7 +31,7 @@ class TerrainGeneration:
         it = np.nditer(blocks, op_flags=['readwrite'], flags=['multi_index', 'refs_ok'])
         while not it.finished:
             index = it.multi_index
-            den = self.noise.getDensity(startcords + Vec3(index[0], index[1], index[2]))
+            den = self.noise.getDensity(startcords + Point3(index[0], index[1], index[2]))
             if den >= self.isovalue:
                 #blockid, density
                 it[0] = [[1, den]]

@@ -18,11 +18,11 @@ class Noise:
     def destroy(self):
         pass
 
-    def getDensity(cords, getDer=False):
-        """x, y, z = cords[0], cords[1], cords[2]
+    def getDensity(self, cords, getDer=False):
+        x, y, z = cords[0], cords[1], cords[2]
         den, der = raw_noise_3d(x / 15.0, y / 15.0, z / 15.0)
         if getDer:
             return den, der
         else:
-            return den"""
-        return 1.0
+            return den
+        #return 1.0

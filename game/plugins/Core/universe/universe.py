@@ -1,4 +1,4 @@
-from panda3d.core import Vec3
+from panda3d.core import Point3
 
 
 class Universe:
@@ -15,7 +15,7 @@ class Universe:
             self.planets = None
 
     def start(self):
-        self.planets.makePlanet(Vec3(0, 0, 0), "Gamma", self.universeNode)
+        self.planets.makePlanet(Point3(0, 0, 0), "Gamma", self.universeNode)
 
     def stop(self):
         pass

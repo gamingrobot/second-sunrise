@@ -1,4 +1,4 @@
-from panda3d.core import Vec3
+from panda3d.core import Point3
 from planet import Planet
 
 
@@ -26,4 +26,4 @@ class Planets:
 
     def makePlanet(self, cords, name, parentnode):
         self.planets[name] = Planet(cords, name, parentnode)
-        self.chunks.makeChunk(Vec3(0, 0, 0), self.planets[name].getNode(), name)
+        self.chunks.makeChunk(Point3(0, 0, 0), self.planets[name].getNode(), name)

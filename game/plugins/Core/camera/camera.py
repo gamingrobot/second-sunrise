@@ -5,7 +5,7 @@ class Camera:
     """Does camera set up - will probably end up with lots of options."""
     def __init__(self, manager, xml):
         base.camNode.setCameraMask(BitMask32.bit(0))
-        base.disableMouse()
+        #base.disableMouse()
         self.reload(manager, xml)
 
     def reload(self, manager, xml):

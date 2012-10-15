@@ -1,8 +1,4 @@
 import numpy as np
-import math
-
-import meshutil
-
 
 class DualContour:
     def __init__(self, chunk, size, chunks, pradius, noise, isovalue):

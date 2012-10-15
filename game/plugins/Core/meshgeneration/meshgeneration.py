@@ -9,6 +9,8 @@ from panda3d.core import GeomTriangles
 from panda3d.core import GeomNode
 from panda3d.core import Geom
 
+import math
+
 
 class MeshGeneration:
     """MeshGeneration for the chunks"""
@@ -33,13 +35,13 @@ class MeshGeneration:
 
     def generate(self, terrain, size, lod=1.0):
         if self.meshgentype == "marching":
-            mesher = MarchingCubes(self, self.size, self.chunks, self.radius, self.noise)
+            mesher = MarchingCubes()
         elif self.meshgentype == "dual":
-            mesher = DualContour(self, self.size, self.chunks, self.radius, self.noise)
+            mesher = DualContour()
         else:
-            mesher = Voxel(self, self.size, self.chunks, self.radius, self.noise)
+            mesher = Voxel()
 
-        triangles = mesher.generateMesh()
+        triangles = mesher.generateMesh(terrain, size, lod)
 
         #format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4t2())
         format = GeomVertexFormat.registerFormat(GeomVertexFormat.getV3n3c4())
@@ -86,15 +88,15 @@ class MeshGeneration:
         geom = Geom(vdata)
         geom.addPrimitive(prim)
 
-        try:
+        """try:
             self.node.removeNode()
             self.bulletnode.removeShape(self.bulletshape)
             self.root.bulletworld.removeRigidBody(self.bulletnode)
             self.bulletnp.removeNode()
         except AttributeError:
-            pass
+            pass"""
 
-        node = GeomNode(self.id)
+        node = GeomNode("terrainmesh")
         node.addGeom(geom)
         return node
 
