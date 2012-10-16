@@ -26,4 +26,11 @@ class Planets:
 
     def makePlanet(self, cords, name, parentnode):
         self.planets[name] = Planet(cords, name, parentnode)
+        self.chunks.makeChunk(Point3(1, 1, 1), self.planets[name].getNode(), name)
+        self.chunks.makeChunk(Point3(1, 1, 0), self.planets[name].getNode(), name)
+        self.chunks.makeChunk(Point3(1, 0, 1), self.planets[name].getNode(), name)
+        self.chunks.makeChunk(Point3(0, 1, 1), self.planets[name].getNode(), name)
+        self.chunks.makeChunk(Point3(1, 0, 0), self.planets[name].getNode(), name)
+        self.chunks.makeChunk(Point3(0, 1, 0), self.planets[name].getNode(), name)
+        self.chunks.makeChunk(Point3(0, 0, 1), self.planets[name].getNode(), name)
         self.chunks.makeChunk(Point3(0, 0, 0), self.planets[name].getNode(), name)

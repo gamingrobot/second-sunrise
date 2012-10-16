@@ -1,4 +1,5 @@
 from pchunk import PChunk as Chunk
+from panda3d.core import Point3
 
 
 class Chunks:
@@ -32,16 +33,89 @@ class Chunks:
         pass
 
     def makeChunk(self, chunkcords, parentnode, planetname):
-        self.chunks[planetname] = []
+        if not planetname in self.chunks:
+            self.chunks[planetname] = {}
+        #make chunk
+        self.chunks[planetname][chunkcords] = Chunk(chunkcords, chunkcords * self.chunksize)
         #create chunk
-        self.chunks[planetname].append(Chunk(chunkcords, chunkcords * self.chunksize))
-        for chunk in self.chunks[planetname]:
-            print chunk.cords
-            #generate terrain
-            chunk.setTerrain(self.terraingen.generate(chunk.abscords, self.chunksize))
-            #generate mesh for now it passes one terrain block, but it will soon be a list of 8, the current and all positive neighbors
-            chunk.setMesh(self.meshgen.generate(chunk.getTerrain(), self.chunksize, lod=1.0))
-            #add to render
-            chunk.setNode(parentnode.attachNewNode(chunk.getMesh()))
-            chunk.getNode().setPos(chunk.abscords)
-            chunk.getNode().setTag('Pickable', '1')
+        self.generateChunk(chunkcords, parentnode, self.chunks[planetname])
+        #regen all negative neighbors
+        #get negative neighbors
+        neighbors = self.getNegativeNeighbors(chunkcords, self.chunks[planetname])
+        for neighbor in neighbors:
+            if neighbor != None:
+                self.generateChunk(neighbor, parentnode, self.chunks[planetname])
+
+    def generateChunk(self, chunkcords, parentnode, chunks):
+        chunk = chunks[chunkcords]
+        print "Generating: " + str(chunk.cords[0]) + "," + str(chunk.cords[1]) + "," + str(chunk.cords[2])
+        #generate terrain
+        chunk.setTerrain(self.terraingen.generate(chunk.abscords, self.chunksize))
+        #build list of neighbors
+        terrain = self.getNeighbors(chunk.cords, chunks)
+        #generate mesh
+        chunk.setMesh(self.meshgen.generate(terrain, self.chunksize, lod=1.0))
+        #remove old node if exists
+        try:
+            chunk.getNode().removeNode()
+            chunk.setNode(None)
+            print "Removed old node"
+        except AttributeError:
+            pass
+        #add to render
+        chunk.setNode(parentnode.attachNewNode(chunk.getMesh()))
+        chunk.getNode().setPos(chunk.abscords)
+        chunk.getNode().setTag('Pickable', '1')
+
+    def getNeighbors(self, cords, chunks):
+        terrain = [None for i in range(8)]
+        x, y, z = cords[0], cords[1], cords[2]
+        terrain[0] = chunks[Point3(x, y, z)].getTerrain()
+        point = Point3(x + 1, y + 1, z + 1)
+        if point in chunks:
+            terrain[1] = chunks[point].getTerrain()
+        point = Point3(x + 1, y + 1, z)
+        if point in chunks:
+            terrain[2] = chunks[point].getTerrain()
+        point = Point3(x + 1, y, z + 1)
+        if point in chunks:
+            terrain[3] = chunks[point].getTerrain()
+        point = Point3(x, y + 1, z + 1)
+        if point in chunks:
+            terrain[4] = chunks[point].getTerrain()
+        point = Point3(x + 1, y, z)
+        if point in chunks:
+            terrain[5] = chunks[point].getTerrain()
+        point = Point3(x, y + 1, z)
+        if point in chunks:
+            terrain[6] = chunks[point].getTerrain()
+        point = Point3(x, y, z + 1)
+        if point in chunks:
+            terrain[7] = chunks[point].getTerrain()
+        return terrain
+
+    def getNegativeNeighbors(self, cords, chunks):
+        neighbors = [None for i in range(7)]
+        x, y, z = cords[0], cords[1], cords[2]
+        point = Point3(x - 1, y - 1, z - 1)
+        if point in chunks:
+            neighbors[0] = point
+        point = Point3(x - 1, y - 1, z)
+        if point in chunks:
+            neighbors[1] = point
+        point = Point3(x - 1, y, z - 1)
+        if point in chunks:
+            neighbors[2] = point
+        point = Point3(x, y - 1, z - 1)
+        if point in chunks:
+            neighbors[3] = point
+        point = Point3(x - 1, y, z)
+        if point in chunks:
+            neighbors[4] = point
+        point = Point3(x, y - 1, z)
+        if point in chunks:
+            neighbors[5] = point
+        point = Point3(x, y, z - 1)
+        if point in chunks:
+            neighbors[6] = point
+        return neighbors

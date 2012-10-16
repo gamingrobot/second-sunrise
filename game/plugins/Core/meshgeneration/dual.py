@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class DualContour:
     def __init__(self, chunk, size, chunks, pradius, noise, isovalue):
         self.blocks = chunk.blocks

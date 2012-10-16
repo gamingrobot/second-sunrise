@@ -53,7 +53,7 @@ class MeshGeneration:
         texcoord = GeomVertexWriter(vdata, 'texcoord')
         prim = GeomTriangles(Geom.UHStatic)
 
-        self.vertexcount = 0
+        vertexcount = 0
         for triangle in triangles:
             for avertex in triangle:
                 #print triangle
@@ -72,16 +72,15 @@ class MeshGeneration:
                     normx /= normlength
                     normy /= normlength
                     normz /= normlength
-
                 normal.addData3f(normx, normy, normz)
                 color.addData4f(shade, shade, shade, 1)
                 #texcoord.addData2f(triangle[0][0] / 16, triangle[0][1] / 16)
                 #texcoord.addData2f(0, 1)
 
             #make triangles
-            prim.addVertices(self.vertexcount, self.vertexcount + 1, self.vertexcount + 2)
+            prim.addVertices(vertexcount, vertexcount + 1, vertexcount + 2)
             prim.closePrimitive()
-            self.vertexcount += 3
+            vertexcount += 3
 
         #print prim
         #attach primitives and render
@@ -100,7 +99,7 @@ class MeshGeneration:
         node.addGeom(geom)
         return node
 
-        self.meshed = True
+        #self.meshed = True
 
         """#do bullet meshing
         #if self.id == self.planet.playerchunk:
