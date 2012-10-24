@@ -16,4 +16,6 @@
     <misc path="data/misc"/>
     <cache path="cache" temp="True"/>
   </obj>
+
+  <obj type="DeveloperConsole" name="console" />
 </config>

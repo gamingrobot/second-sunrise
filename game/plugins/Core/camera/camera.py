@@ -12,11 +12,11 @@ class Camera:
 
     def reload(self, manager, xml):
         #only temporary while testing
-        plight = PointLight('plight')
+        self.plight = PointLight('plight')
         bright = 2
-        plight.setColor(VBase4(bright, bright, bright, 1))
-        #plight.setAttenuation(Point3(0, 0, 0.5))
-        plnp = base.camera.attachNewNode(plight)
+        self.plight.setColor(VBase4(bright, bright, bright, 1))
+        #self.plight.setAttenuation(Point3(0, 0, 0.5))
+        plnp = base.camera.attachNewNode(self.plight)
         #plnp.setPos(0, 0, 0)
         render.setLight(plnp)
 

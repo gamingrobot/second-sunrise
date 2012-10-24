@@ -23,4 +23,4 @@ class Universe:
         pass
 
     def destroy(self):
-        pass
+        self.universeNode.remove()
