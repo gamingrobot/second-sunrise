@@ -7,10 +7,6 @@ class Camera:
     """Does camera set up - will probably end up with lots of options."""
     def __init__(self, manager, xml):
         base.camNode.setCameraMask(BitMask32.bit(0))
-        #base.disableMouse()
-        self.reload(manager, xml)
-
-    def reload(self, manager, xml):
         #only temporary while testing
         self.plight = PointLight('plight')
         bright = 2
@@ -19,6 +15,12 @@ class Camera:
         plnp = base.camera.attachNewNode(self.plight)
         #plnp.setPos(0, 0, 0)
         render.setLight(plnp)
+
+        #base.disableMouse()
+        self.reload(manager, xml)
+
+    def reload(self, manager, xml):
+        pass
 
     def start(self):
         pass

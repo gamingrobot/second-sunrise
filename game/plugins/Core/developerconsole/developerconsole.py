@@ -65,6 +65,9 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
         self.hide()
         self.initialized = False
 
+    def reload(self, manager, xml):
+        pass
+
     def prevCommand(self):
         if self.hidden:
             return
@@ -156,7 +159,9 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
             self.hide()
 
     def start(self):
-        pass
+        self.toggle()
+
+    def stop(self):
         self.toggle()
 
     def show(self):

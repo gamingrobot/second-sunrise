@@ -19,7 +19,7 @@ import xml.etree.ElementTree as et
 import imp
 import types
 
-messagespam = False
+messagespam = True
 
 
 class Manager:
