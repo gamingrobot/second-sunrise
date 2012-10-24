@@ -27,8 +27,8 @@ class Manager:
     def __init__(self, baseDir=''):
         # Basic configuratrion variables...
         self.baseDir = baseDir
-        self.pluginDir = 'plugins.Core'
-        self.modPluginDir = 'plugins.Mods'
+        self.pluginDir = 'plugins.core'
+        self.modPluginDir = 'plugins.mods'
         self.configDir = self.baseDir + 'config/game/'
         self.loadingInvFrameRate = 1.0 / 20.0
 
