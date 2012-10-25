@@ -18,7 +18,7 @@ from panda3d.core import WindowProperties
 from panda3d.core import ClockObject
 import datetime
 
-#testchange
+
 class Window:
     """This plugin sets up window properties"""
     def __init__(self, manager, xml):
