@@ -159,9 +159,11 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
             self.hide()
 
     def start(self):
+        return
         self.toggle()
 
     def stop(self):
+        return
         self.toggle()
 
     def show(self):

@@ -10,6 +10,7 @@ from panda3d.core import GeomNode
 from panda3d.core import Geom
 
 import math
+import random
 
 
 class MeshGeneration:
@@ -74,6 +75,7 @@ class MeshGeneration:
                     normz /= normlength
                 normal.addData3f(normx, normy, normz)
                 color.addData4f(shade, shade, shade, 1)
+                #color.addData4f(random.randrange(0,255), random.randrange(0,255), random.randrange(0,255), 1)
                 #texcoord.addData2f(triangle[0][0] / 16, triangle[0][1] / 16)
                 #texcoord.addData2f(0, 1)
 
