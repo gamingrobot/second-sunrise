@@ -3,6 +3,8 @@
     <antialias/>
   </obj>
   <obj type="Loading" name="loading"/>
+  <obj type="Controls" name="controls" />
+  <obj type="Events" name="events" />
 
   <obj type="EscExit" name="esc_exit"/>
   <obj type="FrameRate" name="frame_rate"/>
@@ -16,6 +18,5 @@
     <misc path="data/misc"/>
     <cache path="cache" temp="True"/>
   </obj>
-
   <obj type="DeveloperConsole" name="console" />
 </config>

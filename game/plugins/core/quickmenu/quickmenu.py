@@ -26,8 +26,13 @@ class QuickMenu:
         for but in xml.findall('button'):
             button = DirectButton(text=but.get('text', '-'), pos=(0.0, 0.0, yPos), scale=.065)
             yPos -= 0.1
+            args = but.get('target')
             button['command'] = manager.transition
-            button['extraArgs'] = [but.get('target', '')]
+            button['extraArgs'] = [args]
+            if args == None:
+                args = but.get('event')
+                button['command'] = manager.get('events').triggerEvent
+                button['extraArgs'] = [args, {}]
             button.hide()
             self.buttons.append(button)
 

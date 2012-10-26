@@ -1,7 +1,11 @@
-class Controls:
+from direct.showbase import DirectObject
+
+
+class Controls(DirectObject.DirectObject):
     """Plugin for controlling the controls system"""
     def __init__(self, manager, xml):
-        pass
+        self.menu_controls = {}
+        self.game_controls = {}
 
     def reload(self, manager, xml):
         pass
@@ -21,20 +25,23 @@ class Controls:
     def setFocusMenu():
         pass
 
-    def registerKeyMenu(name, key, callback):
+    def registerKeyMenu(self, name, key, callback, plugin):
         pass
 
-    def registerKeyGame(name, key, callback):
+    def registerKeyGame(self, name, key, callback, plugin):
+        if not (plugin in self.game_controls):
+            self.game_controls[plugin] = []
+        self.game_controls[plugin].append([name, key, callback])
+        self.accept(key, callback)
+
+    def registerKeyAll(self, name, key, callback, plugin):
         pass
 
-    def registerKeyAll(name, key, callback):
+    def unRegisterKeyMenu(self, name, callback, plugin):
         pass
 
-    def unRegisterKeyMenu(name, callback):
+    def unRegisterKeyGame(self, name, callback, plugin):
         pass
 
-    def unRegisterKeyGame(name, callback):
-        pass
-
-    def unRegisterKeyAll(name, callback):
+    def unRegisterKeyAll(self, name, callback, plugin):
         pass

@@ -65,6 +65,9 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
         self.hide()
         self.initialized = False
 
+        controlsmg = manager.get("controls")
+        controlsmg.registerKeyGame("Toggle Console", "f1", self.toggle, self.__class__.__name__)
+
     def reload(self, manager, xml):
         pass
 
@@ -160,11 +163,11 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
 
     def start(self):
         return
-        self.toggle()
+        #self.toggle()
 
     def stop(self):
         return
-        self.toggle()
+        #self.toggle()
 
     def show(self):
         self.accept('arrow_up', self.prevCommand)
