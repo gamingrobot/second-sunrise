@@ -65,8 +65,8 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
         self.hide()
         self.initialized = False
 
-        controlsmg = manager.get("controls")
-        controlsmg.registerKeyGame("Toggle Console", "f1", self.toggle, self.__class__.__name__)
+        controls = manager.get("controls")
+        controls.registerKeyGame("Toggle Console", "f1", self.toggle, self.__class__.__name__)
 
     def reload(self, manager, xml):
         pass

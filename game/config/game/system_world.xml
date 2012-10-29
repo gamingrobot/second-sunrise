@@ -24,7 +24,5 @@
   <obj type="Universe" name="universe" >
     <planets plugin="planets" />
   </obj>
-    <obj type="QuickMenu" name="menu_main_buttons">
-    <button text="Trigger" event="playerdeath"/>
-  </obj>
+   <obj type="Menu" name="menu_settings" config="menu_ingame"/>
 </config>

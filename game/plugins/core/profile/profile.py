@@ -23,6 +23,8 @@ class Profile(DirectObject.DirectObject):
     def __init__(self, manager, xml):
         self.pstats = None
         #TODO: register key to link to function go
+        controls = manager.get("controls")
+        controls.registerKeyGame("Open Profiler", "f2", self.go, self.__class__.__name__)
 
     def reload(self, manager, xml):
         pass

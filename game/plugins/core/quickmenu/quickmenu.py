@@ -19,6 +19,9 @@ from direct.gui.DirectGui import *
 class QuickMenu:
     """This creates a menu - nothing fancy - just a list of buttons, each of which invokes a transition to another config file."""
     def __init__(self, manager, xml):
+        self.reload(manager, xml)
+
+    def reload(self, manager, xml):
         self.buttons = []
 
         # Create the button objects...
@@ -26,18 +29,22 @@ class QuickMenu:
         for but in xml.findall('button'):
             button = DirectButton(text=but.get('text', '-'), pos=(0.0, 0.0, yPos), scale=.065)
             yPos -= 0.1
-            args = but.get('target')
-            button['command'] = manager.transition
-            button['extraArgs'] = [args]
-            if args == None:
-                args = but.get('event')
+            action = but.get('action')
+            if action == "menu":
+                pass
+
+            elif action == "function":
+                button['command'] = getattr(self, but.get('target'))
+
+            elif action == "config":
+                button['command'] = manager.transition
+                button['extraArgs'] = [but.get('target')]
+
+            elif action == "event":
                 button['command'] = manager.get('events').triggerEvent
-                button['extraArgs'] = [args, {}]
+                button['extraArgs'] = [but.get('target'), {}]
             button.hide()
             self.buttons.append(button)
-
-    def reload(self, manager, xml):
-        pass
 
     def start(self):
         for button in self.buttons:
@@ -50,3 +57,6 @@ class QuickMenu:
     def destroy(self):
         for button in self.buttons:
             button.destroy()
+
+    def helloworld(self):
+        print "helloworld"

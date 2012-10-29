@@ -6,8 +6,9 @@ class EscExit(DirectObject.DirectObject):
     """TODO: fix with register control"""
     def __init__(self, manager, xml):
         self.end = manager.end
-        controlsmg = manager.get("controls")
-        controlsmg.registerKeyGame("Excape Game", "escape", self.end, self.__class__.__name__)
+        #controls = manager.get("controls")
+        #controls.registerKeyGame("Excape Game", "escape", self.end, self.__class__.__name__)
+        #controls.registerKeyMenu("Excape Game", "escape", self.end, self.__class__.__name__)
 
     def reload(self, manager, xml):
         pass

@@ -1,8 +1,5 @@
 <config>
   <obj type="Include" config="base"/>
 
-  <obj type="QuickMenu" name="menu_main_buttons">
-    <button text="Play" target="menu_worldselect"/>
-    <button text="Settings" target="menu_settings"/>
-  </obj>
+  <obj type="Menu" name="menu_main" config="menu_main" />
 </config>

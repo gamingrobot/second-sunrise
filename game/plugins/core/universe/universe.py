@@ -16,11 +16,11 @@ class Universe:
 
         self.planets.makePlanet(Point3(0, 0, 0), "Gamma", self.universeNode)
 
-        eventmg = manager.get("events")
-        eventmg.hookEvent("playerdeath", self.testcallback)
+        event = manager.get("events")
+        event.hookEvent("playerdeath", self.testcallback)
 
-        #controlsmg = manager.get("controls")
-        #controlsmg.registerKeyGame("Toggle Console", "F1", self.testcallback2, self.__class__.__name__)
+        #controls = manager.get("controls")
+        #controls.registerKeyGame("Toggle Console", "F1", self.testcallback2, self.__class__.__name__)
 
     def start(self):
         pass
