@@ -1,0 +1,4 @@
+<config>
+	<button text="Some Settings Sufff" action="" target=""/>
+	<button text="Back" action="menu" target="menu_main"/>
+</config>

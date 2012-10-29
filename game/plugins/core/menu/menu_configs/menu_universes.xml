@@ -1,0 +1,6 @@
+<config>
+	<button text="Voxel" action="config" target="game_voxel"/>
+    <button text="Marching Cubes" action="config" target="game_marching"/>
+    <button text="Dual Contouring" action="config" target="game_dual"/>
+    <button text="Back" action="menu" target="menu_main"/>
+</config>

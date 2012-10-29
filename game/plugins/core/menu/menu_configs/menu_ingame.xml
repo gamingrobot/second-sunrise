@@ -1,0 +1,3 @@
+<config>
+    <button text="Quit" action="function" target="exit"/>
+</config>

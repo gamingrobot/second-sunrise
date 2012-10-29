@@ -1,0 +1,4 @@
+<config>
+	<button text="Play" action="menu" target="menu_universes"/>
+    <button text="Settings" action="menu" target="menu_settings"/>
+</config>
