@@ -7,7 +7,7 @@ class Menu:
     def __init__(self, manager, xml):
         self.frames = []
         self.buttons = []
-        self.menuConfigDir = "plugins/core/menu/menu_configs/"
+        self.menuConfigDir = "config/menu/"
         self.menuCodeDir = "plugins.core.menu.menu_code"
         self.currentMenu = ""
 
