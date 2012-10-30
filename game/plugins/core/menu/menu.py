@@ -39,8 +39,8 @@ class Menu:
                 menu = __import__(base, globals(), locals(), [self.currentMenu.lower()])
                 #menu = getattr(menu, self.currentMenu)
                 #print menu
-                inst = getattr(menu, self.currentMenu)(manager, xml)
-                button['command'] = getattr(inst, but.get('target'))
+                inst = getattr(menu, self.currentMenu)(manager, xml)  # Init
+                button['command'] = getattr(inst, but.get('target'))  # function call
 
             elif action == "config":
                 button['command'] = manager.transition
