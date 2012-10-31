@@ -16,20 +16,23 @@ class DualContour:
         self.dirs = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
         #Vertices of cube
-        self.cube_verts = [np.array([x, y, z])
+        """self.cube_verts = [np.array([x, y, z])
             for x in range(2)
             for y in range(2)
-            for z in range(2)]
+            for z in range(2)]"""
+        self.cube_verts = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]
 
         #Edges of cube
-        self.cube_edges = [ 
-            [k for (k,v) in enumerate(self.cube_verts) if v[i] == a and v[j] == b]
+        """self.cube_edges = [ 
+            [k for (k, v) in enumerate(self.cube_verts) if v[i] == a and v[j] == b]
             for a in range(2)
             for b in range(2)
             for i in range(3)
-            for j in range(3) if i != j]
+            for j in range(3) if i != j]"""
 
-        self.center = np.array([16,16,16])
+        self.cube_edges = [[0, 1], [0, 2], [0, 1], [0, 4], [0, 2], [0, 4], [2, 3], [1, 3], [4, 5], [1, 5], [4, 6], [2, 6], [4, 5], [4, 6], [2, 3], [2, 6], [1, 3], [1, 5], [6, 7], [5, 7], [6, 7], [3, 7], [5, 7], [3, 7]]
+
+        self.center = np.array([16, 16, 16])
         self.radius = 10
 
     def estimate_hermite(self, f, df, v0, v1):
@@ -40,11 +43,25 @@ class DualContour:
     def generateMesh(self, terrain, size, lod):
         dc_verts = []
         vindex = {}
-        for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
+        done = False
+        #for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
+        while not done:
+            x, y, z = 13, 9, 9
             o = np.array([x, y, z])
             #Get signs for cube
-            cube_signs = [self.f(o + v) > 0 for v in self.cube_verts]
+            #cube_signs = [self.f(o + v) > 0 for v in self.cube_verts]
+            cube_signs = []
+            for v in self.cube_verts:
+                #calculate the output given a xyz
+                sign = self.f(o + v)
+                if sign > self.isovalue:
+                    cube_signs.append(True)
+                else:
+                    cube_signs.append(False)
 
+            print cube_signs
+
+            #if all are True or all are False skip this run of the loop, there is no sign change
             if all(cube_signs) or not any(cube_signs):
                 continue
 
@@ -54,22 +71,33 @@ class DualContour:
             h_data = []
             for e in self.cube_edges:
                 if cube_signs[e[0]] != cube_signs[e[1]]:
-                    h_data.append(self.estimate_hermite(self.f, self.df, o+self.cube_verts[e[0]], o+self.cube_verts[e[1]]))
+                    #input f, df, and 2 verts out comes p and n
+                    h_data.append(self.estimate_hermite(self.f, self.df, o + self.cube_verts[e[0]], o + self.cube_verts[e[1]]))
 
             #Solve qef to get vertex
-            A = [n for p, n in h_data]
-            b = [np.dot(p, n) for p, n in h_data]
+            #A = [n for p, n in h_data]
+            #b = [np.dot(p, n) for p, n in h_data]
+            #v, residue, rank, s = la.lstsq(A, b)
+            A = []
+            b = []
+            for p, n in h_data:
+                print p, n
+                A.append(n)
+                b.append(np.dot(p, n))
             v, residue, rank, s = la.lstsq(A, b)
 
             #Throw out failed solutions
+            print v
+            #print la.norm(v - o)
             if la.norm(v - o) > 2:
                 continue
 
             #Emit one vertex per every cube that crosses
             vindex[tuple(o)] = len(dc_verts)
             dc_verts.append(v)
+            done = True
 
-        #Construct faces
+        """#Construct faces
         dc_faces = []
         for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
             if not (x, y, z) in vindex:
@@ -91,7 +119,8 @@ class DualContour:
             dc_triangles.append(((v1[0], v1[1], v1[2]),
                 (v2[0], v2[1], v2[2]),
                 (v3[0], v3[1], v3[2])))
-        return dc_triangles
+        return dc_triangles"""
+        return []
 
 
     def f(self, x):
