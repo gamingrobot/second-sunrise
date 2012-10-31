@@ -36,8 +36,16 @@ class DualContour:
         self.radius = 10
 
     def estimate_hermite(self, f, df, v0, v1):
-        t0 = opt.brentq(lambda t: f((1. - t) * v0 + t * v1), 0, 1)
+        def brentf(t):
+            print v0, v1
+            ret =  f((1. - t) * v0 + t * v1)
+            #print ret
+            return ret
+        t0 = opt.brentq(brentf, 0, 1)
+        print "T0 IS ", t0
+        #find exactly where the sign changes
         x0 = (1. - t0) * v0 + t0 * v1
+        print "X0 IS", x0
         return (x0, df(x0))
 
     def generateMesh(self, terrain, size, lod):
@@ -70,6 +78,7 @@ class DualContour:
             #    for e in self.cube_edges if cube_signs[e[0]] != cube_signs[e[1]]]
             h_data = []
             for e in self.cube_edges:
+                #if sign change
                 if cube_signs[e[0]] != cube_signs[e[1]]:
                     #input f, df, and 2 verts out comes p and n
                     h_data.append(self.estimate_hermite(self.f, self.df, o + self.cube_verts[e[0]], o + self.cube_verts[e[1]]))
@@ -87,7 +96,8 @@ class DualContour:
             v, residue, rank, s = la.lstsq(A, b)
 
             #Throw out failed solutions
-            print v
+            print v - o
+            print la.norm(v - o)
             #print la.norm(v - o)
             if la.norm(v - o) > 2:
                 continue
@@ -124,12 +134,12 @@ class DualContour:
 
 
     def f(self, x):
-        d = x-self.center
-        return np.dot(d,d) - self.radius**2
+        d = x - self.center
+        return np.dot(d, d) - self.radius**2
 
     def df(self, x):
-        d = x-self.center
-        return d / math.sqrt(np.dot(d,d))
+        d = x - self.center
+        return d / math.sqrt(np.dot(d, d))
 
 
 
