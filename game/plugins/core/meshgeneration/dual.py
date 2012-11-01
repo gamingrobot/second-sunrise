@@ -40,7 +40,8 @@ class DualContour:
             #print v0, v1
             ni = (1. - t) * v0 + t * v1
             ret = noise.getDensity(Point3(ni[0], ni[1], ni[2]))
-            print "Ret is", ret
+            #ret = self.testNoise(Point3(ni[0], ni[1], ni[2]))
+            #print "Ret is", ret
             return ret
         #root finding equation
         t0 = opt.brentq(brentf, 0, 1)
@@ -49,7 +50,8 @@ class DualContour:
         x0 = (1. - t0) * v0 + t0 * v1
         #print "X0 IS", x0
         den = noise.getDensity(Point3(x0[0], x0[1], x0[2]), True)[1]
-        print "Found", x0
+        #den = [8,2,7]
+        #print "Found", x0
         return (x0, den)
 
     def generateMesh(self, terrain, size, lod):
@@ -57,10 +59,10 @@ class DualContour:
         vindex = {}
         done = False
         noise = self.noise
-        #for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
-        while not done:
+        for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
+        #while not done:
             #x, y, z = 13, 9, 9
-            x, y, z = 5, 8, 0
+            #x, y, z = 5, 8, 0
             o = np.array([x, y, z])
             #Get signs for cube
             #cube_signs = [self.f(o + v) > 0 for v in self.cube_verts]
@@ -69,7 +71,8 @@ class DualContour:
                 #calculate the output given a xyz
                 ni = o + v
                 sign = noise.getDensity(Point3(ni[0], ni[1], ni[2]))
-                print "Sign is", sign
+                #sign = self.testNoise(Point3(ni[0], ni[1], ni[2]))
+                #print "Sign is", sign
                 if sign > self.isovalue:
                     cube_signs.append(True)
                 else:
@@ -137,13 +140,21 @@ class DualContour:
                 (v3[0], v3[1], v3[2])))
         return dc_triangles
 
+    def testNoise(self, point):
+        if point[0] > 8:
+            return -1.0
+        elif point[0] < 8:
+            return 1.0
+        else:
+            return 0.0
+
 
     ####################### WORKING DUAL CONTOURING CODE ########################
     """def estimate_hermite(self, f, df, v0, v1):
         def brentf(t):
             #print v0, v1
             ret = f((1. - t) * v0 + t * v1)
-            print "Ret is", ret
+            #print "Ret is", ret
             return ret
         #root finding equation
         t0 = opt.brentq(brentf, 0, 1)
@@ -151,16 +162,16 @@ class DualContour:
         #find exactly where the sign changes
         x0 = (1. - t0) * v0 + t0 * v1
         #print "X0 IS", x0
-        print "Found", x0
+        #print "Found", x0
         return (x0, df(x0))
 
     def generateMesh(self, terrain, size, lod):
         dc_verts = []
         vindex = {}
         done = False
-        #for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
-        while not done:
-            x, y, z = 13, 9, 9
+        for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
+        #while not done:
+            #x, y, z = 13, 9, 9
             o = np.array([x, y, z])
             #Get signs for cube
             #cube_signs = [self.f(o + v) > 0 for v in self.cube_verts]
@@ -168,7 +179,7 @@ class DualContour:
             for v in self.cube_verts:
                 #calculate the output given a xyz
                 sign = self.f(o + v)
-                print "Sign is", sign
+                #print "Sign is", sign
                 if sign > self.isovalue:
                     cube_signs.append(True)
                 else:

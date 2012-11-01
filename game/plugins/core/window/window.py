@@ -25,6 +25,7 @@ class Window:
         render.setAntialias(AntialiasAttrib.MAuto)
         base.setBackgroundColor(100 / 255.0, 149 / 255.0, 237 / 255.0)
         render.setTwoSided(True)
+        base.toggleWireframe()
 
         self.task = None
 
