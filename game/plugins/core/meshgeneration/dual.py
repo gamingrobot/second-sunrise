@@ -9,9 +9,6 @@ class DualContour:
     def __init__(self):
         self.isovalue = 0.0
 
-        self.center = np.array([8, 8, 8])
-        self.radius = 4
-
         #Cardinal directions
         self.dirs = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
@@ -38,9 +35,10 @@ class DualContour:
     def estimate_hermite(self, f, df, v0, v1):
         def brentf(t):
             print v0, v1
-            ret =  f((1. - t) * v0 + t * v1)
+            ret = f((1. - t) * v0 + t * v1)
             #print ret
             return ret
+        #root finding equation
         t0 = opt.brentq(brentf, 0, 1)
         print "T0 IS ", t0
         #find exactly where the sign changes
@@ -62,6 +60,7 @@ class DualContour:
             for v in self.cube_verts:
                 #calculate the output given a xyz
                 sign = self.f(o + v)
+                print sign
                 if sign > self.isovalue:
                     cube_signs.append(True)
                 else:
@@ -96,8 +95,8 @@ class DualContour:
             v, residue, rank, s = la.lstsq(A, b)
 
             #Throw out failed solutions
-            print v - o
-            print la.norm(v - o)
+            #print v - o
+            #print la.norm(v - o)
             #print la.norm(v - o)
             if la.norm(v - o) > 2:
                 continue
@@ -132,16 +131,18 @@ class DualContour:
         return dc_triangles"""
         return []
 
-
     def f(self, x):
         d = x - self.center
-        return np.dot(d, d) - self.radius**2
+        print "D AND DOT:", d, np.dot(d, d)
+        #(x**2 + y**2 + z**2) - r**2 = 0
+        ret = np.dot(d, d) - self.radius ** 2
+        print ret
+        return ret
 
     def df(self, x):
         d = x - self.center
+        #x, y,z / sqrt(x**2 + y**2 + z**2)
         return d / math.sqrt(np.dot(d, d))
-
-
 
     """def estimate_hermite(self, v0, v1):
         den, der = raw_noise_3d(v0[0]/15.0, v0[1]/15.0, v0[2]/15.0)
