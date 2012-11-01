@@ -23,7 +23,8 @@ class Window:
     """This plugin sets up window properties"""
     def __init__(self, manager, xml):
         render.setAntialias(AntialiasAttrib.MAuto)
-        base.setBackgroundColor(0.0, 0.0, 0.0)
+        base.setBackgroundColor(100 / 255.0, 149 / 255.0, 237 / 255.0)
+        render.setTwoSided(True)
 
         self.task = None
 
