@@ -35,12 +35,12 @@ class Menu:
 
             elif action == "function":
                 print self.currentMenu.lower()
-                base = self.menuCodeDir + '.' + self.currentMenu.lower()
-                menu = __import__(base, globals(), locals(), [self.currentMenu.lower()])
+                #base = self.menuCodeDir + '.' + self.currentMenu.lower()
+                #menu = __import__(base, globals(), locals(), [self.currentMenu.lower()])
                 #menu = getattr(menu, self.currentMenu)
                 #print menu
-                inst = getattr(menu, self.currentMenu)(manager, xml)  # Init
-                button['command'] = getattr(inst, but.get('target'))  # function call
+                #inst = getattr(menu, self.currentMenu)(manager, xml)  # Init
+                button['command'] = self.getFunc(manager, xml, but, 'target')
 
             elif action == "config":
                 button['command'] = manager.transition
@@ -96,8 +96,8 @@ class Menu:
     def getFunc(self, manager, xml, el, attr):
         base = self.menuCodeDir + '.' + self.currentMenu.lower()
         menu = __import__(base, globals(), locals(), [self.currentMenu.lower()])
-        inst = getattr(menu, self.currentMenu)(manager, xml)
-        return getattr(inst, el.get(attr))
+        inst = getattr(menu, self.currentMenu)(manager, xml)  # Init controller
+        return getattr(inst, el.get(attr))  # function call
 
     def changeMenu(self, manager, target):
         xml = et.parse(self.menuConfigDir + target + '.xml')
