@@ -7,8 +7,8 @@ class EscExit(DirectObject.DirectObject):
     def __init__(self, manager, xml):
         self.end = manager.end
         #controls = manager.get("controls")
-        #controls.registerKeyGame("Excape Game", "escape", self.end, self.__class__.__name__)
-        #controls.registerKeyMenu("Excape Game", "escape", self.end, self.__class__.__name__)
+        #controls.registerKeyGame("Excape Game", "escape", self.end, self)
+        #controls.registerKeyMenu("Excape Game", "escape", self.end, self)
 
     def reload(self, manager, xml):
         pass

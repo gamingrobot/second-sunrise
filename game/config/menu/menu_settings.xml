@@ -1,4 +1,8 @@
 <config>
 	<button text="Some Settings Sufff" action="" target=""/>
+	<slider min="0" max="50" step="1" value="30" onchange="printVal" />
+	<button text="Try Game" action="function" target="setGame" />
+	<button text="Try Menu" action="function" target="setMenu" />
+	<button text="Controls" action="menu" target="settings_controls" />
 	<button text="Back" action="menu" target="menu_main"/>
 </config>

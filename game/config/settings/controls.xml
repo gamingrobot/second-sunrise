@@ -1,0 +1,9 @@
+<config>
+	<game>
+		<DeveloperConsole>
+			<action name="Toggle Console" key="f1" callback="toggleControls" />
+		</DeveloperConsole>
+	</game>
+	<menu>
+	</menu>
+</config>
