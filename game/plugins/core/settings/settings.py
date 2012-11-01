@@ -51,11 +51,12 @@ class Settings:
                 print "couldn't find focus: ", ctrlType
 
             for plugin in ctrlTypeXml.findall("*"):
-                    for act in plugin.findall('action'):
-                        controls[ctrlType][plugin.tag] = []
-                        name = act.get('name')
-                        key = act.get('key')
-                        callback = act.get('callback')
-                        controls[ctrlType][plugin.tag].append([name, key, callback])
+                controls[ctrlType][plugin.tag] = []
+                for act in plugin.findall('action'):
+                    controls[ctrlType][plugin.tag]
+                    name = act.get('name')
+                    key = act.get('key')
+                    callback = act.get('callback')
+                    controls[ctrlType][plugin.tag].append([name, key, callback])
 
         return controls

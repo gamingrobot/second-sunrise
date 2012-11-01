@@ -38,32 +38,51 @@ class Controls(DirectObject.DirectObject):
     def destroy(self):
         pass
 
-    def setFocusMenu(self):
-        self._gameMode = False
-        for plugin in self.menu_controls:
-            for name, key, callback in self.menu_controls[plugin]:
+    def __setFocus(self, focus):
+        if (focus == 'game'):
+            self._gameMode = True
+            one = 'game'
+            two = 'menu'
+        else:
+            self._gameMode = False
+            one = 'menu'
+            two = 'game'
+
+        for plugin in self.controls[one]:
+            for name, key, callback in self.controls[one][plugin]:
                 self.accept(key, callback)
-        for plugin in self.game_controls:
-            for name, key, callback in self.game_controls[plugin]:
+        for plugin in self.controls[two]:
+            for name, key, callback in self.controls[two][plugin]:
                 self.ignore(key)
 
+    def setFocusMenu(self):
+        self.__setFocus('menu')
+
     def setFocusGame(self):
-        self._gameMode = True
-        for plugin in self.game_controls:
-            for name, key, callback in self.game_controls[plugin]:
-                self.accept(key, callback)
-        for plugin in self.menu_controls:
-            for name, key, callback in self.menu_controls[plugin]:
-                self.ignore(key)
+        self.__setFocus('game')
 
     def __registerKey(self, name, key, callback, plugin, focus):
         pluginName = plugin.__class__.__name__
-        if not (plugin in self.controls[focus]):
-            self.controls[focus][pluginName] = []
+        curFocus = self.controls[focus]
+        savedFocus = self.savedControls[focus]
+        if not (pluginName in curFocus):
+            curFocus[pluginName] = []
+        if not (pluginName in savedFocus):
+            savedFocus[pluginName] = []
 
-        if pluginName in self.savedControls[focus]:
-            print "saved: ", self.savedControls[focus][pluginName], " name: ", callback.__name__
-        self.controls[focus][pluginName].append([name, key, callback])
+        plugin = curFocus[pluginName]
+        savedPlugin = savedFocus[pluginName]
+
+        if pluginName in savedFocus:
+            for action in savedPlugin:
+                if action[2] == callback.__name__:
+                    key = action[1]
+                    action = [name, key, callback.__name__]
+                    print "action ", action
+                    break
+
+        plugin.append([name, key, callback])
+
         if (focus == 'game' and self.inGameMode()) or (focus == 'menu' and self.inMenuMode):
             self.accept(key, callback)
 
