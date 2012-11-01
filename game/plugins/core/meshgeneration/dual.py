@@ -40,7 +40,7 @@ class DualContour:
             #print v0, v1
             ni = (1. - t) * v0 + t * v1
             ret = noise.getDensity(Point3(ni[0], ni[1], ni[2]))
-            #print ret
+            print "Ret is", ret
             return ret
         #root finding equation
         t0 = opt.brentq(brentf, 0, 1)
@@ -49,6 +49,7 @@ class DualContour:
         x0 = (1. - t0) * v0 + t0 * v1
         #print "X0 IS", x0
         den = noise.getDensity(Point3(x0[0], x0[1], x0[2]), True)[1]
+        print "Found", x0
         return (x0, den)
 
     def generateMesh(self, terrain, size, lod):
@@ -56,9 +57,10 @@ class DualContour:
         vindex = {}
         done = False
         noise = self.noise
-        for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
-        #while not done:
-        #    x, y, z = 13, 9, 9
+        #for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
+        while not done:
+            #x, y, z = 13, 9, 9
+            x, y, z = 5, 8, 0
             o = np.array([x, y, z])
             #Get signs for cube
             #cube_signs = [self.f(o + v) > 0 for v in self.cube_verts]
@@ -67,13 +69,11 @@ class DualContour:
                 #calculate the output given a xyz
                 ni = o + v
                 sign = noise.getDensity(Point3(ni[0], ni[1], ni[2]))
-                #print sign
+                print "Sign is", sign
                 if sign > self.isovalue:
                     cube_signs.append(True)
                 else:
                     cube_signs.append(False)
-
-            #print cube_signs
 
             #if all are True or all are False skip this run of the loop, there is no sign change
             if all(cube_signs) or not any(cube_signs):
@@ -111,7 +111,7 @@ class DualContour:
             #Emit one vertex per every cube that crosses
             vindex[tuple(o)] = len(dc_verts)
             dc_verts.append(v)
-            #done = True
+            done = True
         print "DONE WITH Vertices"
         #Construct faces
         dc_faces = []
@@ -141,16 +141,17 @@ class DualContour:
     ####################### WORKING DUAL CONTOURING CODE ########################
     """def estimate_hermite(self, f, df, v0, v1):
         def brentf(t):
-            print v0, v1
+            #print v0, v1
             ret = f((1. - t) * v0 + t * v1)
-            #print ret
+            print "Ret is", ret
             return ret
         #root finding equation
         t0 = opt.brentq(brentf, 0, 1)
-        print "T0 IS ", t0
+        #print "T0 IS ", t0
         #find exactly where the sign changes
         x0 = (1. - t0) * v0 + t0 * v1
-        print "X0 IS", x0
+        #print "X0 IS", x0
+        print "Found", x0
         return (x0, df(x0))
 
     def generateMesh(self, terrain, size, lod):
@@ -167,13 +168,11 @@ class DualContour:
             for v in self.cube_verts:
                 #calculate the output given a xyz
                 sign = self.f(o + v)
-                print sign
+                print "Sign is", sign
                 if sign > self.isovalue:
                     cube_signs.append(True)
                 else:
                     cube_signs.append(False)
-
-            print cube_signs
 
             #if all are True or all are False skip this run of the loop, there is no sign change
             if all(cube_signs) or not any(cube_signs):
@@ -196,7 +195,7 @@ class DualContour:
             A = []
             b = []
             for p, n in h_data:
-                print p, n
+                #print p, n
                 A.append(n)
                 b.append(np.dot(p, n))
             v, residue, rank, s = la.lstsq(A, b)
@@ -238,18 +237,18 @@ class DualContour:
         return dc_triangles"""
         #return []
 
-    """def f(self, x):
+    def f(self, x):
         d = x - self.center
-        print "D AND DOT:", d, np.dot(d, d)
+        #print "D AND DOT:", d, np.dot(d, d)
         #(x**2 + y**2 + z**2) - r**2 = 0
         ret = np.dot(d, d) - self.radius ** 2
-        print ret
+        #print ret
         return ret
 
     def df(self, x):
         d = x - self.center
         #x, y,z / sqrt(x**2 + y**2 + z**2)
-        return d / math.sqrt(np.dot(d, d))"""
+        return d / math.sqrt(np.dot(d, d))
 
     ###################### OLD OLD CODE #######################
 
