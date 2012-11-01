@@ -12,7 +12,7 @@ class Settings:
         #perhaps loadSettings shoudl actually be reload????
         #self.reload()
 
-    def reload(self):
+    def reload(self, manager, xml):
         pass
 
     def start(self):

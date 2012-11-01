@@ -19,9 +19,10 @@ class Controls(DirectObject.DirectObject):
     """
     def __init__(self, manager, xml):
         settings = manager.get("settings")
-        self.currentControls = settings.getControls()
-        self.menu_controls = {}
-        self.game_controls = {}
+        self.savedControls = settings.getControls()
+        self.controls = {}
+        self.controls['menu'] = {}
+        self.controls['game'] = {}
         #this should be false by default, but for now we're treating gameMode as All
         self._gameMode = True
 
@@ -55,22 +56,39 @@ class Controls(DirectObject.DirectObject):
             for name, key, callback in self.menu_controls[plugin]:
                 self.ignore(key)
 
-    def registerKeyMenu(self, name, key, callback, plugin):
+    def __registerKey(self, name, key, callback, plugin, focus):
         pluginName = plugin.__class__.__name__
-        if not (plugin in self.menu_controls):
-            self.menu_controls[pluginName] = []
-        self.menu_controls[pluginName].append([name, key, callback])
-        if self.inMenuMode():
+        if not (plugin in self.controls[focus]):
+            self.controls[focus][pluginName] = []
+
+        if pluginName in self.savedControls[focus]:
+            print "saved: ", self.savedControls[focus][pluginName], " name: ", callback.__name__
+        self.controls[focus][pluginName].append([name, key, callback])
+        if (focus == 'game' and self.inGameMode()) or (focus == 'menu' and self.inMenuMode):
             self.accept(key, callback)
 
+    def registerKeyMenu(self, name, key, callback, plugin):
+        self.__registerKey(name, key, callback, plugin, 'menu')
+
+        '''pluginName = plugin.__class__.__name__
+        if not (plugin in self.menu_controls):
+            self.menu_controls[pluginName] = []
+
+        if (pluginName in self.savedControls['menu'] and ):
+        self.menu_controls[pluginName].append([name, key, callback])
+        if self.inMenuMode():
+            self.accept(key, callback)'''
+
     def registerKeyGame(self, name, key, callback, plugin):
-        pluginName = plugin.__class__.__name__
+        self.__registerKey(name, key, callback, plugin, 'game')
+
+        '''pluginName = plugin.__class__.__name__
         if not (plugin in self.game_controls):
             self.game_controls[pluginName] = []
         self.game_controls[pluginName].append([name, key, callback])
         if self.inGameMode():
             self.accept(key, callback)
-        print self.game_controls
+        print self.game_controls'''
 
     def registerKeyAll(self, name, key, callback, plugin):
         self.registerKeyGame(name, key, callback, plugin)
