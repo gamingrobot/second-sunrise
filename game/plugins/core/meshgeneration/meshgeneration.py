@@ -16,6 +16,7 @@ import random
 class MeshGeneration:
     """MeshGeneration for the chunks"""
     def __init__(self, manager, xml):
+        self.manager = manager
         self.reload(manager, xml)
 
     def reload(self, manager, xml):
@@ -38,7 +39,7 @@ class MeshGeneration:
         if self.meshgentype == "marching":
             mesher = MarchingCubes()
         elif self.meshgentype == "dual":
-            mesher = DualContour()
+            mesher = DualContour(noise=self.manager.get('noise'))
         else:
             mesher = Voxel()
 
