@@ -1,10 +1,16 @@
+<?xml version="1.0" ?>
 <config>
 	<game>
+		<Profile>
+			<action callback="go" key="f2" name="Open Profiler"/>
+		</Profile>
 		<DeveloperConsole>
-			<action name="Toggle Console" key="f3" callback="toggle" />
-			<action name="Toggle Noob" key="f2" callback="toggle2" />
+			<action callback="toggle" key="f4" name="Toggle Console"/>
 		</DeveloperConsole>
 	</game>
 	<menu>
+		<DeveloperConsole>
+			<action callback="toggle" key="f3" name="Toggle Console"/>
+		</DeveloperConsole>
 	</menu>
 </config>

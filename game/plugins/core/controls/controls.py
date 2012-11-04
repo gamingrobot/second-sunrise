@@ -7,6 +7,7 @@ class Controls(DirectObject.DirectObject):
     finalizeKeys(self, plugin)
         runs comparison between menu_controls and game_controls AND controls.xml
         removes anything from xml that hasn't been registered for the plugin
+            basically set self.savedControls = self.controls with the exception that the final array[2] should be the name instead of the method reference
         developer must always call this after registering their last key, which should always be done in their init
 
     everything goes to controls.xml
@@ -48,12 +49,13 @@ class Controls(DirectObject.DirectObject):
             one = 'menu'
             two = 'game'
 
-        for plugin in self.controls[one]:
-            for name, key, callback in self.controls[one][plugin]:
-                self.accept(key, callback)
+
         for plugin in self.controls[two]:
             for name, key, callback in self.controls[two][plugin]:
                 self.ignore(key)
+        for plugin in self.controls[one]:
+            for name, key, callback in self.controls[one][plugin]:
+                self.accept(key, callback)
 
     def setFocusMenu(self):
         self.__setFocus('menu')
@@ -72,14 +74,19 @@ class Controls(DirectObject.DirectObject):
 
         plugin = curFocus[pluginName]
         savedPlugin = savedFocus[pluginName]
+        found = False
 
-        if pluginName in savedFocus:
-            for action in savedPlugin:
-                if action[2] == callback.__name__:
-                    key = action[1]
-                    action = [name, key, callback.__name__]
-                    print "action ", action
-                    break
+        for action in savedPlugin:
+            if action[2] == callback.__name__:
+                key = action[1]
+                action = [name, key, callback.__name__]
+                print "action ", action
+                global found
+                found = True
+                break
+
+        if not found:
+            savedPlugin.append([name, key, callback.__name__])
 
         plugin.append([name, key, callback])
 
@@ -89,25 +96,8 @@ class Controls(DirectObject.DirectObject):
     def registerKeyMenu(self, name, key, callback, plugin):
         self.__registerKey(name, key, callback, plugin, 'menu')
 
-        '''pluginName = plugin.__class__.__name__
-        if not (plugin in self.menu_controls):
-            self.menu_controls[pluginName] = []
-
-        if (pluginName in self.savedControls['menu'] and ):
-        self.menu_controls[pluginName].append([name, key, callback])
-        if self.inMenuMode():
-            self.accept(key, callback)'''
-
     def registerKeyGame(self, name, key, callback, plugin):
         self.__registerKey(name, key, callback, plugin, 'game')
-
-        '''pluginName = plugin.__class__.__name__
-        if not (plugin in self.game_controls):
-            self.game_controls[pluginName] = []
-        self.game_controls[pluginName].append([name, key, callback])
-        if self.inGameMode():
-            self.accept(key, callback)
-        print self.game_controls'''
 
     def registerKeyAll(self, name, key, callback, plugin):
         self.registerKeyGame(name, key, callback, plugin)
