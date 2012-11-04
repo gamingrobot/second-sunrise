@@ -93,15 +93,18 @@ class Controls(DirectObject.DirectObject):
         if (focus == 'game' and self.inGameMode()) or (focus == 'menu' and self.inMenuMode):
             self.accept(key, callback)
 
+        return key
+
     def registerKeyMenu(self, name, key, callback, plugin):
-        self.__registerKey(name, key, callback, plugin, 'menu')
+        return self.__registerKey(name, key, callback, plugin, 'menu')
 
     def registerKeyGame(self, name, key, callback, plugin):
-        self.__registerKey(name, key, callback, plugin, 'game')
+        return self.__registerKey(name, key, callback, plugin, 'game')
 
     def registerKeyAll(self, name, key, callback, plugin):
-        self.registerKeyGame(name, key, callback, plugin)
-        self.registerKeyMenu(name, key, callback, plugin)
+        key = self.registerKeyGame(name, key, callback, plugin)
+        key = self.registerKeyMenu(name, key, callback, plugin)
+        return key
 
     def unRegisterKeyMenu(self, name, plugin):
         pass

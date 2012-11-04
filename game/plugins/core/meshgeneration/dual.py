@@ -16,20 +16,9 @@ class DualContour:
         self.dirs = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
         #Vertices of cube
-        """self.cube_verts = [np.array([x, y, z])
-            for x in range(2)
-            for y in range(2)
-            for z in range(2)]"""
         self.cube_verts = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]
 
         #Edges of cube
-        """self.cube_edges = [
-            [k for (k, v) in enumerate(self.cube_verts) if v[i] == a and v[j] == b]
-            for a in range(2)
-            for b in range(2)
-            for i in range(3)
-            for j in range(3) if i != j]"""
-
         self.cube_edges = [[0, 1], [0, 2], [0, 1], [0, 4], [0, 2], [0, 4], [2, 3], [1, 3], [4, 5], [1, 5], [4, 6], [2, 6], [4, 5], [4, 6], [2, 3], [2, 6], [1, 3], [1, 5], [6, 7], [5, 7], [6, 7], [3, 7], [5, 7], [3, 7]]
 
         self.center = np.array([16, 16, 16])
@@ -37,42 +26,28 @@ class DualContour:
 
     def estimate_hermite(self, noise, v0, v1):
         def brentf(t):
-            #print v0, v1
             ni = (1. - t) * v0 + t * v1
             ret = noise.getDensity(Point3(ni[0], ni[1], ni[2]))
-            #ret = self.testNoise(Point3(ni[0], ni[1], ni[2]))
-            #print "Ret is", ret
             return ret
         #root finding equation
         t0 = opt.brentq(brentf, 0, 1)
-        #print "T0 IS ", t0
         #find exactly where the sign changes
         x0 = (1. - t0) * v0 + t0 * v1
-        #print "X0 IS", x0
+        #get derivative of x0
         den = noise.getDensity(Point3(x0[0], x0[1], x0[2]), True)[1]
-        #den = [8,2,7]
-        #print "Found", x0
         return (x0, den)
 
     def generateMesh(self, terrain, size, lod):
         dc_verts = []
         vindex = {}
-        done = False
         noise = self.noise
         for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
-        #while not done:
-            #x, y, z = 13, 9, 9
-            #x, y, z = 5, 8, 0
             o = np.array([x, y, z])
-            #Get signs for cube
-            #cube_signs = [self.f(o + v) > 0 for v in self.cube_verts]
             cube_signs = []
+            #find edges that have a sign change
             for v in self.cube_verts:
-                #calculate the output given a xyz
                 ni = o + v
                 sign = noise.getDensity(Point3(ni[0], ni[1], ni[2]))
-                #sign = self.testNoise(Point3(ni[0], ni[1], ni[2]))
-                #print "Sign is", sign
                 if sign > self.isovalue:
                     cube_signs.append(True)
                 else:
@@ -83,8 +58,6 @@ class DualContour:
                 continue
 
             #Estimate hermite data
-            #h_data = [self.estimate_hermite(self.f, self.df, o+self.cube_verts[e[0]], o+self.cube_verts[e[1]]) 
-            #    for e in self.cube_edges if cube_signs[e[0]] != cube_signs[e[1]]]
             h_data = []
             for e in self.cube_edges:
                 #if sign change
@@ -93,29 +66,21 @@ class DualContour:
                     h_data.append(self.estimate_hermite(noise, o + self.cube_verts[e[0]], o + self.cube_verts[e[1]]))
 
             #Solve qef to get vertex
-            #A = [n for p, n in h_data]
-            #b = [np.dot(p, n) for p, n in h_data]
-            #v, residue, rank, s = la.lstsq(A, b)
             A = []
             b = []
             for p, n in h_data:
-                #print p, n
                 A.append(n)
                 b.append(np.dot(p, n))
             v, residue, rank, s = la.lstsq(A, b)
 
             #Throw out failed solutions
-            #print v - o
-            #print la.norm(v - o)
-            #print la.norm(v - o)
             if la.norm(v - o) > 2:
                 continue
 
             #Emit one vertex per every cube that crosses
             vindex[tuple(o)] = len(dc_verts)
             dc_verts.append(v)
-            done = True
-        print "DONE WITH Vertices"
+
         #Construct faces
         dc_faces = []
         for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):

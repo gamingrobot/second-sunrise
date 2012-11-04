@@ -5,7 +5,12 @@
 			<action callback="go" key="f2" name="Open Profiler"/>
 		</Profile>
 		<DeveloperConsole>
+<<<<<<< HEAD
 			<action callback="toggle" key="f4" name="Toggle Console"/>
+=======
+			<action name="Toggle Console" key="`" callback="toggle" />
+			<action name="Toggle Noob" key="f2" callback="toggle2" />
+>>>>>>> 9b9d766899c29112309111ce558ded01b205906b
 		</DeveloperConsole>
 	</game>
 	<menu>

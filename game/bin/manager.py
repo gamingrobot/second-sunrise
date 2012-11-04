@@ -46,8 +46,13 @@ class Manager:
         # For pandaStep...
         self.lastTime = 0.0
 
+        #current config
+        self.currentConfig = ""
+
     def transition(self, config):
         """Transitions from the current configuration to a new configuration, makes a point to keep letting Panda draw whilst it is doing so, so any special loading screen plugin can do its stuff. Maintains some variables in this class so such a plugin can also display a loading bar."""
+
+        self.currentConfig = config
 
         # Step 1 - call stop on all current objects- do this immediatly as we can't have some running whilst others are not...
         for obj in self.objList:
@@ -181,6 +186,9 @@ class Manager:
 
         # One last yield, just to keep things going...
         yield None
+
+    def reload(self):
+        self.transition(self.currentConfig)
 
     def get(self, name):
         """Returns the plugin instance associated with the given name, or None if it doesn't exist."""
