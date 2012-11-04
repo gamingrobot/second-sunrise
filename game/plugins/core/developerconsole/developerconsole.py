@@ -66,7 +66,7 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
         self.initialized = False
 
         controls = manager.get("controls")
-        controls.registerKeyGame("Toggle Console", "f1", self.toggle, self)
+        self.toggleKey = controls.registerKeyAll("Toggle Console", "`", self.toggle, self)
 
     def reload(self, manager, xml):
         pass
@@ -140,6 +140,10 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
                 locals[plugin] = self.manager.named[plugin]
             locals['panda3d'] = panda3d
 
+            #register custom commands
+            locals['reload'] = self.manager.reload
+            locals['load'] = self.manager.transition
+
             # Run it and print the output.
             if not self.initialized:
                 InteractiveInterpreter.__init__(self, locals=locals)
@@ -156,6 +160,11 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
                 self.writeErr(traceback.format_exc())
 
     def toggle(self):
+        #remove toggle key from entry
+        if self.entry['focus']:
+            entryLen = len(self.entry.get(True))
+            if self.entry.get(True)[entryLen - len(self.toggleKey):entryLen] == self.toggleKey:
+                self.entry.enterText(self.entry.get(True)[:entryLen - len(self.toggleKey)])
         if self.hidden:
             self.show()
         else:

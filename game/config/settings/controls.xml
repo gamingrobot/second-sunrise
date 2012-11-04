@@ -1,7 +1,7 @@
 <config>
 	<game>
 		<DeveloperConsole>
-			<action name="Toggle Console" key="f3" callback="toggle" />
+			<action name="Toggle Console" key="`" callback="toggle" />
 			<action name="Toggle Noob" key="f2" callback="toggle2" />
 		</DeveloperConsole>
 	</game>
