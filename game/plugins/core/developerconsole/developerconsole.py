@@ -66,11 +66,8 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
         self.initialized = False
 
         controls = manager.get("controls")
-<<<<<<< HEAD
-        controls.registerKeyAll("Toggle Console", "f1", self.toggle, self)
-=======
+
         self.toggleKey = controls.registerKeyAll("Toggle Console", "`", self.toggle, self)
->>>>>>> 9b9d766899c29112309111ce558ded01b205906b
 
     def reload(self, manager, xml):
         pass
