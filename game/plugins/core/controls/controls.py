@@ -102,9 +102,12 @@ class Controls(DirectObject.DirectObject):
         return self.__registerKey(name, key, callback, plugin, 'game')
 
     def registerKeyAll(self, name, key, callback, plugin):
-        key = self.registerKeyGame(name, key, callback, plugin)
-        key = self.registerKeyMenu(name, key, callback, plugin)
-        return key
+        keyGame = self.registerKeyGame(name, key, callback, plugin)
+        keyMenu = self.registerKeyMenu(name, key, callback, plugin)
+        ret = {}
+        ret["game"] = keyGame
+        ret["menu"] = keyMenu
+        return ret
 
     def unRegisterKeyMenu(self, name, plugin):
         pass

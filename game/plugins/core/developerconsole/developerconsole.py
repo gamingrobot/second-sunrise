@@ -67,7 +67,7 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
 
         controls = manager.get("controls")
 
-        self.toggleKey = controls.registerKeyAll("Toggle Console", "`", self.toggle, self)
+        self.toggleKeys = controls.registerKeyAll("Toggle Console", "`", self.toggle, self)
 
     def reload(self, manager, xml):
         pass
@@ -163,9 +163,11 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
     def toggle(self):
         #remove toggle key from entry
         if self.entry['focus']:
-            entryLen = len(self.entry.get(True))
-            if self.entry.get(True)[entryLen - len(self.toggleKey):entryLen] == self.toggleKey:
-                self.entry.enterText(self.entry.get(True)[:entryLen - len(self.toggleKey)])
+            for gtype in self.toggleKeys.keys():
+                key = self.toggleKeys[gtype]
+                entryLen = len(self.entry.get(True))
+                if self.entry.get(True)[entryLen - len(key):entryLen] == key:
+                    self.entry.enterText(self.entry.get(True)[:entryLen - len(key)])
         if self.hidden:
             self.show()
         else:
