@@ -144,6 +144,7 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
             #register custom commands
             locals['reload'] = self.manager.reload
             locals['load'] = self.manager.transition
+            locals['wireframe'] = base.toggleWireframe
 
             # Run it and print the output.
             if not self.initialized:
