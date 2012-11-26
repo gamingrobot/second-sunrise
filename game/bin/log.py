@@ -24,17 +24,37 @@ class Log:
         return " ".join(map(str, message))
 
     def error(self, *message):
-        frame, module, line, function, context, index = inspect.stack()[1]
-        self.getCat(self.getName(frame, module)).error(self.combine(message))
+        name = "Plugin"
+        try:
+            frame, module, line, function, context, index = inspect.stack()[1]
+            name = self.getName(frame, module)
+        except:
+            pass
+        self.getCat(name).error(self.combine(message))
 
     def warning(self, *message):
-        frame, module, line, function, context, index = inspect.stack()[1]
-        self.getCat(self.getName(frame, module)).warning(self.combine(message))
+        name = "Plugin"
+        try:
+            frame, module, line, function, context, index = inspect.stack()[1]
+            name = self.getName(frame, module)
+        except:
+            pass
+        self.getCat(name).warning(self.combine(message))
 
     def info(self, *message):
-        frame, module, line, function, context, index = inspect.stack()[1]
-        self.getCat(self.getName(frame, module)).info(self.combine(message))
+        name = "Plugin"
+        try:
+            frame, module, line, function, context, index = inspect.stack()[1]
+            name = self.getName(frame, module)
+        except:
+            pass
+        self.getCat(name).info(self.combine(message))
 
     def debug(self, *message):
-        frame, module, line, function, context, index = inspect.stack()[1]
-        self.getCat(self.getName(frame, module)).debug(self.combine(message))
+        name = "Plugin"
+        try:
+            frame, module, line, function, context, index = inspect.stack()[1]
+            name = self.getName(frame, module)
+        except:
+            pass
+        self.getCat(name).debug(self.combine(message))
