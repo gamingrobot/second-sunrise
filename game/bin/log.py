@@ -1,10 +1,8 @@
 from panda3d.core import ConfigVariableString
-
 import inspect
 
 
 class Log:
-    #todo check prc log level and dont call those stacktraces
     def __init__(self):
         loglevel = ConfigVariableString('log-level', 'info').getValue()
         if loglevel == "error":
