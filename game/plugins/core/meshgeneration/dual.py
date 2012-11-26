@@ -1,6 +1,9 @@
 import numpy as np
 import numpy.linalg as la
-import scipy.optimize as opt
+try:
+    import scipy.optimize as opt
+except:
+    pass
 import itertools
 import math
 
