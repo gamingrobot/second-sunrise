@@ -17,8 +17,9 @@ class Log:
             self.loglevel = 0
         self.debug("Level", loglevel)
 
-    def __getName(self, frame, module):
+    def __getName(self):
         retmod = "Module"
+        frame, module, line, function, context, index = inspect.stack()[2]
         try:
             self_argument = frame.f_code.co_varnames[0]  # this should be self
             instance = frame.f_locals[self_argument]
@@ -39,30 +40,20 @@ class Log:
     #message levels
     def error(self, *message):
         if self.loglevel <= 4:
-            frame, module, line, function, context, index = inspect.stack()[1]
-            name = self.__getName(frame, module)
-            print self.__format("error", name, message)
+            print self.__format("error", self.__getName(), message)
 
     def warning(self, *message):
         if self.loglevel <= 3:
-            frame, module, line, function, context, index = inspect.stack()[1]
-            name = self.__getName(frame, module)
-            print self.__format("warning", name, message)
+            print self.__format("warning", self.__getName(), message)
 
     def info(self, *message):
         if self.loglevel <= 2:
-            frame, module, line, function, context, index = inspect.stack()[1]
-            name = self.__getName(frame, module)
-            print self.__format("info", name, message)
+            print self.__format("info", self.__getName(), message)
 
     def debug(self, *message):
         if self.loglevel <= 1:
-            frame, module, line, function, context, index = inspect.stack()[1]
-            name = self.__getName(frame, module)
-            print self.__format("debug", name, message)
+            print self.__format("debug", self.__getName(), message)
 
     def manager(self, *message):
         if self.loglevel <= 0:
-            frame, module, line, function, context, index = inspect.stack()[1]
-            name = self.__getName(frame, module)
-            print self.__format("manager", name, message)
+            print self.__format("manager", self.__getName(), message)
