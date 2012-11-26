@@ -4,8 +4,7 @@ from xml.dom import minidom
 
 class Settings:
     """Settings manager"""
-    def __init__(self, manager, xml):
-        self.manager = manager
+    def __init__(self, xml):
         #self.xml = xml
         self.settingsConfigDir = "config/settings/"
         self.ctrlConfig = et.parse(self.settingsConfigDir + 'controls.xml')
@@ -14,7 +13,7 @@ class Settings:
         #perhaps loadSettings shoudl actually be reload????
         #self.reload()
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):
@@ -27,7 +26,7 @@ class Settings:
         pass
 
     #read all xml settings and set appropriate game variables
-    def loadSettings(self, manager):
+    def loadSettings(self):
         #load settings from menu_settings.xml
         #is that a good place to store them?
         pass
@@ -50,7 +49,7 @@ class Settings:
             try:
                 ctrlTypeXml = self.ctrlConfig.find(ctrlType)
             except:
-                print "couldn't find focus: ", ctrlType
+                log.warning(self, "couldn't find focus: ", ctrlType)
 
             for plugin in ctrlTypeXml.findall("*"):
                 controls[ctrlType][plugin.tag] = []
@@ -65,7 +64,7 @@ class Settings:
 
     def saveControls(self):
         ctrls = et.Element('config')
-        controls = self.manager.get('controls').savedControls
+        controls = manager.get('controls').savedControls
         for ctrlType in self.controlTypes:
             xmlType = et.SubElement(ctrls, ctrlType)
             focus = controls[ctrlType]

@@ -19,7 +19,7 @@ from direct.actor import Actor
 
 class Loading:
     """Does a loading screen - renders some stuff whilst a transition is happenning."""
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         self.node = Actor.Actor('data/misc/loading')
         self.node.reparentTo(base.render)
         self.node.setShaderAuto()
@@ -35,7 +35,7 @@ class Loading:
 
         #self.stop()
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):

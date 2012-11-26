@@ -46,13 +46,12 @@ class PseudoFile:
 
 class DeveloperConsole(InteractiveInterpreter, DirectObject):
     """The name says it all."""
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         sys.stdout = PseudoFile(self.writeOut)
         sys.stderr = PseudoFile(self.writeErr)
         tpErr = TextProperties()
         tpErr.setTextColor(1, 0.5, 0.5, 1)
         TextPropertiesManager.getGlobalPtr().setProperties("err", tpErr)
-        self.manager = manager
         font = loader.loadFont("cmss12")
         self.frame = DirectFrame(parent=base.a2dTopCenter, text_align=TextNode.ALeft, text_pos=(-base.getAspectRatio() + TEXT_MARGIN[0], TEXT_MARGIN[1]), text_scale=0.05, text_fg=(1, 1, 1, 1), frameSize=(-2.0, 2.0, -0.5, 0.0), frameColor=(0, 0, 0, 0.5), text='', text_font=font)
         self.entry = DirectEntry(parent=base.a2dTopLeft, command=self.command, scale=0.05, width=1000.0, pos=(-0.02, 0, -0.48), relief=None, text_pos=(1.5, 0, 0), text_fg=(1, 1, 0.5, 1), rolloverSound=None, clickSound=None, text_font=font)
@@ -69,7 +68,7 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
 
         self.toggleKeys = controls.registerKeyAll("Toggle Console", "`", self.toggle, self)
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def prevCommand(self):
@@ -136,14 +135,13 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
 
             # Insert plugins into the local namespace
             locals = __main__.__dict__
-            locals['manager'] = self.manager
-            for plugin in self.manager.named.keys():
-                locals[plugin] = self.manager.named[plugin]
+            for plugin in manager.named.keys():
+                locals[plugin] = manager.named[plugin]
             locals['panda3d'] = panda3d
 
             #register custom commands
-            locals['reload'] = self.manager.reload
-            locals['load'] = self.manager.transition
+            locals['reload'] = manager.reload
+            locals['load'] = manager.transition
             locals['wireframe'] = base.toggleWireframe
 
             # Run it and print the output.

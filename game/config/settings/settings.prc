@@ -8,3 +8,7 @@ sync-video False
 
 notify-level-thread spam
 
+default-directnotify-level debug
+
+
+

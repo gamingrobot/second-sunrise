@@ -17,23 +17,21 @@ import xml.etree.ElementTree as et
 
 class Include:
     """Meta plugin that allows you to include other config files, will be declared as <obj type="Include" config="other"/> A name is not needed."""
-    def __init__(self, manager, xml):
-        self.manager = manager
-
+    def __init__(self, xml):
         # Get the name of the config to load...
         self.config = xml.get('config')
 
     def postInit(self):
         # Load the configuration xml file...
-        elem = et.parse(self.manager.configDir + self.config + '.xml')
+        elem = et.parse(manager.configDir + self.config + '.xml')
         yield None
 
         # Iterate the relevant elements and use the manager to load them all...
         for obj in elem.findall('obj'):
-            for blah in self.manager.addObj(obj):
+            for blah in manager.addObj(obj):
                 yield None
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):

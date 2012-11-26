@@ -3,10 +3,10 @@ from simplexnoise import *
 
 class Noise:
     """MeshGenerators for the chunks"""
-    def __init__(self, manager, xml):
-        self.reload(manager, xml)
+    def __init__(self, xml):
+        self.reload(xml)
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):

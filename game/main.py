@@ -26,6 +26,7 @@ loadPrcFile("config/settings/settings.prc")
 from bin.manager import *
 
 import sys
+from bin.log import Log
 
 
 class Second_Sunrise(ShowBase):
@@ -38,8 +39,14 @@ class Second_Sunrise(ShowBase):
         else:
             baseDir = ''
 
+        #make logger global
+        __builtins__.log = Log()
+
         # Create the manager - this does it all...
-        plugin = Manager(baseDir)
+        pluginmanager = Manager(baseDir)
+
+        #make manager global
+        __builtins__.manager = pluginmanager
 
         # Create a task to do the work of getting the game going...
         def firstLight(task):
@@ -49,7 +56,7 @@ class Second_Sunrise(ShowBase):
                 cn = 'menu_main'
 
             print 'Starting configuration ' + cn
-            plugin.transition(cn)
+            pluginmanager.transition(cn)
             return task.done
 
         taskMgr.add(firstLight, 'firstLight')

@@ -3,10 +3,10 @@ from panda3d.core import Point3
 
 class Universe:
     """That thing that came from the big bang"""
-    def __init__(self, manager, xml):
-        self.reload(manager, xml)
+    def __init__(self, xml):
+        self.reload(xml)
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         self.universeNode = render.attachNewNode("universe")
         planets = xml.find('planets')
         if planets != None:
@@ -33,7 +33,7 @@ class Universe:
         pass
 
     def testcallback(self, event):
-        print "Player died"
+        log.info("Player died")
 
     def testcallback2(self):
-        print "Key pressed"
+        log.info("Key pressed")

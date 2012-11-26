@@ -4,11 +4,11 @@ from planet import Planet
 
 class Planets:
     """Well the Planets"""
-    def __init__(self, manager, xml):
-        self.reload(manager, xml)
+    def __init__(self, xml):
+        self.reload(xml)
         self.planets = {}
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         chunks = xml.find('chunks')
         if chunks != None:
             self.chunks = manager.get(chunks.get('plugin'))

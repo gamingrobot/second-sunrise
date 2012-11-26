@@ -4,14 +4,14 @@ from panda3d.core import Point3
 
 class TerrainGeneration:
     """Terraingeneration for the chunks"""
-    def __init__(self, manager, xml):
-        self.reload(manager, xml)
+    def __init__(self, xml):
+        self.reload(xml)
         self.isovalue = 0.0
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         noise = xml.find('noise')
         if noise != None:
-            print "DEBUG: " + noise.get('plugin')
+            log.debug(noise.get('plugin'))
             self.noise = manager.get(noise.get('plugin'))
         else:
             self.noise = None

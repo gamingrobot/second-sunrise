@@ -20,13 +20,13 @@ from panda3d.core import PStatClient
 
 class Profile(DirectObject.DirectObject):
     """Connects to pstats, if pstats is not running on the local computer it will set a copy running regardless."""
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         self.pstats = None
         #TODO: register key to link to function go
         controls = manager.get("controls")
         controls.registerKeyGame("Open Profiler", "f2", self.go, self)
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):

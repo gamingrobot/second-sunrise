@@ -4,21 +4,19 @@ from panda3d.core import Point3
 
 class Chunks:
     """Chunk class manages the creation of chunks"""
-    def __init__(self, manager, xml):
-        self.reload(manager, xml)
+    def __init__(self, xml):
+        self.reload(xml)
         self.chunks = {}
         self.chunksize = 16
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         meshgen = xml.find('meshgen')
         if meshgen != None:
-            print "DEBUG: " + meshgen.get('plugin')
             self.meshgen = manager.get(meshgen.get('plugin'))
         else:
             self.meshgen = None
         terraingen = xml.find('terraingen')
         if terraingen != None:
-            print "DEBUG: " + terraingen.get('plugin')
             self.terraingen = manager.get(terraingen.get('plugin'))
         else:
             self.terraingen = None
@@ -48,7 +46,7 @@ class Chunks:
 
     def generateChunk(self, chunkcords, parentnode, chunks):
         chunk = chunks[chunkcords]
-        print "Generating: " + str(chunk.cords[0]) + "," + str(chunk.cords[1]) + "," + str(chunk.cords[2])
+        log.info("Generating: " + str(chunk.cords[0]) + "," + str(chunk.cords[1]) + "," + str(chunk.cords[2]))
         #generate terrain
         chunk.setTerrain(self.terraingen.generate(chunk.abscords, self.chunksize))
         #build list of neighbors
@@ -59,7 +57,7 @@ class Chunks:
         try:
             chunk.getNode().removeNode()
             chunk.setNode(None)
-            print "Removed old node"
+            log.debug("Removed old node")
         except AttributeError:
             pass
         #add to render

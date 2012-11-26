@@ -18,7 +18,7 @@ class Controls(DirectObject.DirectObject):
 
 
     """
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         settings = manager.get("settings")
         self.savedControls = settings.getControls()
         self.controls = {}
@@ -27,7 +27,7 @@ class Controls(DirectObject.DirectObject):
         #this should be false by default, but for now we're treating gameMode as All
         self._gameMode = True
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):
@@ -48,7 +48,6 @@ class Controls(DirectObject.DirectObject):
             self._gameMode = False
             one = 'menu'
             two = 'game'
-
 
         for plugin in self.controls[two]:
             for name, key, callback in self.controls[two][plugin]:
@@ -80,8 +79,7 @@ class Controls(DirectObject.DirectObject):
             if action[2] == callback.__name__:
                 key = action[1]
                 action = [name, key, callback.__name__]
-                print "action ", action
-                global found
+                log.debug("action", action)
                 found = True
                 break
 

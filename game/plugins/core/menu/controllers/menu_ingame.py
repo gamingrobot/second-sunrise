@@ -1,10 +1,10 @@
 class menu_ingame:
     """ingame menu"""
-    def __init__(self, manager, xml):
-        self.reload(manager, xml)
+    def __init__(self, xml):
+        self.reload(xml)
 
-    def reload(self, manager, xml):
-        self.manager = manager
+    def reload(self, xml):
+        pass
 
     def start(self):
         pass
@@ -16,4 +16,4 @@ class menu_ingame:
         pass
 
     def exit(self):
-        self.manager.end()
+        manager.end()

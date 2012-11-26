@@ -1,9 +1,9 @@
 class Events:
     """Events System"""
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         self.events = {}
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):

@@ -21,7 +21,7 @@ import datetime
 
 class Window:
     """This plugin sets up window properties"""
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         render.setAntialias(AntialiasAttrib.MAuto)
         base.setBackgroundColor(100 / 255.0, 149 / 255.0, 237 / 255.0)
         render.setTwoSided(True)
@@ -35,7 +35,7 @@ class Window:
         for i in xrange(info.getTotalDisplayModes()):
             self.res.append((info.getDisplayModeWidth(i), info.getDisplayModeHeight(i)))
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     screenshot = lambda self: base.screenshot()
@@ -75,9 +75,9 @@ class Window:
             self.task = taskMgr.add(self.record, 'RecordFrames')
             globalClock.setMode(ClockObject.MNonRealTime)
             globalClock.setFrameRate(25.0)
-            print 'started recording'
+            log.info('started recording')
         else:
             globalClock.setMode(ClockObject.MNormal)
             taskMgr.remove(self.task)
             self.task = None
-            print 'ended recording'
+            log.info('ended recording')

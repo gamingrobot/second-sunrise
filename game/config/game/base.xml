@@ -19,5 +19,6 @@
     <misc path="data/misc"/>
     <cache path="cache" temp="True"/>
   </obj>
+  <obj type="Physics" name="physics" />
   <obj type="DeveloperConsole" name="console" />
 </config>

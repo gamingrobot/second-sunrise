@@ -4,10 +4,10 @@ from direct.showbase import DirectObject
 class FrameRate(DirectObject.DirectObject):
     """Toggles displaying the framerate"""
     """TODO: fix with register control"""
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         self.state = False
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):

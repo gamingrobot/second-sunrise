@@ -5,7 +5,7 @@ from panda3d.core import VBase4
 
 class Camera:
     """Does camera set up - will probably end up with lots of options."""
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         base.camNode.setCameraMask(BitMask32.bit(0))
         #only temporary while testing
         self.plight = PointLight('plight')
@@ -17,9 +17,9 @@ class Camera:
         render.setLight(plnp)
 
         #base.disableMouse()
-        self.reload(manager, xml)
+        self.reload(xml)
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         pass
 
     def start(self):

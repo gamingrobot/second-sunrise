@@ -18,10 +18,10 @@ import posixpath
 
 class Global:
     """This provides global access to lumps of configuration xml - allows other plugin objects to get at the xml it is given."""
-    def __init__(self, manager, xml):
-        self.reload(manager, xml)
+    def __init__(self, xml):
+        self.reload(xml)
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         self.xml = xml
 
         # Some clever code for handling being in a p3d file - turn paths into full paths if needed...

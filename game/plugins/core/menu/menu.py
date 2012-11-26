@@ -4,16 +4,16 @@ import xml.etree.ElementTree as et
 
 class Menu:
     """menu manager"""
-    def __init__(self, manager, xml):
+    def __init__(self, xml):
         self.frames = []
         self.directObjects = []
         self.menuConfigDir = "config/menu/"
         self.menuCodeDir = "plugins.core.menu.controllers"
         self.currentMenu = ""
 
-        self.reload(manager, xml)
+        self.reload(xml)
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         #create frame
         #check if config= is set
         try:
@@ -31,16 +31,16 @@ class Menu:
             action = but.get('action')
             if action == "menu":
                 button['command'] = self.changeMenu
-                button['extraArgs'] = [manager, but.get('target')]
+                button['extraArgs'] = [but.get('target')]
 
             elif action == "function":
-                print self.currentMenu.lower()
+                log.info("Going to menu:", self.currentMenu.lower())
                 #base = self.menuCodeDir + '.' + self.currentMenu.lower()
                 #menu = __import__(base, globals(), locals(), [self.currentMenu.lower()])
                 #menu = getattr(menu, self.currentMenu)
                 #print menu
                 #inst = getattr(menu, self.currentMenu)(manager, xml)  # Init
-                button['command'] = self.getFunc(manager, xml, but, 'target')
+                button['command'] = self.getFunc(xml, but, 'target')
 
             elif action == "config":
                 button['command'] = manager.transition
@@ -67,7 +67,7 @@ class Menu:
                 step = 0.01
 
             #get the function based on the attribute onchange
-            func = self.getFunc(manager, xml, sldr, 'onchange')
+            func = self.getFunc(xml, sldr, 'onchange')
             slider = DirectSlider(range=(float(low), float(high)), value=float(sldr.get('value')), pageSize=float(step), command=func)
             slider['extraArgs'] = [slider]
             yPos -= 0.1
@@ -93,16 +93,16 @@ class Menu:
         for obj in self.directObjects:
             obj.destroy()
 
-    def getFunc(self, manager, xml, el, attr):
+    def getFunc(self, xml, el, attr):
         base = self.menuCodeDir + '.' + self.currentMenu.lower()
         menu = __import__(base, globals(), locals(), [self.currentMenu.lower()])
-        inst = getattr(menu, self.currentMenu)(manager, xml)  # Init controller
+        inst = getattr(menu, self.currentMenu)(xml)  # Init controller
         return getattr(inst, el.get(attr))  # function call
 
-    def changeMenu(self, manager, target):
+    def changeMenu(self, target):
         xml = et.parse(self.menuConfigDir + target + '.xml')
         self.currentMenu = target
         self.destroy()
         self.directObjects = []
-        self.reload(manager, xml)
+        self.reload(xml)
         self.start()

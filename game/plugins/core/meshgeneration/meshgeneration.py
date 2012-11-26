@@ -15,13 +15,12 @@ import random
 
 class MeshGeneration:
     """MeshGeneration for the chunks"""
-    def __init__(self, manager, xml):
-        self.manager = manager
-        self.reload(manager, xml)
+    def __init__(self, xml):
+        self.reload(xml)
 
-    def reload(self, manager, xml):
+    def reload(self, xml):
         self.meshgentype = xml.get('gentype')
-        print "DEBUG: " + self.meshgentype
+        log.debug(self.meshgentype)
 
     def start(self):
         pass
@@ -39,7 +38,7 @@ class MeshGeneration:
         if self.meshgentype == "marching":
             mesher = MarchingCubes()
         elif self.meshgentype == "dual":
-            mesher = DualContour(noise=self.manager.get('noise'))
+            mesher = DualContour(noise=manager.get('noise'))
         else:
             mesher = Voxel()
 

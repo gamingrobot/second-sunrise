@@ -143,41 +143,43 @@ class Manager:
         # Step 2 - get the plugin - load it if it is not already loaded...
         if not (plugin in self.plugin):
             if messagespam:
-                print 'Loading plugin', plugin
+                log.info('Loading plugin', plugin)
             base = self.pluginDir + '.' + plugin.lower()
             plug = __import__(base, globals(), locals(), [plugin.lower()])
             plug = getattr(plug, plugin.lower())
             self.plugin[plugin] = plug
             if messagespam:
-                print 'Loaded', plugin
+                log.info('Loaded', plugin)
             yield None
 
         # Step 3a - check if there is an old object that can be repurposed, otherwise create a new object...
         #done = False
         if (name in self.oldNamed) and isinstance(self.oldNamed[name], getattr(self.plugin[plugin], plugin)) and getattr(self.oldNamed[name], 'reload', None) != None:
             if messagespam:
-                print 'Reusing', plugin
+                log.info('Reusing', plugin)
             inst = self.oldNamed[name]
             self.oldNamed[name] = True  # So we know its been re-used for during the deletion phase.
-            inst.reload(self, element)
+            inst.reload(element)
             yield None
             if messagespam:
-                print 'Reused', plugin
+                log.info('Reused', plugin)
             if getattr(inst, 'postReload', None) != None:
                 for blah in inst.postReload():
                     yield None
-                print 'post reload', plugin
+                if messagespam:
+                    log.info('post reload', plugin)
         else:
             if messagespam:
-                print 'Making', plugin
-            inst = getattr(self.plugin[plugin], plugin)(self, element)
+                log.info('Making', plugin)
+            inst = getattr(self.plugin[plugin], plugin)(element)
             yield None
             if messagespam:
-                print 'Made', plugin
+                log.info('Made', plugin)
             if getattr(inst, 'postInit', None) != None:
                 for blah in inst.postInit():
                     yield None
-                print 'post init', plugin
+                if messagespam:
+                    log.info('post init', plugin)
 
         # Step 3b - Stick it in the object database...
         self.objList.append((inst, name))
