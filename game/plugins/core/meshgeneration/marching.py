@@ -1,4 +1,4 @@
-import itertools
+from bin.shared import myiter
 
 
 class MarchingCubes:
@@ -13,7 +13,7 @@ class MarchingCubes:
 
     def generateMesh(self, terrain, size, lod):
         triangles = []
-        for x, y, z in itertools.product(xrange(0, size), xrange(0, size), xrange(0, size)):
+        for x, y, z in myiter.product(xrange(0, size), xrange(0, size), xrange(0, size)):
             #Thread.forceYield()
             p = self.GridCell()
             pv = [-1.0 for i in range(8)]

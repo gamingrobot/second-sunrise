@@ -4,7 +4,7 @@ try:
     import scipy.optimize as opt
 except:
     pass
-import itertools
+from bin.shared import myiter
 import math
 
 from panda3d.core import Point3
@@ -44,7 +44,7 @@ class DualContour:
         dc_verts = []
         vindex = {}
         noise = self.noise
-        for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
+        for x, y, z in myiter.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
             o = np.array([x, y, z])
             cube_signs = []
             #find edges that have a sign change
@@ -86,7 +86,7 @@ class DualContour:
 
         #Construct faces
         dc_faces = []
-        for x, y, z in itertools.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
+        for x, y, z in myiter.product(xrange(0, size - 1), xrange(0, size - 1), xrange(0, size - 1)):
             if not (x, y, z) in vindex:
                 continue
 

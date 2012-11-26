@@ -1,4 +1,4 @@
-import itertools
+from bin.shared import myiter
 
 
 class Voxel:
@@ -7,7 +7,7 @@ class Voxel:
 
     def generateMesh(self, terrain, size, lod):
         triangles = []
-        for x, y, z in itertools.product(xrange(0, size), xrange(0, size), xrange(0, size)):
+        for x, y, z in myiter.product(xrange(0, size), xrange(0, size), xrange(0, size)):
             block = terrain[0][x, y, z]
             #current block exists
             if not self.isEmptyBlock(block):
