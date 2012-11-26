@@ -13,6 +13,10 @@ from panda3d.bullet import BulletBoxShape
 class Physics(DirectObject.DirectObject):
     """SPAAAAAAAAAAAAAAAAAAAAAAAACE"""
     def __init__(self, xml):
+        #init pre and post callbacks
+        self.prePhysics = {}
+        self.postPhysics = {}
+
         #bullet debug node
         debugNode = BulletDebugNode('Debug')
         debugNode.showWireframe(True)
@@ -52,6 +56,32 @@ class Physics(DirectObject.DirectObject):
         del self.physicsTask
 
     def simulationTask(self, task):
+        # Call the pre-physics functions
+        for ident, func in self.prePhysics.iteritems():
+            func()
+
         dt = globalClock.getDt()
         self.bulletworld.doPhysics(dt, 10, 1.0 / 180.0)
+
+        # Call the post-physics functions
+        for ident, func in self.postPhysics.iteritems():
+            func()
+
         return task.cont
+
+    def getWorld(self):
+        return self.bulletworld
+
+    def registerPreFunc(self, name, func):
+        self.prePhysics[name] = func
+
+    def unRegisterPreFunc(self, name):
+        if name in self.prePhysics:
+            del self.prePhysics[name]
+
+    def registerPostFunc(self, name, func):
+        self.postPhysics[name] = func
+
+    def unRegisterPostFunc(self, name):
+        if name in self.postPhysics:
+            del self.postPhysics[name]
