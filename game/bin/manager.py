@@ -50,7 +50,7 @@ class Manager:
         """Transitions from the current configuration to a new configuration, makes a point to keep letting Panda draw whilst it is doing so, so any special loading screen plugin can do its stuff. Maintains some variables in this class so such a plugin can also display a loading bar."""
 
         self.currentConfig = config
-        log.manager("Loading config", config)
+        log.debug("Loading config", config)
 
         # Step 1 - call stop on all current objects- do this immediatly as we can't have some running whilst others are not...
         for obj in self.objList:
