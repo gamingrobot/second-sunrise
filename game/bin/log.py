@@ -28,7 +28,7 @@ class Log:
         try:
             frame, module, line, function, context, index = inspect.stack()[1]
             name = self.getName(frame, module)
-        except:
+        except Exception:
             pass
         self.getCat(name).error(self.combine(message))
 
@@ -37,7 +37,7 @@ class Log:
         try:
             frame, module, line, function, context, index = inspect.stack()[1]
             name = self.getName(frame, module)
-        except:
+        except Exception:
             pass
         self.getCat(name).warning(self.combine(message))
 
@@ -46,7 +46,7 @@ class Log:
         try:
             frame, module, line, function, context, index = inspect.stack()[1]
             name = self.getName(frame, module)
-        except:
+        except Exception:
             pass
         self.getCat(name).info(self.combine(message))
 
@@ -55,6 +55,6 @@ class Log:
         try:
             frame, module, line, function, context, index = inspect.stack()[1]
             name = self.getName(frame, module)
-        except:
+        except Exception:
             pass
         self.getCat(name).debug(self.combine(message))
