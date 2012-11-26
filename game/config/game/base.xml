@@ -1,6 +1,8 @@
 <config>
   <obj type="Window" name="window">
-    <antialias/>
+    <antialias value="True"/>
+    <wireframe value="False"/>
+    <doublesided value="False"/>
   </obj>
   <obj type="Loading" name="loading"/>
   <obj type="Settings" name="settings" />

@@ -22,10 +22,14 @@ import datetime
 class Window:
     """This plugin sets up window properties"""
     def __init__(self, xml):
-        render.setAntialias(AntialiasAttrib.MAuto)
+        if self.checkToggle("wireframe", xml):
+            base.toggleWireframe()
+        if self.checkToggle("antialias", xml):
+            render.setAntialias(AntialiasAttrib.MAuto)
+        if self.checkToggle("doublesided", xml):
+            render.setTwoSided(True)
+
         base.setBackgroundColor(100 / 255.0, 149 / 255.0, 237 / 255.0)
-        render.setTwoSided(True)
-        base.toggleWireframe()
 
         self.task = None
 
@@ -40,6 +44,15 @@ class Window:
 
     screenshot = lambda self: base.screenshot()
     wireframe = lambda self: base.toggleWireframe()
+
+    def checkToggle(self, toggle, xml):
+        if xml.find(toggle) != None:
+            if xml.find(toggle).get("value") == None or xml.find(toggle).get("value") == "True":
+                return True
+            else:
+                return False
+        else:
+            return False
 
     def toggleFullscreen(self):
         prop = base.win.getProperties()
