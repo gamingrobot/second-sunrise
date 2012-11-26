@@ -19,9 +19,6 @@ import xml.etree.ElementTree as et
 import imp
 import types
 
-messagespam = False
-
-
 class Manager:
     """The simple plugin system - this is documented in the docs directory."""
     def __init__(self, baseDir=''):
@@ -53,6 +50,7 @@ class Manager:
         """Transitions from the current configuration to a new configuration, makes a point to keep letting Panda draw whilst it is doing so, so any special loading screen plugin can do its stuff. Maintains some variables in this class so such a plugin can also display a loading bar."""
 
         self.currentConfig = config
+        log.manager("Loading config", config)
 
         # Step 1 - call stop on all current objects- do this immediatly as we can't have some running whilst others are not...
         for obj in self.objList:
@@ -142,44 +140,36 @@ class Manager:
 
         # Step 2 - get the plugin - load it if it is not already loaded...
         if not (plugin in self.plugin):
-            if messagespam:
-                log.info('Loading plugin', plugin)
+            log.manager('Loading plugin', plugin)
             base = self.pluginDir + '.' + plugin.lower()
             plug = __import__(base, globals(), locals(), [plugin.lower()])
             plug = getattr(plug, plugin.lower())
             self.plugin[plugin] = plug
-            if messagespam:
-                log.info('Loaded', plugin)
+            log.manager('Loaded', plugin)
             yield None
 
         # Step 3a - check if there is an old object that can be repurposed, otherwise create a new object...
         #done = False
         if (name in self.oldNamed) and isinstance(self.oldNamed[name], getattr(self.plugin[plugin], plugin)) and getattr(self.oldNamed[name], 'reload', None) != None:
-            if messagespam:
-                log.info('Reusing', plugin)
+            log.manager('Reusing', plugin)
             inst = self.oldNamed[name]
             self.oldNamed[name] = True  # So we know its been re-used for during the deletion phase.
             inst.reload(element)
             yield None
-            if messagespam:
-                log.info('Reused', plugin)
+            log.manager('Reused', plugin)
             if getattr(inst, 'postReload', None) != None:
                 for blah in inst.postReload():
                     yield None
-                if messagespam:
-                    log.info('post reload', plugin)
+                log.manager('post reload', plugin)
         else:
-            if messagespam:
-                log.info('Making', plugin)
+            log.manager('Making', plugin)
             inst = getattr(self.plugin[plugin], plugin)(element)
             yield None
-            if messagespam:
-                log.info('Made', plugin)
+            log.manager('Made', plugin)
             if getattr(inst, 'postInit', None) != None:
                 for blah in inst.postInit():
                     yield None
-                if messagespam:
-                    log.info('post init', plugin)
+                log.manager('post init', plugin)
 
         # Step 3b - Stick it in the object database...
         self.objList.append((inst, name))

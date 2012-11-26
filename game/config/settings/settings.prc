@@ -8,7 +8,9 @@ sync-video False
 
 notify-level-thread spam
 
-default-directnotify-level debug
+#error warning info debug manager
+log-level debug
+
 
 
 

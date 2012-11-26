@@ -55,7 +55,6 @@ class Second_Sunrise(ShowBase):
             else:
                 cn = 'menu_main'
 
-            print 'Starting configuration ' + cn
             pluginmanager.transition(cn)
             return task.done
 
