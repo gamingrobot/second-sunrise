@@ -7,7 +7,6 @@
   <obj type="Loading" name="loading"/>
   <obj type="Settings" name="settings" />
   <obj type="Controls" name="controls" />
-  <obj type="Events" name="events" />
 
   <obj type="EscExit" name="esc_exit"/>
   <obj type="FrameRate" name="frame_rate"/>

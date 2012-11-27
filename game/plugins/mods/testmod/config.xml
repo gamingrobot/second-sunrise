@@ -1,0 +1,13 @@
+<config>
+	<mainclass name="TestMod"/>
+	<!--figure out how to call functions in main plugin
+		figure out how to make it so multipe plugins can override
+	 	<override plugin="Universe" /> just a thought for now -->
+	<depends>
+		<mod name="dependmod" />
+	</depends>
+	<loadon config="system_world" />
+	<modconfig>
+		<somevar walls="70.0" random="30.0"/>
+	</modconfig>
+</config>

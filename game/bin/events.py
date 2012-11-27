@@ -1,19 +1,7 @@
 class Events:
     """Events System"""
-    def __init__(self, xml):
+    def __init__(self):
         self.events = {}
-
-    def reload(self, xml):
-        pass
-
-    def start(self):
-        pass
-
-    def stop(self):
-        pass
-
-    def destroy(self):
-        pass
 
     def hookEvent(self, eventName, callback):
         if not (eventName in self.events):

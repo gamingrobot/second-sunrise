@@ -27,6 +27,7 @@ from bin.manager import *
 
 import sys
 from bin.log import Log
+from bin.events import Events
 
 
 class Second_Sunrise(ShowBase):
@@ -41,6 +42,9 @@ class Second_Sunrise(ShowBase):
 
         #make logger global
         __builtins__.log = Log()
+
+        #make events global
+        __builtins__.events = Events()
 
         # Create the manager - this does it all...
         pluginmanager = Manager(baseDir)
