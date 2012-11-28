@@ -23,7 +23,7 @@ class Include:
 
     def postInit(self):
         # Load the configuration xml file...
-        elem = et.parse(manager.configDir + self.config + '.xml')
+        elem = et.parse(manager.__configDir + self.config + '.xml')
         yield None
 
         # Iterate the relevant elements and use the manager to load them all...

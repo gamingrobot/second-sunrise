@@ -29,7 +29,7 @@ class Manager(object):
         self.__baseDir = baseDir
         self.__pluginDir = 'plugins.core'
         self.__modPluginDir = 'plugins.mods'
-        self.configDir = self.__baseDir + 'config/game/'
+        self.__configDir = self.__baseDir + 'config/game/'
         self.__loadingInvFrameRate = 1.0 / 20.0
 
         # The plugin database - dictionary of modules...
@@ -71,7 +71,7 @@ class Manager(object):
             yield task.cont
 
             # Step 3 - load and iterate the config file and add in each instance...
-            elem = et.parse(self.configDir + config + '.xml')
+            elem = et.parse(self.__configDir + config + '.xml')
             yield task.cont
             for obj in elem.findall('obj'):
                 for blah in self.addObj(obj):
