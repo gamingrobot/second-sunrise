@@ -212,3 +212,6 @@ class Manager(object):
     def getPercentage(self):
         """During a transition this will return [0,1] indicating percentage done - for a loading plugin to use. Calling at other times will return 1.0 This is not yet implimented, as it needs to get very clever to compensate for variable loading times and includes."""
         return 1.0
+
+    def getConfigDir(self):
+        return self.__configDir
