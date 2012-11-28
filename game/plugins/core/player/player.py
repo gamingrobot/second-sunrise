@@ -28,7 +28,7 @@ class Player:
         radius = 0.4
         gravity = 0.0
 
-        self.__world = manager.get("physics").getWorld()
+        self.__world = manager.physics.getWorld()
         self.__parent = render
         self.__timeStep = 0
         self.__currentPos = Vec3(0, 0, 0)
@@ -71,7 +71,7 @@ class Player:
         self.__standUpCallback = [None, [], {}]
         self.__fallCallback = [None, [], {}]
 
-        manager.get("physics").registerPreFunc("playerController", self.update)
+        manager.physics.registerPreFunc("playerController", self.update)
 
     def start(self):
         pass

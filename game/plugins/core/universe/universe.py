@@ -18,8 +18,7 @@ class Universe:
 
         events.hookEvent("playerdeath", self.testcallback)
 
-        #controls = manager.get("controls")
-        #controls.registerKeyGame("Toggle Console", "F1", self.testcallback2, self)
+        manager.controls.registerKeyAll("Toggle Console", "F1", self.testcallback2, self)
 
     def start(self):
         pass

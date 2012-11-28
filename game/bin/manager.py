@@ -19,7 +19,8 @@ import xml.etree.ElementTree as et
 import imp
 import types
 
-class Manager:
+
+class Manager(object):
     """The simple plugin system - this is documented in the docs directory."""
     def __init__(self, baseDir=''):
         # Basic configuratrion variables...
@@ -30,11 +31,11 @@ class Manager:
         self.loadingInvFrameRate = 1.0 / 20.0
 
         # The plugin database - dictionary of modules...
-        self.plugin = dict()
+        self.plugin = {}
 
         # Create the instance database - a list in creation order of (obj,name) where name can be None for nameless objects, plus a dictionary to get at the objects by name...
         self.objList = []
-        self.named = dict()
+        self.named = {}
 
         # The above, but only used during transitions...
         self.oldObjList = None
@@ -64,7 +65,7 @@ class Manager:
             self.oldObjList = self.objList
             self.oldNamed = self.named
             self.objList = []
-            self.named = dict()
+            self.named = {}
             yield task.cont
 
             # Step 3 - load and iterate the config file and add in each instance...
@@ -81,6 +82,11 @@ class Manager:
                 if (not (name in self.oldNamed)) or self.oldNamed[name] != True:
                     # It needs to die - we let the reference count being zeroed do the actual deletion but it might have a slow death, so we use the destroy method/generator to make it happen during the progress bar ratehr than blocking the gc at some random point...
                     destroy = getattr(inst, 'destroy', None)
+                    #remove attr
+                    if name != None:
+                        log.manager("removingAttr", name)
+                        delattr(self, name)
+                    #if a function call
                     if isinstance(destroy, types.MethodType):
                         ret = destroy()
                         yield task.cont
@@ -174,6 +180,10 @@ class Manager:
         # Step 3b - Stick it in the object database...
         self.objList.append((inst, name))
         if name != None:
+            #generate instance var
+            log.manager("addingAttr", name)
+            setattr(self, name, inst)
+            #add to name db
             self.named[name] = inst
 
         # One last yield, just to keep things going...
@@ -187,7 +197,14 @@ class Manager:
         if name in self.named:
             return self.named[name]
         else:
-            return None
+            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name,))
+
+    def __setattr__(self, attr, value):
+        #hasattr(self, "readonly") for first init of function
+        if hasattr(self, "self.named") and attr in self.named:
+            raise AttributeError("Read only attribute: %s" % (attr,))
+        else:
+            object.__setattr__(self, attr, value)
 
     def getPercentage(self):
         """During a transition this will return [0,1] indicating percentage done - for a loading plugin to use. Calling at other times will return 1.0 This is not yet implimented, as it needs to get very clever to compensate for variable loading times and includes."""

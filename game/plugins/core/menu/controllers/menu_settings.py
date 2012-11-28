@@ -19,12 +19,10 @@ class menu_settings:
         log.debug(elt['value'])
 
     def setGame(self):
-        controls = manager.get("controls")
-        controls.setFocusGame()
+        manager.controls.setFocusGame()
 
     def setMenu(self):
-        controls = manager.get('controls')
-        controls.setFocusMenu()
+        manager.controls.setFocusMenu()
 
     def savesettings(self):
         pass

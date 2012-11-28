@@ -19,8 +19,7 @@ class Controls(DirectObject.DirectObject):
 
     """
     def __init__(self, xml):
-        settings = manager.get("settings")
-        self.savedControls = settings.getControls()
+        self.savedControls = manager.settings.getControls()
         self.controls = {}
         self.controls['menu'] = {}
         self.controls['game'] = {}
