@@ -1,6 +1,14 @@
 from pchunk import PChunk as Chunk
 from panda3d.core import Point3
 
+#threading
+from direct.stdpy import threading
+from direct.showbase.PythonUtil import Queue
+from pandac.PandaModules import Thread
+
+
+_chunkQueue = Queue()
+
 
 class Chunks:
     """Chunk class manages the creation of chunks"""
@@ -8,6 +16,9 @@ class Chunks:
         self.reload(xml)
         self.chunks = {}
         self.chunksize = 16
+
+        _chunkThread = _ChunkThread()
+        _chunkThread.start()
 
     def reload(self, xml):
         meshgen = xml.find('meshgen')
@@ -36,13 +47,19 @@ class Chunks:
         #make chunk
         self.chunks[planetname][chunkcords] = Chunk(chunkcords, chunkcords * self.chunksize)
         #create chunk
-        self.generateChunk(chunkcords, parentnode, self.chunks[planetname])
+        #if frist chunk dont generate with threads
+        if len(self.chunks[planetname].keys()) <= 1:
+            log.debug("generating non threaded chunk")
+            self.generateChunk(chunkcords, parentnode, self.chunks[planetname])
+        else:
+            log.debug("generating threaded chunk")
+            _chunkQueue.push({'class': self, 'chunkcords': chunkcords, 'parentnode': parentnode, 'chunks': self.chunks[planetname]})
         #regen all negative neighbors
         #get negative neighbors
         neighbors = self.getNegativeNeighbors(chunkcords, self.chunks[planetname])
         for neighbor in neighbors:
             if neighbor != None:
-                self.generateChunk(neighbor, parentnode, self.chunks[planetname])
+                _chunkQueue.push({'class': self, 'chunkcords': neighbor, 'parentnode': parentnode, 'chunks': self.chunks[planetname]})
 
     def generateChunk(self, chunkcords, parentnode, chunks):
         chunk = chunks[chunkcords]
@@ -117,3 +134,13 @@ class Chunks:
         if point in chunks:
             neighbors[6] = point
         return neighbors
+
+
+class _ChunkThread(threading.Thread):
+    def run(self):
+        while True:
+            while not _chunkQueue.isEmpty():
+                popq = _chunkQueue.pop()
+                popq['class'].generateChunk(popq['chunkcords'], popq['parentnode'], popq['chunks'])
+                Thread.sleep(0.04)
+            Thread.sleep(0.04)
