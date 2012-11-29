@@ -44,22 +44,26 @@ class Chunks:
     def makeChunk(self, chunkcords, parentnode, planetname):
         if not planetname in self.chunks:
             self.chunks[planetname] = {}
-        #make chunk
-        self.chunks[planetname][chunkcords] = Chunk(chunkcords, chunkcords * self.chunksize)
-        #create chunk
-        #if frist chunk dont generate with threads
-        if len(self.chunks[planetname].keys()) <= 1:
-            log.debug("generating non threaded chunk")
-            self.generateChunk(chunkcords, parentnode, self.chunks[planetname])
+        #check if chunk already exists
+        if not chunkcords in self.chunks[planetname]:
+            #make chunk
+            self.chunks[planetname][chunkcords] = Chunk(chunkcords, chunkcords * self.chunksize)
+            #create chunk
+            #if frist chunk dont generate with threads
+            if len(self.chunks[planetname].keys()) <= 1:
+                log.debug("generating non threaded chunk")
+                self.generateChunk(chunkcords, parentnode, self.chunks[planetname])
+            else:
+                log.debug("generating threaded chunk")
+                _chunkQueue.push({'class': self, 'chunkcords': chunkcords, 'parentnode': parentnode, 'chunks': self.chunks[planetname]})
+            #regen all negative neighbors
+            #get negative neighbors
+            neighbors = self.getNegativeNeighbors(chunkcords, self.chunks[planetname])
+            for neighbor in neighbors:
+                if neighbor != None:
+                    _chunkQueue.push({'class': self, 'chunkcords': neighbor, 'parentnode': parentnode, 'chunks': self.chunks[planetname]})
         else:
-            log.debug("generating threaded chunk")
-            _chunkQueue.push({'class': self, 'chunkcords': chunkcords, 'parentnode': parentnode, 'chunks': self.chunks[planetname]})
-        #regen all negative neighbors
-        #get negative neighbors
-        neighbors = self.getNegativeNeighbors(chunkcords, self.chunks[planetname])
-        for neighbor in neighbors:
-            if neighbor != None:
-                _chunkQueue.push({'class': self, 'chunkcords': neighbor, 'parentnode': parentnode, 'chunks': self.chunks[planetname]})
+            log.debug("chunk", chunkcords, "already exists")
 
     def generateChunk(self, chunkcords, parentnode, chunks):
         chunk = chunks[chunkcords]

@@ -215,3 +215,6 @@ class Manager(object):
 
     def getConfigDir(self):
         return self.__configDir
+
+    def getNamed(self):
+        return self.__named

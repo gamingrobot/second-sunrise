@@ -17,6 +17,7 @@ from panda3d.core import TextNode, TextProperties, TextPropertiesManager
 from direct.showbase.DirectObject import DirectObject
 from direct.gui.DirectGui import DirectFrame, DirectEntry
 from direct.gui.OnscreenText import OnscreenText
+from panda3d.core import *
 import sys
 import traceback
 import __main__
@@ -133,14 +134,15 @@ class DeveloperConsole(InteractiveInterpreter, DirectObject):
 
             # Insert plugins into the local namespace
             locals = __main__.__dict__
-            for plugin in manager.named.keys():
-                locals[plugin] = manager.named[plugin]
+            for plugin in manager.getNamed().keys():
+                locals[plugin] = manager.getNamed()[plugin]
             locals['panda3d'] = panda3d
 
             #register custom commands
             locals['reload'] = manager.reload
             locals['load'] = manager.transition
             locals['wireframe'] = base.toggleWireframe
+            locals['trigger'] = events.triggerEvent
 
             # Run it and print the output.
             if not self.initialized:

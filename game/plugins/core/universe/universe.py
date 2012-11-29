@@ -14,7 +14,7 @@ class Universe:
         else:
             self.planets = None
 
-        self.planets.makePlanet(Point3(0, 0, 0), "Gamma", self.universeNode)
+        self.planets.makePlanet(Point3(0, 0, 0), 4, "Gamma", self.universeNode)
 
         events.hookEvent("playerdeath", self.testcallback)
 
