@@ -14,7 +14,7 @@ class Universe:
         else:
             self.planets = None
 
-        self.planets.makePlanet(Point3(0, 0, 0), 4, "Gamma", self.universeNode)
+        self.planets.makePlanet(Point3(0, 0, 0), 10, "Gamma", self.universeNode)
 
         events.hookEvent("playerdeath", self.testcallback)
 
@@ -29,6 +29,9 @@ class Universe:
     def destroy(self):
         #self.universeNode.remove()
         pass
+
+    def getSpawnPoint(self):
+        return Point3(0, 0, 0)
 
     def testcallback(self, event):
         log.info("Player died")

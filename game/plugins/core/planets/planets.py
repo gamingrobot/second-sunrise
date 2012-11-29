@@ -9,6 +9,7 @@ class Planets:
         self.reload(xml)
         self.planets = {}
         events.hookEvent("playermove", self.playerMoved)
+        events.hookEvent("playerspawn", self.playerMoved)
 
     def reload(self, xml):
         chunks = xml.find('chunks')
@@ -55,8 +56,6 @@ class Planets:
     def makePlanet(self, cords, radius, name, parentnode):
         self.planets[name] = Planet(cords, radius, name, parentnode)
         #self.generatePositiveChunks(Point3(-1, -1, -1), name)
-        events.triggerEvent("playermove", Point3(60, 0, 0))
-        # events.triggerEvent("playermove", Point3(61, 0, 0))
         #self.generatePlusChunks(Point3(0, 0, 0), name)
         #spawn player here
 
