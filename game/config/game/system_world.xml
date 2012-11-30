@@ -2,14 +2,6 @@
   <obj type="Camera" name="camera">
     <fov deg="70" zoom="40" zoomTime="0.1" near="0.05" far="12800.0"/>
   </obj>
-  <!-- Camera is parented to player -->
-  <obj type="Player" name="player">
-    <size height="1.55" crouchHeight="0.7" radius="0.3" headHeight="1.4" crouchHeadHeight="0.6"/>
-    <power baseImpulse="15000.0" feetImpulse="75000.0" crouchSpeed="4.0" jumpForce="16000.0" jumpLeeway="0.1"/>
-    <body mass="70.0" termVel="30.0"/>
-    <camera plugin="camera"/>
-  </obj>
-
   <obj type="Noise" name="noise"/>
   <obj type="TerrainGeneration" name="terraingen">
     <noise plugin="noise" />
@@ -23,6 +15,13 @@
   </obj>
   <obj type="Universe" name="universe" >
     <planets plugin="planets" />
+  </obj>
+  <!-- Camera is parented to player -->
+  <obj type="Player" name="player">
+    <size height="1.55" crouchHeight="0.7" radius="0.3" headHeight="1.4" crouchHeadHeight="0.6"/>
+    <power baseImpulse="15000.0" feetImpulse="75000.0" crouchSpeed="4.0" jumpForce="16000.0" jumpLeeway="0.1"/>
+    <body mass="70.0" termVel="30.0"/>
+    <camera plugin="camera"/>
   </obj>
   <obj type="Menu" name="menu_settings" config="menu_ingame"/>
 </config>

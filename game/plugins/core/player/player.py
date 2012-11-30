@@ -20,7 +20,11 @@ class Player:
 
         manager.physics.registerPreFunc("playerController", self.update)
 
+        #ask the universe where to put the player
+        self.__currentPos = manager.universe.getSpawnPoint()
+
     def start(self):
+        events.triggerEvent("playerspawn", self.movementParent.getPos())
         pass
 
     def stop(self):
