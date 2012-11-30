@@ -12,13 +12,17 @@ class Player:
     def reload(self, xml):
         shape2 = BulletBoxShape(Vec3(1, 1, 2))
         self.playernode = BulletRigidBodyNode('Earth')
-        self.playernode.setMass(100.0)
+        self.playernode.setMass(1.0)
         self.playernode.addShape(shape2)
+        self.playernode.setDeactivationEnabled(False)
         self.playernp = render.attachNewNode(self.playernode)
         self.playernp.setPos(25, 0, 0)
         manager.physics.getWorld().attachRigidBody(self.playernode)
 
         manager.physics.registerPreFunc("playerController", self.update)
+
+        self.playernode.applyForce(Vec3(10, 0, 0), False)
+
 
     def start(self):
         pass

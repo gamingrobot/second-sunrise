@@ -34,8 +34,9 @@ class Physics(DirectObject.DirectObject):
         #test colision
         shape2 = BulletSphereShape(20)
         self.earthnode = BulletRigidBodyNode('Earth')
-        self.earthnode.setMass(10000.0)
+        self.earthnode.setMass(1000000000000000000000000000000.0)
         self.earthnode.addShape(shape2)
+        self.earthnode.setDeactivationEnabled(False)
         self.earthnp = render.attachNewNode(self.earthnode)
         self.earthnp.setPos(0, 0, 0)
         self.bulletworld.attachRigidBody(self.earthnode)
