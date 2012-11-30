@@ -29,11 +29,12 @@ class Physics(DirectObject.DirectObject):
         #create bullet world
         self.bulletworld = BulletWorld()
         self.bulletworld.setDebugNode(debugNP.node())
-        self.bulletworld.setGravity(Vec3(0, 0, -9.8))
+        self.bulletworld.setGravity(Vec3(0, 0, 0))
 
         #test colision
-        shape2 = BulletSphereShape(64)
+        shape2 = BulletSphereShape(20)
         self.earthnode = BulletRigidBodyNode('Earth')
+        self.earthnode.setMass(10000.0)
         self.earthnode.addShape(shape2)
         self.earthnp = render.attachNewNode(self.earthnode)
         self.earthnp.setPos(0, 0, 0)
