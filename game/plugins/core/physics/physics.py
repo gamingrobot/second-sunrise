@@ -13,6 +13,7 @@ from panda3d.bullet import BulletBoxShape
 class Physics(DirectObject.DirectObject):
     """SPAAAAAAAAAAAAAAAAAAAAAAAACE"""
     def __init__(self, xml):
+        globalClock.setMaxDt(0.1)
         #init pre and post callbacks
         self.prePhysics = {}
         self.postPhysics = {}
@@ -32,14 +33,12 @@ class Physics(DirectObject.DirectObject):
         self.bulletworld.setGravity(Vec3(0, 0, 0))
 
         #test colision
-        shape2 = BulletSphereShape(20)
-        self.earthnode = BulletRigidBodyNode('Earth')
-        self.earthnode.setMass(1000000000000000000000000000000.0)
-        self.earthnode.addShape(shape2)
-        self.earthnode.setDeactivationEnabled(False)
-        self.earthnp = render.attachNewNode(self.earthnode)
+        self.earthnp = render.attachNewNode(BulletRigidBodyNode('Earth'))
+        self.earthnp.node().setMass(100000.0)
+        self.earthnp.node().addShape(BulletSphereShape(20))
         self.earthnp.setPos(0, 0, 0)
-        self.bulletworld.attachRigidBody(self.earthnode)
+        self.earthnp.node().setDeactivationEnabled(False)
+        self.bulletworld.attachRigidBody(self.earthnp.node())
 
         #start doing physics
         self.physicsTask = taskMgr.add(self.simulationTask, 'Physics Loop', sort=100)
@@ -62,8 +61,8 @@ class Physics(DirectObject.DirectObject):
         for ident, func in self.prePhysics.iteritems():
             func()
 
-        dt = globalClock.getDt()
-        self.bulletworld.doPhysics(dt, 10, 1.0 / 180.0)
+        self.dt = globalClock.getDt()
+        self.bulletworld.doPhysics(self.dt, 10, 1.0 / 180.0)
 
         # Call the post-physics functions
         for ident, func in self.postPhysics.iteritems():
@@ -73,6 +72,9 @@ class Physics(DirectObject.DirectObject):
 
     def getWorld(self):
         return self.bulletworld
+
+    def getDt(self):
+        return self.dt
 
     def registerPreFunc(self, name, func):
         self.prePhysics[name] = func
