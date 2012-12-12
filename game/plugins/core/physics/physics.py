@@ -6,7 +6,7 @@ from direct.showbase import DirectObject
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletDebugNode
 from panda3d.bullet import BulletSphereShape
-from panda3d.bullet import BulletRigidBodyNode
+from panda3d.bullet import BulletGhostNode
 from panda3d.bullet import BulletBoxShape
 
 
@@ -31,14 +31,6 @@ class Physics(DirectObject.DirectObject):
         self.bulletworld = BulletWorld()
         self.bulletworld.setDebugNode(debugNP.node())
         self.bulletworld.setGravity(Vec3(0, 0, 0))
-
-        #test colision
-        self.earthnp = render.attachNewNode(BulletRigidBodyNode('Earth'))
-        self.earthnp.node().setMass(100000.0)
-        self.earthnp.node().addShape(BulletSphereShape(20))
-        self.earthnp.setPos(0, 0, 0)
-        self.earthnp.node().setDeactivationEnabled(False)
-        self.bulletworld.attachRigidBody(self.earthnp.node())
 
         #start doing physics
         self.physicsTask = taskMgr.add(self.simulationTask, 'Physics Loop', sort=100)

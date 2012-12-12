@@ -63,7 +63,8 @@ class Chunks:
                 if neighbor != None:
                     _chunkQueue.push({'class': self, 'chunkcords': neighbor, 'parentnode': parentnode, 'chunks': self.chunks[planetname]})
         else:
-            log.debug("chunk", chunkcords, "already exists")
+            pass
+            #log.debug("chunk", chunkcords, "already exists")
 
     def generateChunk(self, chunkcords, parentnode, chunks):
         chunk = chunks[chunkcords]

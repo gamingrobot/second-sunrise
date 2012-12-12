@@ -21,7 +21,7 @@ class Noise:
     def getDensity(self, cords, getDer=False):
         #return 1.0
         x, y, z = cords[0], cords[1], cords[2]
-        den, der = raw_noise_3d(x / 100.0, y / 100.0, z / 100.0)
+        den, der = raw_noise_3d(x / 60.0, y / 60.0, z / 60.0)
         if getDer:
             return den, der
         else:

@@ -33,20 +33,20 @@ class Planets:
         #TODO: fix so cords are better currently just rough
         for name in self.planets:
             player = eventdata
-            log.debug("player is at", player)
-            log.debug("checking if player is in:", name)
+            #log.debug("player is at", player)
+            #log.debug("checking if player is in:", name)
             planetborder = self.planets[name].psize * self.chunks.chunksize
             positiveborder = self.planets[name].cords + planetborder
             negtiveborder = self.planets[name].cords - planetborder
             #check for a fail case
-            log.debug(player.x, player.y, player.z)
+            #log.debug(player.x, player.y, player.z)
             if (player.x < positiveborder.x and player.x > negtiveborder.x) and (player.y < positiveborder.y and player.y > negtiveborder.y) and (player.z < positiveborder.z and player.z > negtiveborder.z):
-                log.info("player is in planet", name)
+                #log.info("player is in planet", name)
                 #move cords to 0,0,0 for player
                 playercords = player - self.planets[name].cords
                 chunkfloat = playercords / self.chunks.chunksize
                 playerchunk = Point3(math.floor(chunkfloat[0]), math.floor(chunkfloat[1]), math.floor(chunkfloat[2]))
-                log.info("player is in chunk:", playerchunk)
+                #log.info("player is in chunk:", playerchunk)
 
                 self.generatePlusChunks(playerchunk, name)
                 break
