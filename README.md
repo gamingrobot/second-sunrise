@@ -1,4 +1,4 @@
-second-sunrise
+Second Sunrise
 ==============
 
 A voxel planet game using Panda3D
