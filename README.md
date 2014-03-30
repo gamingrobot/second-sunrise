@@ -4,11 +4,10 @@ second-sunrise
 A voxel planet game using Panda3D
 
 
-Unfinished but there are some interesting bits of code.
+Unfinished but here are some interesting bits of code.
 
-[Isosurface Generation](https://github.com/gamingrobot/second-sunrise/tree/master/game/plugins/core/meshgeneration)
-
-[Plugin system](https://github.com/gamingrobot/second-sunrise/blob/master/game/bin/manager.py)
+* [Isosurface Generation](https://github.com/gamingrobot/second-sunrise/tree/master/game/plugins/core/meshgeneration)
+* [Plugin system](https://github.com/gamingrobot/second-sunrise/blob/master/game/bin/manager.py)
 
 Some interesting images
 
